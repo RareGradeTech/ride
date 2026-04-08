@@ -592,13 +592,7 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as 
 import{getDatabase,ref,set,push,get,onValue,update}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
 
-const app=initializeApp({apiKey: "AIzaSyCh7Ute6LeSAxcNDEQwZg5m0cA4ujnLCfg",
-  authDomain: "test-17881.firebaseapp.com",
-  databaseURL: "https://test-17881-default-rtdb.firebaseio.com",
-  projectId: "test-17881",
-  storageBucket: "test-17881.firebasestorage.app",
-  messagingSenderId: "1057428047643",
-  appId: "1:1057428047643:web:f3801c0d933225a5cd35be""});
+const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
 let cu=null;
 window.db = db; 
