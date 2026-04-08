@@ -43,36 +43,63 @@ div[id*="yoco"],
   animation: sp 0.8s linear infinite; margin-bottom: 16px;
 }
 
-/* Sidebar */
+/* ── SIDEBAR ───────────────────────────────────────────────────────── */
 .sidebar{
-  display:none; width:88px; background:var(--card); border-right:1px solid var(--border);
-  flex-direction:column; padding:26px 18px; z-index:60; flex-shrink:0;
-  transition:width .35s cubic-bezier(.4,0,.2,1); overflow-x:hidden; white-space:nowrap;
+  display:none; width:80px; background:var(--card); border-right:1px solid var(--border);
+  flex-direction:column; padding:26px 14px; z-index:60; flex-shrink:0;
+  transition:width .32s cubic-bezier(.4,0,.2,1), padding .32s cubic-bezier(.4,0,.2,1);
+  overflow:hidden; white-space:nowrap;
 }
 @media(min-width:900px){.sidebar{display:flex;}}
-.sidebar:hover{width:260px; box-shadow:4px 0 24px rgba(0,0,0,.04);}
-.logo{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
-  display:flex;align-items:center;gap:16px;margin-bottom:36px;padding-left:6px;}
-.logo-mark{width:38px;height:38px;background:var(--blue);border-radius:10px;
+.sidebar:hover{
+  width:270px;
+  padding:26px 20px;
+  box-shadow:4px 0 28px rgba(0,0,0,.06);
+}
+.logo{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
+  display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px;
+  min-width:240px;
+}
+.logo-mark{
+  width:38px;height:38px;background:var(--blue);border-radius:10px;
   display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;
-  font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow);}
-.l-txt{opacity:0; transition:opacity .2s; letter-spacing:-.5px;}
-.sidebar:hover .l-txt{opacity:1; transition-delay:.1s;}
-.nl{display:flex;align-items:center;gap:18px;padding:14px;border-radius:12px;
-  color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s;margin-bottom:4px;overflow:hidden;}
-.nl svg{flex-shrink:0;}
+  font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow);
+}
+.l-txt{
+  opacity:0;transition:opacity .18s .1s;
+  font-size:19px;letter-spacing:-.4px;font-weight:800;
+}
+.sidebar:hover .l-txt{opacity:1;}
+
+.nl{
+  display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px;
+  color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s;
+  margin-bottom:4px;min-width:240px;
+}
+.nl svg{flex-shrink:0;width:22px;height:22px;}
 .nl:hover{background:rgba(26,59,255,.05);color:var(--blue);}
 .nl.act{background:rgba(26,59,255,.09);color:var(--blue);font-weight:600;}
-.n-txt{opacity:0; transition:opacity .2s;}
-.sidebar:hover .n-txt{opacity:1; transition-delay:.1s;}
+.n-txt{opacity:0;transition:opacity .18s .1s;font-size:15px;}
+.sidebar:hover .n-txt{opacity:1;}
+
 .nav-spacer{flex:1;}
-.user-mini{display:flex;align-items:center;gap:16px;padding:12px 14px;
-  background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer;transition:.17s;overflow:hidden;}
+
+.user-mini{
+  display:flex;align-items:center;gap:14px;padding:11px 11px;
+  background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer;
+  transition:.17s;min-width:240px;
+}
 .user-mini:hover{background:rgba(26,59,255,.07);}
 .av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;
   display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
-.user-txt{opacity:0; transition:opacity .2s; display:flex; flex-direction:column;}
-.sidebar:hover .user-txt{opacity:1; transition-delay:.1s;}
+.user-txt{
+  opacity:0;transition:opacity .18s .1s;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.sidebar:hover .user-txt{opacity:1;}
+.user-txt .u-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
+.user-txt .u-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
 
 /* map */
 .map-wrap{flex:1;position:relative;height:100vh;}
@@ -279,17 +306,112 @@ div[id*="yoco"],
 .srt{font-size:14px;font-weight:500;}
 .sra{color:var(--muted);font-size:13px;}
 
-/* auth */
-.auth-overlay{position:fixed;inset:0;z-index:998; background:linear-gradient(155deg,#0A1FD4,#0C0C1A);
-  display:none;align-items:center;justify-content:center;padding:24px; opacity:0; transition:opacity .3s;}
-.auth-overlay.show{display:flex; opacity:1;}
-.auth-card{background:#fff;border-radius:26px;padding:38px 30px; width:100%;max-width:355px;box-shadow:0 40px 80px rgba(0,0,0,.3);}
-.auth-logo{font-family:'Syne',sans-serif;font-size:26px;font-weight:800; color:var(--blue);text-align:center;margin-bottom:4px;letter-spacing:-.4px;}
-.auth-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px;}
-.gbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px; padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:15px;font-weight:600;cursor:pointer; font-family:'DM Sans',sans-serif;transition:.17s;color:var(--ink);}
-.gbtn:hover{border-color:var(--blue);background:rgba(26,59,255,.04);}
-.auth-skip{display:block;text-align:center;margin-top:14px;color:var(--muted); font-size:13px;cursor:pointer;transition:.15s;}
-.auth-skip:hover{color:var(--blue);}
+/* ── AUTH OVERLAY — REDESIGNED ─────────────────────────────────────── */
+.auth-overlay{
+  position:fixed;inset:0;z-index:998;
+  background:linear-gradient(140deg,#0818A8 0%,#0C0C1F 55%,#1A0A3C 100%);
+  display:none;align-items:center;justify-content:center;padding:24px;
+  opacity:0;transition:opacity .35s;
+}
+.auth-overlay.show{display:flex;opacity:1;}
+
+/* decorative orbs */
+.auth-overlay::before{
+  content:'';position:absolute;width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle, rgba(26,59,255,.35) 0%, transparent 70%);
+  top:-120px;right:-100px;pointer-events:none;
+}
+.auth-overlay::after{
+  content:'';position:absolute;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle, rgba(74,108,255,.22) 0%, transparent 70%);
+  bottom:-80px;left:-60px;pointer-events:none;
+}
+
+.auth-card{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(32px) saturate(1.4);
+  -webkit-backdrop-filter:blur(32px) saturate(1.4);
+  border-radius:28px;padding:44px 36px 40px;
+  width:100%;max-width:380px;
+  position:relative;z-index:1;
+  box-shadow:0 40px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* brand mark */
+.auth-brand{display:flex;align-items:center;justify-content:center;gap:13px;margin-bottom:32px;}
+.auth-mark{
+  width:50px;height:50px;background:var(--blue);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;
+  box-shadow:0 8px 24px rgba(26,59,255,.55);
+  flex-shrink:0;
+}
+.auth-brand-name{
+  font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+  color:#fff;letter-spacing:-.4px;
+}
+
+/* headline */
+.auth-headline{
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  color:#fff;text-align:center;line-height:1.3;margin-bottom:8px;letter-spacing:-.3px;
+}
+.auth-sub{
+  font-size:13.5px;color:rgba(255,255,255,.55);text-align:center;
+  margin-bottom:32px;line-height:1.55;font-weight:400;
+}
+
+/* divider dots */
+.auth-features{
+  display:flex;justify-content:center;gap:22px;margin-bottom:30px;
+}
+.auth-feat{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:rgba(255,255,255,.5);font-weight:500;
+}
+.auth-feat-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(26,59,255,.8);flex-shrink:0;
+}
+
+/* Google button */
+.gbtn{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:15px 20px;
+  background:rgba(255,255,255,.97);
+  border:none;
+  border-radius:14px;
+  font-size:15px;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:.2s;color:#1a1a2e;
+  box-shadow:0 4px 20px rgba(0,0,0,.28);
+  letter-spacing:.01em;
+}
+.gbtn:hover{background:#fff;transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,.35);}
+.gbtn:active{transform:scale(0.98);}
+
+/* separator */
+.auth-sep{
+  display:flex;align-items:center;gap:12px;margin:20px 0;
+}
+.auth-sep-line{flex:1;height:1px;background:rgba(255,255,255,.1);}
+.auth-sep-txt{font-size:12px;color:rgba(255,255,255,.3);white-space:nowrap;}
+
+.auth-skip{
+  display:block;width:100%;text-align:center;padding:13px;
+  border:1px solid rgba(255,255,255,.14);border-radius:12px;
+  color:rgba(255,255,255,.55);font-size:13px;font-weight:500;
+  cursor:pointer;transition:.2s;background:transparent;
+  font-family:'DM Sans',sans-serif;
+}
+.auth-skip:hover{border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.8);background:rgba(255,255,255,.05);}
+
+/* trust line */
+.auth-trust{
+  text-align:center;margin-top:20px;
+  font-size:11.5px;color:rgba(255,255,255,.28);
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.auth-trust-icon{font-size:12px;}
 
 /* modal — z-index raised to 500 so it's above panels but below Yoco (99999) */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
@@ -333,15 +455,42 @@ div[id*="yoco"],
   <div style="font-family:'Syne',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
 </div>
 
+<!-- ── AUTH OVERLAY ───────────────────────────────────────────────── -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-card">
-    <div class="auth-logo">⚡ VynixRide</div>
-    <div class="auth-sub">Your ride, your city. Sign in to continue.</div>
+
+    <div class="auth-brand">
+      <div class="auth-mark">VX</div>
+      <div class="auth-brand-name">VynixRide</div>
+    </div>
+
+    <div class="auth-headline">Your ride, your city.</div>
+    <div class="auth-sub">Sign in to book rides, track trips,<br>and manage your wallet.</div>
+
+    <div class="auth-features">
+      <div class="auth-feat"><div class="auth-feat-dot"></div>Fast booking</div>
+      <div class="auth-feat"><div class="auth-feat-dot"></div>Secure wallet</div>
+      <div class="auth-feat"><div class="auth-feat-dot"></div>Live tracking</div>
+    </div>
+
     <button class="gbtn" id="gSignIn">
-      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/></svg>
+      <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/></svg>
       Continue with Google
     </button>
-    <span class="auth-skip" id="skipAuth">Skip — explore in demo mode</span>
+
+    <div class="auth-sep">
+      <div class="auth-sep-line"></div>
+      <div class="auth-sep-txt">or</div>
+      <div class="auth-sep-line"></div>
+    </div>
+
+    <button class="auth-skip" id="skipAuth">Explore in demo mode →</button>
+
+    <div class="auth-trust">
+      <span class="auth-trust-icon">🔒</span>
+      Your data is encrypted and never shared
+    </div>
+
   </div>
 </div>
 
@@ -440,8 +589,8 @@ div[id*="yoco"],
     <div class="user-mini" onclick="switchTab('account')">
       <div class="av" id="sbAv">?</div>
       <div class="user-txt">
-        <div style="font-size:14px;font-weight:700" id="sbName">Guest</div>
-        <div style="font-size:12px;color:var(--muted)" id="sbEmail">Not signed in</div>
+        <div class="u-name" id="sbName">Guest</div>
+        <div class="u-email" id="sbEmail">Not signed in</div>
       </div>
     </div>
   </aside>
@@ -613,12 +762,10 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
     return;
   }
 
-  // Hide the triggering modal
   if (restoreModalId) {
     document.getElementById(restoreModalId).classList.remove('show');
   }
 
-  // On mobile: slide down all bottom sheets so Yoco popup is fully visible
   const isMobile = window.innerWidth < 900;
   const bookPanel = document.getElementById('bookPanel');
   const activePanel = document.getElementById('activeRidePanel');
@@ -658,14 +805,12 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
     description: description,
     callback: function (result) {
       if (result.error) {
-        // Restore modal + sheets on failure so user can retry
         if (restoreModalId) {
           document.getElementById(restoreModalId).classList.add('show');
         }
         restoreSheets();
         window.showToast("Payment failed: " + result.error.message);
       } else {
-        // Success — sheets stay hidden, success handler takes over
         onSuccessCallback(result.id);
       }
     }
@@ -716,7 +861,6 @@ function renderTx(obj){
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
 
-// ── Ride booking — closes confirmModal before launching Yoco ─────────
 window.initiateRidePayment = async function(){
   if(!cu) { window.showToast('Please sign in first'); return; }
   const r = window._rides.find(x => x.id === window._selId);
@@ -734,11 +878,10 @@ window.initiateRidePayment = async function(){
         window.startSearchTimer();
       } catch(e) { window.showToast('Database error after payment.'); }
     },
-    'confirmModal' // ← the modal to hide before Yoco opens, restore on failure
+    'confirmModal'
   );
 };
 
-// ── Wallet top-up — closes topUpModal before launching Yoco ─────────
 window.executeYocoTopUp = async function() {
   if(!cu) { window.showToast("Sign in first."); return; }
   const input = document.getElementById('yocoAmount').value;
@@ -759,7 +902,7 @@ window.executeYocoTopUp = async function() {
         window.showToast(`Successfully added R${amt.toFixed(2)}`);
       } catch(e) { window.showToast("Database error saving top-up."); }
     },
-    'topUpModal' // ← hide before Yoco, restore on failure
+    'topUpModal'
   );
 };
 
