@@ -328,116 +328,124 @@ body.yoco-active .bnav {
 .srt{font-size:14px;font-weight:500;}
 .sra{color:var(--muted);font-size:13px;}
 
-/* ── AUTH OVERLAY — Plus Jakarta Sans font ─────────────────────────── */
-.auth-overlay{
-  position:fixed;inset:0;z-index:998;
-  background:linear-gradient(140deg,#0818A8 0%,#0C0C1F 55%,#1A0A3C 100%);
-  display:none;align-items:center;justify-content:center;padding:24px;
-  opacity:0;transition:opacity .35s;
-  font-family:'Plus Jakarta Sans',sans-serif;
-}
-.auth-overlay.show{display:flex;opacity:1;}
-
-/* decorative orbs */
-.auth-overlay::before{
-  content:'';position:absolute;width:480px;height:480px;border-radius:50%;
-  background:radial-gradient(circle, rgba(26,59,255,.35) 0%, transparent 70%);
-  top:-120px;right:-100px;pointer-events:none;
-}
-.auth-overlay::after{
-  content:'';position:absolute;width:340px;height:340px;border-radius:50%;
-  background:radial-gradient(circle, rgba(74,108,255,.22) 0%, transparent 70%);
-  bottom:-80px;left:-60px;pointer-events:none;
+/* ── NEW AUTH OVERLAY (Matching design with glassy card and globs) ─── */
+.auth-overlay {
+  position: fixed; inset: 0; z-index: 998;
+  background: url('image_0.png') no-repeat center center / cover;
+  display: none; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.35s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.auth-card{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.14);
-  backdrop-filter:blur(32px) saturate(1.4);
-  -webkit-backdrop-filter:blur(32px) saturate(1.4);
-  border-radius:28px;padding:44px 36px 40px;
-  width:100%;max-width:380px;
-  position:relative;z-index:1;
-  box-shadow:0 40px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);
+.auth-overlay.show { display: flex; opacity: 1; }
+
+/* Dark, heavily blurred tint over the background image */
+.auth-overlay::before {
+  content: ''; position: absolute; inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* brand mark */
-.auth-brand{display:flex;align-items:center;justify-content:center;gap:13px;margin-bottom:32px;}
-.auth-mark{
-  width:50px;height:50px;background:var(--blue);border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;
-  box-shadow:0 8px 24px rgba(26,59,255,.55);
-  flex-shrink:0;
-}
-.auth-brand-name{
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;
-  color:#fff;letter-spacing:-.4px;
-}
-
-/* headline */
-.auth-headline{
-  font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;
-  color:#fff;text-align:center;line-height:1.3;margin-bottom:8px;letter-spacing:-.3px;
-}
-.auth-sub{
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:13.5px;color:rgba(255,255,255,.55);text-align:center;
-  margin-bottom:32px;line-height:1.55;font-weight:400;
+.auth-card {
+  position: relative; z-index: 1; /* Above the overlay blur */
+  background: rgba(255, 255, 255, 0.03); /* Subtle dark glassy background */
+  backdrop-filter: blur(40px) saturate(1.6); /* Heavy glass effect */
+  -webkit-backdrop-filter: blur(40px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  padding: 48px 40px;
+  width: 100%; max-width: 400px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
+  overflow: hidden; /* For inner glowing elements */
 }
 
-/* divider dots */
-.auth-features{
-  display:flex;justify-content:center;gap:22px;margin-bottom:30px;
+/* Inner decorative glowing blobs */
+.auth-card-blob {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: -1;
 }
-.auth-feat{
-  display:flex;align-items:center;gap:6px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:12px;color:rgba(255,255,255,.5);font-weight:500;
+.auth-card-blob-1 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(230, 50, 150, 0.25) 0%, transparent 70%);
+  top: -100px; right: -80px;
 }
-.auth-feat-dot{
-  width:6px;height:6px;border-radius:50%;background:rgba(26,59,255,.8);flex-shrink:0;
+.auth-card-blob-2 {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(50, 200, 250, 0.2) 0%, transparent 70%);
+  bottom: -60px; left: -40px;
 }
 
-/* Google button */
-.gbtn{
-  width:100%;display:flex;align-items:center;justify-content:center;gap:12px;
-  padding:15px 20px;
-  background:rgba(255,255,255,.97);
-  border:none;
-  border-radius:14px;
-  font-size:15px;font-weight:700;cursor:pointer;
-  font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;color:#1a1a2e;
-  box-shadow:0 4px 20px rgba(0,0,0,.28);
-  letter-spacing:.01em;
+.auth-headline {
+  font-size: 28px; font-weight: 800; color: #fff;
+  text-align: center; margin-bottom: 12px; letter-spacing: -0.5px;
 }
-.gbtn:hover{background:#fff;transform:translateY(-1px);box-shadow:0 8px 28px rgba(0,0,0,.35);}
-.gbtn:active{transform:scale(0.98);}
+.auth-sub {
+  font-size: 15px; color: rgba(255, 255, 255, 0.6);
+  text-align: center; margin-bottom: 40px; line-height: 1.6;
+}
 
-/* separator */
-.auth-sep{
-  display:flex;align-items:center;gap:12px;margin:20px 0;
+.gbtn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 14px;
+  padding: 16px 24px; border-radius: 16px; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.2s;
+  position: relative; color: #fff; border: none; overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
 }
-.auth-sep-line{flex:1;height:1px;background:rgba(255,255,255,.1);}
-.auth-sep-txt{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.3);white-space:nowrap;}
 
-.auth-skip{
-  display:block;width:100%;text-align:center;padding:13px;
-  border:1px solid rgba(255,255,255,.14);border-radius:12px;
-  color:rgba(255,255,255,.55);font-size:13px;font-weight:500;
-  cursor:pointer;transition:.2s;background:transparent;
-  font-family:'Plus Jakarta Sans',sans-serif;
+.gbtn::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+  border-radius: inherit; z-index: 0;
 }
-.auth-skip:hover{border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.8);background:rgba(255,255,255,.05);}
 
-/* trust line */
-.auth-trust{
-  text-align:center;margin-top:20px;
-  font-family:'Plus Jakarta Sans',sans-serif;
-  font-size:11.5px;color:rgba(255,255,255,.28);
-  display:flex;align-items:center;justify-content:center;gap:5px;
+.gbtn::after {
+  content: ''; position: absolute; inset: 0;
+  border: 2px solid transparent; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(230, 50, 150, 0.6) 0%, rgba(50, 200, 250, 0.5) 50%, rgba(130, 60, 240, 0.5) 100%) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; z-index: 1;
 }
-.auth-trust-icon{font-size:12px;}
+
+.gbtn:hover::before {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+}
+.gbtn:active { transform: scale(0.98); }
+
+/* Style elements inside Google button to make them all white/themed for design look */
+.gbtn svg path { fill: #fff; } 
+.gbtn span { position: relative; z-index: 2; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;}
+
+.auth-sep {
+  display: flex; align-items: center; gap: 12px; margin: 32px 0 24px;
+}
+.auth-sep-line { flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+.auth-sep-txt {
+  font-size: 12px; color: rgba(255, 255, 255, 0.3); font-weight: 500; text-transform: uppercase;
+}
+
+/* Demo button styled as a subtle text link */
+.auth-skip {
+  display: inline-block; width: auto; text-align: center; padding: 4px;
+  border: none; border-radius: 0;
+  color: rgba(255, 255, 255, 0.6); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: 0.2s; background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  margin-bottom: 24px;
+}
+.auth-skip b { color: rgba(50, 200, 250, 0.9); font-weight: 700; transition: 0.15s;}
+.auth-skip:hover { color: rgba(255, 255, 255, 0.9); }
+.auth-skip:hover b { color: rgba(50, 200, 250, 1); }
+
+.auth-trust {
+  text-align: center; font-size: 12px;
+  color: rgba(255, 255, 255, 0.2);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.auth-trust-icon { font-size: 13px; }
 
 /* modal — z-index 500 so above panels but below Yoco (99999) */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
@@ -483,33 +491,26 @@ body.yoco-active .bnav {
 
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-card">
-
-    <div class="auth-brand">
-      <div class="auth-mark">VX</div>
-      <div class="auth-brand-name">VynixRide</div>
-    </div>
-
-    <div class="auth-headline">Your ride, your city.</div>
-    <div class="auth-sub">Sign in to book rides, track trips,<br>and manage your wallet.</div>
-
-    <div class="auth-features">
-      <div class="auth-feat"><div class="auth-feat-dot"></div>Fast booking</div>
-      <div class="auth-feat"><div class="auth-feat-dot"></div>Secure wallet</div>
-      <div class="auth-feat"><div class="auth-feat-dot"></div>Live tracking</div>
-    </div>
-
+    <div class="auth-card-blob auth-card-blob-1"></div>
+    <div class="auth-card-blob auth-card-blob-2"></div>
+    
+    <div class="auth-headline">Let's log you in</div>
+    <div class="auth-sub">Welcome back, you've been missed!</div>
+    
     <button class="gbtn" id="gSignIn">
-      <svg width="19" height="19" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/></svg>
-      Continue with Google
+      <svg width="19" height="19" viewBox="0 0 48 48"><path d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/><path d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/><path d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/><path d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/></svg>
+      <span>Continue with Google</span>
     </button>
-
+    
     <div class="auth-sep">
       <div class="auth-sep-line"></div>
       <div class="auth-sep-txt">or</div>
       <div class="auth-sep-line"></div>
     </div>
 
-    <button class="auth-skip" id="skipAuth">Explore in demo mode →</button>
+    <button class="auth-skip" id="skipAuth">
+      <span style="opacity:0.6">Don't have an account?</span> <b>Sign Up</b>
+    </button>
 
     <div class="auth-trust">
       <span class="auth-trust-icon">🔒</span>
