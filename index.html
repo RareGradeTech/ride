@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VynixRide</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
@@ -18,7 +18,7 @@
   --border:#E2E4F0;--green:#17A85A;--red:#E53535;--nav-h:72px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;color:var(--ink);background:var(--bg);}
+html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);}
 
 /* ── YOCO — always on top, right-aligned on desktop ─────────────────── */
 iframe[src*="yoco"],
@@ -78,7 +78,7 @@ body.yoco-active .bnav {
   box-shadow:4px 0 28px rgba(0,0,0,.06);
 }
 .logo{
-  font-family:'Lexend',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
   display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px;
   min-width:240px;
 }
@@ -167,12 +167,12 @@ body.yoco-active .bnav {
 @media(min-width:900px){.drag-handle{display:none;}}
 
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
-.ptitle{font-family:'Lexend',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
+.ptitle{font-family:'Syne',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
 .top-cbtn {
   background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff;
   padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700;
   cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s;
-  display: none; font-family: 'Inter', sans-serif; letter-spacing: 0.02em;
+  display: none; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em;
 }
 .top-cbtn:active { transform: scale(0.96); }
 
@@ -180,14 +180,14 @@ body.yoco-active .bnav {
 .geo-wrap{margin-bottom:12px;flex-shrink:0;}
 .mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;
   border-radius:13px!important;border:1.5px solid var(--border)!important;
-  box-shadow:none!important;background:#fff!important; font-family:'Inter',sans-serif!important;}
+  box-shadow:none!important;background:#fff!important; font-family:'DM Sans',sans-serif!important;}
 .mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;
-  color:var(--ink)!important;font-family:'Inter',sans-serif!important;
+  color:var(--ink)!important;font-family:'DM Sans',sans-serif!important;
   padding:11px 40px 11px 40px!important;height:46px!important;}
 .mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important;}
 .mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important;
   box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important;}
-.mapboxgl-ctrl-geocoder--suggestion{font-family:'Inter',sans-serif!important;font-size:13px!important;}
+.mapboxgl-ctrl-geocoder--suggestion{font-family:'DM Sans',sans-serif!important;font-size:13px!important;}
 
 .origin-row{display:flex;align-items:center;gap:10px;background:#fff;
   padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);
@@ -212,7 +212,7 @@ body.yoco-active .bnav {
   background:linear-gradient(135deg,var(--blue2),var(--blue));
   color:#fff;display:flex;align-items:center;justify-content:center;
   font-weight:700;font-size:12px;flex-shrink:0;}
-.rname{font-size:14px;font-weight:700;font-family:'Lexend',sans-serif;margin-bottom:1px;}
+.rname{font-size:14px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:1px;}
 .rmeta{font-size:11px;color:var(--muted);}
 .rprice{font-size:15px;font-weight:700;}
 .rtbadge{font-size:10px;font-weight:600;color:var(--blue);
@@ -232,8 +232,8 @@ body.yoco-active .bnav {
 .circular-progress circle { fill: none; stroke-width: 8; stroke-linecap: round; }
 .circ-bg { stroke: var(--border); }
 .circ-fill { stroke: var(--blue); stroke-dasharray: 283; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
-.time-left { font-family: 'Lexend', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
-.search-title { font-family: 'Lexend', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
+.time-left { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
+.search-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
 .search-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 500; text-align: center; max-width: 250px; }
 .cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px;
   background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s;}
@@ -259,11 +259,11 @@ body.yoco-active .bnav {
   border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08);}
 .ad-car-info{text-align:right;}
 .ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px;
-  font-family:'Lexend',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
+  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px; padding-top:18px;border-top:1px solid var(--border);}
 .ad-m-item{display:flex;flex-direction:column;}
 .ad-m-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
-.ad-m-val{font-family:'Lexend',sans-serif;font-size:17px;font-weight:800;color:var(--blue);}
+.ad-m-val{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--blue);}
 
 /* bottom nav */
 .bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
@@ -280,13 +280,13 @@ body.yoco-active .bnav {
   padding:28px 20px calc(var(--nav-h) + env(safe-area-inset-bottom, 20px));}
 @media(min-width:900px){.fpage{padding:32px 36px 32px;}}
 .fpage.show{display:flex;}
-.ph{font-family:'Lexend',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
+.ph{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
 
 /* trips */
 .tc{background:var(--card);border-radius:16px;padding:16px 18px; margin-bottom:11px;border:1px solid var(--border);transition:.17s;}
 .tc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);}
 .tc-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.tc-type{font-family:'Lexend',sans-serif;font-size:15px;font-weight:700;}
+.tc-type{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
 .tc-fare{font-size:15px;font-weight:700;color:var(--blue);}
 .tc-meta{font-size:12px;color:var(--muted);margin-top:4px;}
 .tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px; font-size:11px;font-weight:600;padding:3px 10px;
@@ -297,9 +297,9 @@ body.yoco-active .bnav {
 .w-hero::before{content:'';position:absolute;top:-30px;right:-30px; width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%;}
 .w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px; width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%;}
 .wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500;}
-.wbal{font-family:'Lexend',sans-serif;font-size:36px;font-weight:800; margin-bottom:16px;letter-spacing:-.5px;}
+.wbal{font-family:'Syne',sans-serif;font-size:36px;font-weight:800; margin-bottom:16px;letter-spacing:-.5px;}
 .wbtns{display:flex;gap:10px;position:relative;z-index:1;}
-.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'Inter',sans-serif; transition:.2s;}
+.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'DM Sans',sans-serif; transition:.2s;}
 .wbtn:hover{background:rgba(255,255,255,.3);}
 .txi{display:flex;justify-content:space-between;align-items:center; padding:13px 0;border-bottom:1px solid var(--border);}
 .txi:last-child{border:none;}
@@ -310,15 +310,15 @@ body.yoco-active .bnav {
 
 /* Inputs for Wallet Topup */
 .input-wrap { margin-bottom: 16px; text-align: left; }
-.t-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); font-family: 'Inter', sans-serif; font-size: 15px; font-weight: 600; outline: none; transition: .2s; }
+.t-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; outline: none; transition: .2s; }
 .t-input:focus { border-color: var(--blue); }
 
 /* ═══════════════════════════════════════════════
-   ACCOUNT PAGE — Lexend font, fresh styling
+   ACCOUNT PAGE — Outfit font, fresh styling
    ═══════════════════════════════════════════════ */
-#tab-account { font-family: 'Inter', sans-serif; }
+#tab-account { font-family: 'Outfit', sans-serif; }
 #tab-account .ph {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 26px; font-weight: 800;
   letter-spacing: -.6px; margin-bottom: 20px;
 }
@@ -338,19 +338,19 @@ body.yoco-active .bnav {
   background: rgba(255,255,255,.22); color: #fff;
   display: flex; align-items: center; justify-content: center;
   font-size: 22px; font-weight: 800;
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Outfit', sans-serif;
   flex-shrink: 0; border: 2px solid rgba(255,255,255,.35);
-  box-shadow: 0 4px 16px rgba(0,0,0,12);
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
 }
 .prof-name {
-  font-family: 'Lexend', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 19px; font-weight: 700; letter-spacing: -.2px;
 }
 .prof-email { font-size: 13px; opacity: .72; margin-top: 3px; font-weight: 400; }
 
 /* Account section group */
 .acc-section-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 11px; font-weight: 700;
   color: var(--muted); letter-spacing: .1em;
   text-transform: uppercase;
@@ -376,7 +376,7 @@ body.yoco-active .bnav {
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
 }
 .srt{
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 15px; font-weight: 500; color: var(--ink);
 }
 .sra{ color: var(--muted); font-size: 16px; font-weight: 400; }
@@ -405,10 +405,10 @@ body.yoco-active .bnav {
 .notif-row:last-child { border: none; }
 .notif-left { flex: 1; padding-right: 16px; }
 .notif-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
 }
-.notif-sub { font-size: 12px; color: var(--muted); font-family: 'Inter', sans-serif; }
+.notif-sub { font-size: 12px; color: var(--muted); font-family: 'Outfit', sans-serif; }
 
 /* ── Payment method cards ──────────────────────── */
 .pm-card {
@@ -424,13 +424,13 @@ body.yoco-active .bnav {
   font-size: 18px; flex-shrink: 0; border: 1.5px solid var(--border);
   background: #fff;
 }
-.pm-label { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; }
-.pm-sub { font-size: 12px; color: var(--muted); margin-top: 1px; font-family: 'Inter', sans-serif; }
+.pm-label { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; }
+.pm-sub { font-size: 12px; color: var(--muted); margin-top: 1px; font-family: 'Outfit', sans-serif; }
 .pm-badge {
   margin-left: auto; font-size: 11px; font-weight: 700;
   padding: 3px 10px; border-radius: 20px;
   background: rgba(23,168,90,.1); color: var(--green);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 .pm-default-badge {
   background: rgba(26,59,255,.08); color: var(--blue);
@@ -447,17 +447,17 @@ body.yoco-active .bnav {
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; flex-shrink: 0;
 }
-.sp-icon.home { background: rgba(255,174,0,12); }
+.sp-icon.home { background: rgba(255,174,0,.12); }
 .sp-icon.work { background: rgba(26,59,255,.09); }
 .sp-icon.fav  { background: rgba(229,53,53,.09); }
 .sp-field-wrap { flex: 1; }
 .sp-field-label {
-  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700;
+  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
   color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px;
 }
 .sp-field {
   width: 100%; padding: 10px 12px; border-radius: 10px;
-  border: 1.5px solid var(--border); font-family: 'Inter', sans-serif;
+  border: 1.5px solid var(--border); font-family: 'Outfit', sans-serif;
   font-size: 13px; font-weight: 500; outline: none;
   color: var(--ink); transition: border-color .18s; background: var(--bg);
 }
@@ -465,14 +465,14 @@ body.yoco-active .bnav {
 .sp-field::placeholder { color: #b0b3c6; }
 
 /* account modal overrides */
-.mbg-acc { font-family: 'Inter', sans-serif; }
-.mbg-acc .mh { font-family: 'Lexend', sans-serif; font-size: 20px; font-weight: 700; }
-.mbg-acc .mcancel { font-family: 'Inter', sans-serif; }
-.mbg-acc .mok { font-family: 'Inter', sans-serif; }
+.mbg-acc { font-family: 'Outfit', sans-serif; }
+.mbg-acc .mh { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; }
+.mbg-acc .mcancel { font-family: 'Outfit', sans-serif; }
+.mbg-acc .mok { font-family: 'Outfit', sans-serif; }
 
 /* account */
 .account-version {
-  text-align: center; font-family: 'Inter', sans-serif;
+  text-align: center; font-family: 'Outfit', sans-serif;
   font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 4px;
 }
 
@@ -482,19 +482,19 @@ body.yoco-active .bnav {
 @media(min-width:900px){.mbg{align-items:center;}}
 .mbg.show{display:flex;}
 .modal{background:#fff;border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px));
-  width: 100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
+  width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
 @media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
 @keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mh{font-family:'Lexend',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
+.mh{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
 .mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
 .mr:last-of-type{border:none;}
 .mrl{font-size:13px;color:var(--muted);}
 .mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
 .mbtns{display:flex;gap:11px;margin-top:20px;}
-.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'Inter',sans-serif; transition:.1s;}
+.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'DM Sans',sans-serif; transition:.1s;}
 .mcancel:hover{background:var(--bg);}
 .mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;
-  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Inter',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
+  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'DM Sans',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
 
 /* toast */
 .toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%;
@@ -511,452 +511,1300 @@ body.yoco-active .bnav {
 .empty-ico{font-size:34px;margin-bottom:10px;}
 
 /* ═══════════════════════════════════════════════════════════
-   AUTH OVERLAY — Full-bleed photo background
+   AUTH OVERLAY — Full-bleed photo background, Uber-style
    ═══════════════════════════════════════════════════════════ */
 .auth-overlay {
   position: fixed; inset: 0; z-index: 998;
   display: none; flex-direction: column;
   opacity: 0; transition: opacity .4s;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   overflow: hidden;
 }
 .auth-overlay.show { display: flex; opacity: 1; }
 
 .auth-bg {
   position: absolute; inset: 0;
-  background: url('https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?auto=format&fit=crop&q=80&w=1200') center/cover no-repeat;
-  filter: brightness(0.7);
-  transform: scale(1.05);
-  transition: transform 10s linear;
+  background: url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center / cover no-repeat;
+  transform: scale(1.04);
+  animation: auth-zoom 18s ease-in-out infinite alternate;
 }
-.auth-overlay.show .auth-bg { transform: scale(1); }
-
-.auth-card {
-  position: relative; margin-top: auto;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  padding: 32px 28px calc(40px + env(safe-area-inset-bottom, 0px));
-  border-radius: 32px 32px 0 0;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
-  display: flex; flex-direction: column; gap: 24px;
-  animation: authSlideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+@keyframes auth-zoom {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.12); }
 }
-@keyframes authSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-.a-logo {
-  font-family: 'Lexend', sans-serif; font-size: 26px; font-weight: 800; color: var(--blue);
+.auth-scrim {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom,
+      rgba(0,0,0,0.18) 0%,
+      rgba(0,0,0,0.05) 30%,
+      rgba(0,0,0,0.45) 65%,
+      rgba(0,0,0,0.88) 100%);
+}
+
+.auth-topbar {
+  position: relative; z-index: 2;
   display: flex; align-items: center; gap: 12px;
+  padding: 56px 28px 0;
 }
-.a-title { font-family: 'Lexend', sans-serif; font-size: 28px; font-weight: 800; line-height: 1.2; letter-spacing: -0.8px; margin-top: 4px; }
-.a-sub { font-size: 15px; color: var(--muted); font-weight: 500; }
-
-.a-form { display: flex; flex-direction: column; gap: 16px; }
-.a-input {
-  width: 100%; padding: 16px 20px; border-radius: 14px; border: 2px solid var(--border);
-  background: #fff; font-size: 16px; font-weight: 600; font-family: 'Inter', sans-serif;
-  outline: none; transition: border-color 0.2s;
+.auth-logo-dot {
+  width: 44px; height: 44px; background: #fff; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
+  font-size: 15px; color: var(--blue); flex-shrink: 0;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.28);
 }
-.a-input:focus { border-color: var(--blue); }
+.auth-logo-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px; font-weight: 800; color: #fff;
+  letter-spacing: -.3px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
+}
 
-.a-btn {
-  width: 100%; padding: 18px; border-radius: 14px; border: none;
-  background: var(--blue); color: #fff; font-size: 16px; font-weight: 700;
-  cursor: pointer; transition: transform 0.1s, background 0.2s;
+.auth-spacer { flex: 1; position: relative; z-index: 2; }
+
+.auth-bottom {
+  position: relative; z-index: 2;
+  padding: 32px 28px calc(44px + env(safe-area-inset-bottom, 0px));
+}
+
+.auth-headline {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(32px, 8vw, 46px);
+  font-weight: 800; color: #fff; line-height: 1.12;
+  letter-spacing: -1px; margin-bottom: 12px;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.3);
+}
+.auth-subline {
+  font-size: 15px; color: rgba(255,255,255,.68);
+  font-weight: 400; margin-bottom: 36px;
+  line-height: 1.55; max-width: 320px;
+}
+
+.auth-pills {
+  display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;
+}
+
+.pill-login {
+  width: 100%; padding: 18px 28px;
+  border-radius: 100px; border: none;
+  background: #fff; color: #0C0C14;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px; font-weight: 800;
+  cursor: pointer; letter-spacing: -.1px;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.32);
+  transition: transform .15s, box-shadow .15s, background .15s;
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  font-family: 'Inter', sans-serif;
 }
-.a-btn:active { transform: scale(0.98); }
-.a-btn-sec { background: transparent; color: var(--blue); border: 2px solid var(--blue); margin-top: -8px; }
+.pill-login:active { transform: scale(0.97); box-shadow: 0 2px 12px rgba(0,0,0,0.22); }
+.pill-login:hover  { background: #f0f0f0; }
 
-.a-footer { text-align: center; font-size: 13px; color: var(--muted); font-weight: 500; }
-.a-footer span { color: var(--blue); cursor: pointer; font-weight: 700; }
+.pill-g-icon { width: 20px; height: 20px; flex-shrink: 0; }
 
+.pill-create {
+  width: 100%; padding: 17px 28px;
+  border-radius: 100px;
+  border: 2px solid rgba(255,255,255,.55);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer; letter-spacing: -.1px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform .15s, background .15s, border-color .15s;
+}
+.pill-create:active { transform: scale(0.97); }
+.pill-create:hover  { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.75); }
+
+.auth-demo-link {
+  display: block; width: 100%; text-align: center;
+  background: none; border: none; padding: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; color: rgba(255,255,255,.42);
+  font-weight: 500; cursor: pointer;
+  letter-spacing: .01em; transition: color .2s;
+}
+.auth-demo-link:hover { color: rgba(255,255,255,.65); }
+
+.auth-trust-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; margin-top: 14px;
+  font-size: 11.5px; color: rgba(255,255,255,.28);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.auth-trust-bar svg { opacity: .38; flex-shrink: 0; }
+
+.auth-feats {
+  display: flex; gap: 20px; margin-bottom: 30px;
+}
+.auth-feat-chip {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600;
+  color: rgba(255,255,255,.7);
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  padding: 5px 12px; border-radius: 100px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.auth-feat-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #4A9AFF; flex-shrink: 0;
+}
+
+@media(min-width:900px){
+  .auth-bottom { max-width: 460px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
+  .auth-topbar { padding-left: 40px; }
+}
+
+/* ── GOOGLE SIGN-IN BOTTOM SHEET ────────────────────────────────────── */
+.google-sheet-bg {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,0.5);
+  display: none; align-items: flex-end; justify-content: center;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.google-sheet-bg.show { display: flex; }
+
+.google-sheet {
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  padding: 10px 28px calc(40px + env(safe-area-inset-bottom, 0px));
+  width: 100%; max-width: 480px;
+  animation: sheetUp .32s cubic-bezier(.4,0,.2,1);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+@media(min-width:900px){
+  .google-sheet-bg { align-items: center; }
+  .google-sheet { border-radius: 22px; padding-bottom: 36px; max-width: 420px; }
+}
+@keyframes sheetUp {
+  from { transform: translateY(80px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.gs-pill {
+  width: 36px; height: 4px; background: #E2E4F0;
+  border-radius: 4px; margin: 0 auto 22px;
+}
+@media(min-width:900px){ .gs-pill { display: none; } }
+
+.gs-brand {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+}
+.gs-brand-dot {
+  width: 36px; height: 36px; background: var(--blue); border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-weight: 800; font-size: 13px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-shadow: 0 4px 12px var(--glow); flex-shrink: 0;
+}
+.gs-brand-name {
+  font-size: 17px; font-weight: 800; color: var(--ink);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.gs-headline {
+  font-size: 22px; font-weight: 800; color: var(--ink);
+  letter-spacing: -.4px; margin-bottom: 6px; margin-top: 18px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.gs-sub {
+  font-size: 14px; color: var(--muted); margin-bottom: 28px;
+  line-height: 1.55; font-weight: 400;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.gs-google-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 16px 24px; border-radius: 14px;
+  background: #fff; border: 2px solid #E2E4F0;
+  font-size: 15px; font-weight: 700; color: var(--ink);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer; transition: background .18s, border-color .18s, transform .1s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+}
+.gs-google-btn:hover { background: #F7F8FF; border-color: #c5caff; }
+.gs-google-btn:active { transform: scale(0.98); }
+
+.gs-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 4px 0 16px; color: var(--muted); font-size: 12px;
+}
+.gs-divider-line { flex: 1; height: 1px; background: var(--border); }
+
+.gs-note {
+  font-size: 12px; color: var(--muted); text-align: center;
+  line-height: 1.6; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.gs-note a { color: var(--blue); text-decoration: none; font-weight: 600; }
+
+.gs-close {
+  position: absolute; top: 16px; right: 20px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); transition: background .15s;
+}
+.gs-close:hover { background: var(--border); }
+.gs-close-wrap { position: relative; }
 </style>
 </head>
 <body>
 
 <div class="init-loader" id="initLoader">
   <div class="loader-spinner"></div>
-  <p style="font-weight:700; color:var(--blue); font-family:'Lexend',sans-serif;">VynixRide</p>
+  <div style="font-family:'Syne',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
 </div>
 
+<!-- AUTH OVERLAY -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-bg"></div>
-  <div class="auth-card">
-    <div class="a-logo">
-      <div class="logo-mark" style="width:42px; height:42px;">V</div>
-      VynixRide
+  <div class="auth-scrim"></div>
+
+  <div class="auth-topbar">
+    <div class="auth-logo-dot">VX</div>
+    <div class="auth-logo-name">VynixRide</div>
+  </div>
+
+  <div class="auth-spacer"></div>
+
+  <div class="auth-bottom">
+    <div class="auth-feats">
+      <div class="auth-feat-chip"><div class="auth-feat-dot"></div>Fast booking</div>
+      <div class="auth-feat-chip"><div class="auth-feat-dot"></div>Live tracking</div>
+      <div class="auth-feat-chip"><div class="auth-feat-dot"></div>Secure pay</div>
     </div>
-    <div>
-      <h2 class="a-title">Ride in style,<br>whenever you need.</h2>
-      <p class="a-sub">Sign in or create an account to start your journey.</p>
-    </div>
-    
-    <div class="a-form" id="loginForm">
-      <input type="email" class="a-input" id="authEmail" placeholder="Email Address">
-      <input type="password" class="a-input" id="authPass" placeholder="Password">
-      <button class="a-btn" onclick="handleAuth()">
-        <span id="authBtnTxt">Continue</span>
-        <div class="spin" id="authSpin"></div>
+
+    <div class="auth-headline">Your city,<br>your ride.</div>
+    <div class="auth-subline">Fast, safe, and affordable rides anywhere in South Africa.</div>
+
+    <div class="auth-pills">
+      <button class="pill-login" id="btnLogin">
+        <svg class="pill-g-icon" viewBox="0 0 48 48">
+          <path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
+          <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/>
+          <path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/>
+          <path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/>
+        </svg>
+        Log In
       </button>
-      <div class="a-footer">Don't have an account? <span onclick="toggleAuthMode(true)">Sign Up</span></div>
+      <button class="pill-create" id="btnCreate">Create an Account</button>
+    </div>
+
+    <button class="auth-demo-link" id="skipAuth">Continue without an account →</button>
+
+    <div class="auth-trust-bar">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Your data is encrypted and never shared
     </div>
   </div>
 </div>
 
-<div class="shell">
-  <div class="sidebar">
-    <div class="logo"><div class="logo-mark">V</div><span class="l-txt">VynixRide</span></div>
-    <div class="nl act" data-tab="ride" onclick="switchTab('ride')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-      <span class="n-txt">Book Ride</span>
+<!-- GOOGLE SIGN-IN SHEET -->
+<div class="google-sheet-bg" id="googleSheetBg">
+  <div class="google-sheet">
+    <div class="gs-pill"></div>
+    <div class="gs-close-wrap">
+      <button class="gs-close" id="gsClose" aria-label="Close">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
-    <div class="nl" data-tab="trips" onclick="switchTab('trips')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-      <span class="n-txt">My Trips</span>
+    <div class="gs-brand">
+      <div class="gs-brand-dot">VX</div>
+      <div class="gs-brand-name">VynixRide</div>
     </div>
-    <div class="nl" data-tab="wallet" onclick="switchTab('wallet')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
-      <span class="n-txt">Wallet</span>
+    <div class="gs-headline" id="gsHeadline">Welcome back</div>
+    <div class="gs-sub" id="gsSub">Sign in with your Google account to continue booking rides and managing your wallet.</div>
+    <button class="gs-google-btn" id="gsGoogleBtn">
+      <svg width="20" height="20" viewBox="0 0 48 48">
+        <path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
+        <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/>
+        <path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/>
+        <path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/>
+      </svg>
+      <span id="gsBtnLabel">Continue with Google</span>
+    </button>
+    <div class="gs-divider">
+      <div class="gs-divider-line"></div>
+      <span>Google handles sign-in securely</span>
+      <div class="gs-divider-line"></div>
     </div>
-    <div class="nl" data-tab="account" onclick="switchTab('account')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-      <span class="n-txt">Account</span>
-    </div>
-    <div class="nav-spacer"></div>
-    <div class="user-mini" onclick="switchTab('account')">
-      <div class="av" id="sideAv">JD</div>
-      <div class="user-txt">
-        <span class="u-name" id="sideName">John Doe</span>
-        <span class="u-email" id="sideEmail">john@vynix.com</span>
-      </div>
-    </div>
-  </div>
-
-  <div id="tab-ride" class="map-wrap" style="display:block;">
-    <div id="map"></div>
-    <div class="locate-btn" onclick="geolocate()"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
-    
-    <div class="panel" id="bookPanel">
-      <div class="drag-handle"></div>
-      <div class="panel-header">
-        <h2 class="ptitle">Where to?</h2>
-        <button class="top-cbtn" id="confirmRideBtn" onclick="requestRide()">Confirm Ride</button>
-      </div>
-      <div class="geo-wrap" id="geoContainer"></div>
-      <div class="origin-row">
-        <div class="o-dot"></div>
-        <div>
-          <div class="o-main" id="originMain">Your Current Location</div>
-          <div class="o-sub" id="originSub">Fetching your address...</div>
-        </div>
-      </div>
-      <div class="slabel">Available Vehicles</div>
-      <div class="ride-list" id="rideList"></div>
-    </div>
-
-    <div class="search-overlay" id="searchOverlay">
-      <div class="circular-progress">
-        <svg><circle class="circ-bg" cx="70" cy="70" r="45"></circle><circle id="circFill" class="circ-fill" cx="70" cy="70" r="45"></circle></svg>
-        <span class="time-left" id="timeLeft">25</span>
-      </div>
-      <h3 class="search-title">Finding your Ride</h3>
-      <p class="search-sub">We're matching you with nearby Vynix partners...</p>
-      <button class="cancel-search-btn" onclick="cancelSearch()">Cancel Request</button>
-    </div>
-
-    <div class="active-panel" id="activeRidePanel">
-      <div class="ad-header">
-        <div class="ad-info">
-          <div class="ad-av" id="drvAv">SM</div>
-          <div>
-            <div class="rname" id="drvName">Samuel M.</div>
-            <div class="rmeta">★ 4.9 • Toyota Corolla</div>
-          </div>
-        </div>
-        <div class="ad-car-info">
-          <div class="rtbadge">Arriving in 4 min</div>
-          <div><span class="ad-plate">VX 492 GP</span></div>
-        </div>
-      </div>
-      <div class="ad-meta-grid">
-        <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">4.2 km</span></div>
-        <div class="ad-m-item"><span class="ad-m-lbl">Trip Cost</span><span class="ad-m-val" id="adFare">R54.00</span></div>
-        <div class="ad-m-item"><span class="ad-m-lbl">Payment</span><span class="ad-m-val" style="font-size:13px; color:var(--muted)">Wallet</span></div>
-      </div>
-      <div style="display:flex; gap:12px;">
-        <button class="mcancel" style="flex:1" onclick="cancelCurrentRide()">Cancel</button>
-        <button class="mok" style="flex:2">Message Driver</button>
-      </div>
+    <div class="gs-note">
+      By continuing you agree to VynixRide's Terms of Service.<br>
+      New users will have an account created automatically.
     </div>
   </div>
+</div>
 
-  <div id="tab-trips" class="fpage">
-    <h1 class="ph">Your Trips</h1>
-    <div id="tripsList"></div>
+<!-- LOC MODAL -->
+<div class="mbg" id="locModal">
+  <div class="modal">
+    <div class="mh">Enable Location</div>
+    <p style="font-size:14px; color:var(--muted); margin-bottom: 24px; line-height:1.5; text-align:left;">
+      VynixRide needs your location to find nearby drivers and accurately set your pickup point. Please turn on location services.
+    </p>
+    <div class="mbtns">
+      <button class="mok" onclick="requestLocation()">Grant Access</button>
+    </div>
   </div>
+</div>
 
-  <div id="tab-wallet" class="fpage">
-    <h1 class="ph">Wallet</h1>
-    <div class="w-hero">
-      <div class="wlabel">Vynix Balance</div>
-      <div class="wbal" id="walletBal">R0.00</div>
-      <div class="wbtns">
-        <button class="wbtn" onclick="openTopup()">+ Add Funds</button>
-        <button class="wbtn" onclick="window.showToast('Vouchers coming soon')">Voucher</button>
-      </div>
+<!-- TOP UP MODAL -->
+<div class="mbg" id="topUpModal">
+  <div class="modal">
+    <div class="mh">Add Funds</div>
+    <div class="input-wrap">
+      <div class="slabel">Top Up via Yoco (ZAR)</div>
+      <input type="number" id="yocoAmount" class="t-input" placeholder="e.g. 150">
     </div>
-    <h2 class="slabel" style="margin-top:10px;">Recent Activity</h2>
-    <div id="txList"></div>
+    <div class="mbtns" style="margin-bottom: 24px;">
+      <button class="mok" onclick="executeYocoTopUp()" style="width:100%">Pay with Yoco</button>
+    </div>
+    <div style="text-align:center; font-size:12px; color:var(--muted); margin-bottom: 16px;">— OR —</div>
+    <div class="input-wrap">
+      <div class="slabel">Redeem Voucher Code</div>
+      <input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform: uppercase;">
+    </div>
+    <div class="mbtns">
+      <button class="mcancel" onclick="closeTopUpModal()">Cancel</button>
+      <button class="mok" onclick="executeVoucher()">Redeem</button>
+    </div>
   </div>
+</div>
 
-  <div id="tab-account" class="fpage">
-    <h1 class="ph">Account</h1>
-
-    <div class="prof-banner">
-      <div class="prof-av-lg" id="accAv">JD</div>
-      <div>
-        <div class="prof-name" id="accName">John Doe</div>
-        <div class="prof-email" id="accEmail">john.doe@email.com</div>
-      </div>
+<!-- CONFIRM MODAL -->
+<div class="mbg" id="confirmModal">
+  <div class="modal">
+    <div class="mh">Confirm Booking</div>
+    <div class="mr"><span class="mrl">Ride</span><b class="mrv" id="m-type">—</b></div>
+    <div class="mr"><span class="mrl">Driver</span><b class="mrv" id="m-driver">—</b></div>
+    <div class="mr"><span class="mrl">ETA (Driver)</span><b class="mrv" id="m-eta">—</b></div>
+    <div class="mr"><span class="mrl">Trip Duration</span><b class="mrv" id="m-trip-time">—</b></div>
+    <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
+    <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
+    <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare">—</b></div>
+    <div class="mbtns">
+      <button class="mcancel" onclick="closeModal()">Cancel</button>
+      <button class="mok" id="bookBtn" onclick="initiateRidePayment()">Pay & Book <span class="spin" id="bspin"></span></button>
     </div>
+  </div>
+</div>
 
-    <div class="acc-section-title">Personal Settings</div>
-    <div class="ss">
-      <div class="sr">
-        <div class="srl"><div class="sri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div><span class="srt">Edit Profile</span></div>
-        <span class="sra">›</span>
-      </div>
-      <div class="sr">
-        <div class="srl"><div class="sri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div><span class="srt">Security & Privacy</span></div>
-        <span class="sra">›</span>
-      </div>
-    </div>
-
-    <div class="acc-section-title">Ride Preferences</div>
-    <div class="ss">
+<!-- ── NOTIFICATIONS MODAL ─────────────────────────────── -->
+<div class="mbg mbg-acc" id="notifModal">
+  <div class="modal" style="text-align:left;">
+    <div class="mh" style="font-family:'Outfit',sans-serif;">Notifications</div>
+    <div class="ss" style="margin-bottom:0; border-radius:14px;">
       <div class="notif-row">
         <div class="notif-left">
-          <div class="notif-title">Dark Mode</div>
-          <div class="notif-sub">Switch to dark map theme</div>
+          <div class="notif-title">Ride status updates</div>
+          <div class="notif-sub">Driver accepted, arriving, trip started & completed</div>
         </div>
-        <label class="ts"><input type="checkbox" id="darkToggle"><span class="ts-slider"></span></label>
+        <label class="ts"><input type="checkbox" id="notif-ride" checked><span class="ts-slider"></span></label>
       </div>
       <div class="notif-row">
         <div class="notif-left">
-          <div class="notif-title">Push Notifications</div>
-          <div class="notif-sub">Receive trip updates & news</div>
+          <div class="notif-title">Driver arriving alert</div>
+          <div class="notif-sub">Get notified when your driver is 2 minutes away</div>
         </div>
-        <label class="ts"><input type="checkbox" checked><span class="ts-slider"></span></label>
+        <label class="ts"><input type="checkbox" id="notif-arriving" checked><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row">
+        <div class="notif-left">
+          <div class="notif-title">Promotional offers</div>
+          <div class="notif-sub">Discounts, promo codes and special deals</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-promo"><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row">
+        <div class="notif-left">
+          <div class="notif-title">Weekly trip summary</div>
+          <div class="notif-sub">A weekly digest of your rides and spending</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-weekly"><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row" style="border:none;">
+        <div class="notif-left">
+          <div class="notif-title">Wallet activity</div>
+          <div class="notif-sub">Top-ups, deductions and voucher redemptions</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-wallet" checked><span class="ts-slider"></span></label>
       </div>
     </div>
+    <div class="mbtns" style="margin-top:20px;">
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closeNotifModal()">Close</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="saveNotifPrefs()">Save Preferences</button>
+    </div>
+  </div>
+</div>
 
-    <div class="acc-section-title">Payment Methods</div>
-    <div class="ss">
+<!-- ── PAYMENT METHODS MODAL ───────────────────────────── -->
+<div class="mbg mbg-acc" id="payModal">
+  <div class="modal" style="text-align:left;">
+    <div class="mh" style="font-family:'Outfit',sans-serif;">Payment Methods</div>
+    <div class="ss" style="margin-bottom:16px; border-radius:14px;">
       <div class="pm-card">
         <div class="pm-icon">💳</div>
         <div>
-          <div class="pm-label">•••• 4921</div>
-          <div class="pm-sub">Expires 12/26</div>
+          <div class="pm-label">Pay by Card (Yoco)</div>
+          <div class="pm-sub">Visa, Mastercard — secure checkout</div>
         </div>
-        <span class="pm-badge pm-default-badge">DEFAULT</span>
+        <span class="pm-badge pm-default-badge">Default</span>
       </div>
-      <div class="sr">
-        <div class="srl"><div class="sri" style="background:rgba(23,168,90,.07)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></div><span class="srt" style="color:var(--green)">Add Payment Method</span></div>
+      <div class="pm-card">
+        <div class="pm-icon">👛</div>
+        <div>
+          <div class="pm-label">VynixRide Wallet</div>
+          <div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div>
+        </div>
+        <span class="pm-badge" id="payModalWalletStatus">—</span>
       </div>
     </div>
+    <div style="background:rgba(26,59,255,.04); border:1.5px solid rgba(26,59,255,.12); border-radius:12px; padding:13px 15px; margin-bottom:16px;">
+      <div style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; color:var(--blue); margin-bottom:4px;">About payments</div>
+      <div style="font-family:'Outfit',sans-serif; font-size:12.5px; color:var(--muted); line-height:1.55;">
+        All card payments are processed securely via Yoco. Your card details are never stored on VynixRide servers. Top up your wallet for even faster checkout.
+      </div>
+    </div>
+    <div class="mbtns">
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePayModal()">Close</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="closePayModal(); openTopUpModal();">Top Up Wallet</button>
+    </div>
+  </div>
+</div>
 
-    <div class="acc-section-title">Saved Places</div>
-    <div class="ss">
+<!-- ── SAVED PLACES MODAL ──────────────────────────────── -->
+<div class="mbg mbg-acc" id="placesModal">
+  <div class="modal" style="text-align:left;">
+    <div class="mh" style="font-family:'Outfit',sans-serif;">Saved Places</div>
+    <div class="ss" style="margin-bottom:16px; border-radius:14px;">
       <div class="sp-row">
         <div class="sp-icon home">🏠</div>
         <div class="sp-field-wrap">
-          <div class="sp-field-label">Home Address</div>
-          <input type="text" class="sp-field" placeholder="Enter home address">
+          <div class="sp-field-label">Home</div>
+          <input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…">
         </div>
       </div>
       <div class="sp-row">
-        <div class="sp-icon work">💼</div>
+        <div class="sp-icon work">🏢</div>
         <div class="sp-field-wrap">
-          <div class="sp-field-label">Work Address</div>
-          <input type="text" class="sp-field" placeholder="Enter work address">
+          <div class="sp-field-label">Work</div>
+          <input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…">
+        </div>
+      </div>
+      <div class="sp-row" style="border:none;">
+        <div class="sp-icon fav">⭐</div>
+        <div class="sp-field-wrap">
+          <div class="sp-field-label">Favourite</div>
+          <input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…">
         </div>
       </div>
     </div>
+    <p style="font-family:'Outfit',sans-serif; font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.55;">
+      Saved places appear as quick-select options when booking a ride. They are stored to your account.
+    </p>
+    <div class="mbtns">
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePlacesModal()">Cancel</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="savePlaces()">Save Places</button>
+    </div>
+  </div>
+</div>
 
-    <div class="acc-section-title">Support & More</div>
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="circular-progress">
+    <svg viewBox="0 0 100 100">
+      <circle class="circ-bg" cx="50" cy="50" r="45"></circle>
+      <circle class="circ-fill" id="searchProgress" cx="50" cy="50" r="45"></circle>
+    </svg>
+    <div class="time-left" id="searchTimerTxt">60s</div>
+  </div>
+  <div class="search-title">Finding a driver...</div>
+  <div class="search-sub">Pinging nearby drivers. If no one accepts within 1 minute, the request will automatically cancel.</div>
+  <button class="cancel-search-btn" onclick="cancelSearch('Search cancelled by user')">Cancel Request</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="shell">
+  <aside class="sidebar" id="mainSidebar">
+    <div class="logo">
+      <div class="logo-mark">VX</div>
+      <span class="l-txt">VynixRide</span>
+    </div>
+    <div class="nl act" data-tab="ride" onclick="switchTab('ride')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span class="n-txt">Book a Ride</span>
+    </div>
+    <div class="nl" data-tab="trips" onclick="switchTab('trips')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="n-txt">My Trips</span>
+    </div>
+    <div class="nl" data-tab="wallet" onclick="switchTab('wallet')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>
+      <span class="n-txt">Wallet</span>
+    </div>
+    <div class="nav-spacer"></div>
+    <div class="nl" data-tab="account" onclick="switchTab('account')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="n-txt">Account</span>
+    </div>
+    <div class="user-mini" onclick="switchTab('account')">
+      <div class="av" id="sbAv">?</div>
+      <div class="user-txt">
+        <div class="u-name" id="sbName">Guest</div>
+        <div class="u-email" id="sbEmail">Not signed in</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="map-wrap" id="tab-ride">
+    <div id="map"></div>
+
+    <div class="panel" id="bookPanel">
+      <div class="drag-handle"></div>
+      
+      <div class="locate-btn" onclick="zoomToCurrent()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      </div>
+
+      <div class="panel-header">
+        <div class="ptitle">Where to?</div>
+        <button class="top-cbtn" id="confirmBtn" onclick="openModal()">Book</button>
+      </div>
+
+      <div class="origin-row">
+        <div class="o-dot"></div>
+        <div>
+          <div class="o-main">Your Location</div>
+          <div class="o-sub" id="originLabel">Detecting…</div>
+        </div>
+      </div>
+      <div class="geo-wrap" id="geoWrap"></div>
+      <div class="slabel">Available Rides</div>
+      <div class="ride-list" id="rideList"></div>
+    </div>
+
+    <div class="active-panel" id="activeRidePanel">
+      <div class="drag-handle"></div>
+      <div class="ad-header">
+        <div class="ad-info">
+          <div class="ad-av" id="adAv">K</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin-bottom:2px;" id="adName">Kabelo</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:500;">⭐ 4.9 · 1,240 rides</div>
+          </div>
+        </div>
+        <div class="ad-car-info">
+          <div style="font-size:14px;font-weight:600;" id="adCar">Toyota Corolla</div>
+          <div class="ad-plate" id="adPlate">ABC 123 L</div>
+        </div>
+      </div>
+      <div class="ad-meta-grid">
+        <div class="ad-m-item">
+          <span class="ad-m-lbl">Arriving in</span>
+          <span class="ad-m-val" id="adTime">3 min</span>
+        </div>
+        <div class="ad-m-item">
+          <span class="ad-m-lbl">Distance</span>
+          <span class="ad-m-val" id="adDist">1.2 km</span>
+        </div>
+        <div class="ad-m-item" style="align-items:flex-end;">
+          <span class="ad-m-lbl">Security PIN</span>
+          <span class="ad-m-val" style="color:var(--ink);">8492</span>
+        </div>
+      </div>
+      <button class="mcancel" style="width:100%;color:var(--red);border-color:rgba(229,53,53,.2);" onclick="cancelActiveRide()">Cancel Ride</button>
+    </div>
+  </div>
+
+  <div class="fpage" id="tab-trips">
+    <div class="ph">My Trips</div>
+    <div id="tripsList"></div>
+  </div>
+
+  <div class="fpage" id="tab-wallet">
+    <div class="ph">Wallet</div>
+    <div class="w-hero">
+      <div class="wlabel">Available Balance</div>
+      <div class="wbal" id="walletBal">R 0.00</div>
+      <div class="wbtns">
+        <button class="wbtn" onclick="openTopUpModal()">+ Top Up (Yoco / Voucher)</button>
+      </div>
+    </div>
+    <div class="slabel">Transactions</div>
+    <div id="txList"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ACCOUNT PAGE — Outfit font, full layout
+       ══════════════════════════════════════════ -->
+  <div class="fpage" id="tab-account">
+    <div class="ph">Account</div>
+
+    <div class="prof-banner">
+      <div class="prof-av-lg" id="profAv">?</div>
+      <div>
+        <div class="prof-name" id="profName">Guest</div>
+        <div class="prof-email" id="profEmail">Not signed in</div>
+      </div>
+    </div>
+
+    <div class="acc-section-title">My Account</div>
     <div class="ss">
-      <div class="sr"><div class="srl"><div class="sri"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><span class="srt">Help Center</span></div><span class="sra">›</span></div>
-      <div class="sr" onclick="logout()"><div class="srl"><div class="sri" style="background:rgba(229,53,53,.07)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></div><span class="srt" style="color:var(--red)">Log Out</span></div></div>
+      <div class="sr" id="authRow" onclick="handleAuthAction()">
+        <div class="srl">
+          <div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <span class="srt" id="authLabel">Sign in with Google</span>
+        </div><span class="sra">›</span>
+      </div>
     </div>
 
-    <div class="account-version">VynixRide App v2.4.0 (Gold)</div>
+    <div class="acc-section-title">Preferences</div>
+    <div class="ss">
+      <div class="sr" onclick="openNotifModal()">
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div>
+            <span class="srt">Notifications</span>
+            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;" id="notifSummary">Ride updates · Wallet activity</div>
+          </div>
+        </div><span class="sra">›</span>
+      </div>
+      <div class="sr" onclick="openPayModal()">
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+            </svg>
+          </div>
+          <div>
+            <span class="srt">Payment Methods</span>
+            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;">Card (Yoco) · Wallet</div>
+          </div>
+        </div><span class="sra">›</span>
+      </div>
+      <div class="sr" onclick="openPlacesModal()">
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <span class="srt">Saved Places</span>
+            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;" id="savedPlacesSummary">Home · Work · Favourite</div>
+          </div>
+        </div><span class="sra">›</span>
+      </div>
+    </div>
+
+    <div class="ss" id="signOutSection" style="display:none">
+      <div class="sr" onclick="doSignOut()">
+        <div class="srl">
+          <div class="sri" style="background:rgba(229,53,53,.08)">
+            <svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </div>
+          <span class="srt" style="color:var(--red); font-family:'Outfit',sans-serif;">Sign Out</span>
+        </div><span class="sra" style="color:var(--red)">›</span>
+      </div>
+    </div>
+
+    <div class="account-version">VynixRide v1.0 · South Africa 🇿🇦</div>
   </div>
-</div>
 
-<div class="bnav">
-  <div class="bni act" id="bn-ride" onclick="switchTab('ride')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Ride</span></div>
-  <div class="bni" id="bn-trips" onclick="switchTab('trips')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg><span>Trips</span></div>
-  <div class="bni" id="bn-wallet" onclick="switchTab('wallet')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg><span>Wallet</span></div>
-  <div class="bni" id="bn-account" onclick="switchTab('account')"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Account</span></div>
-</div>
-
-<div class="mbg" id="modalTopup">
-  <div class="modal">
-    <h3 class="mh">Top Up Wallet</h3>
-    <p class="mrl" style="text-align:left; margin-bottom:12px;">Enter amount to add (R10 - R5000)</p>
-    <div class="input-wrap">
-      <input type="number" class="t-input" id="topupAmt" placeholder="0.00">
+  <nav class="bnav">
+    <div class="bni act" id="bn-ride" onclick="switchTab('ride')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Ride
     </div>
-    <div class="mbtns">
-      <button class="mcancel" onclick="closeModal('modalTopup')">Cancel</button>
-      <button class="mok" onclick="processTopup()">Add Funds <div class="spin" id="topupSpin"></div></button>
+    <div class="bni" id="bn-trips" onclick="switchTab('trips')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Trips
     </div>
-  </div>
+    <div class="bni" id="bn-wallet" onclick="switchTab('wallet')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>
+      Wallet
+    </div>
+    <div class="bni" id="bn-account" onclick="switchTab('account')">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Account
+    </div>
+  </nav>
 </div>
 
-<div class="mbg" id="modalConfirm">
-  <div class="modal">
-    <h3 class="mh">Confirm Ride</h3>
-    <div class="mr"><span class="mrl">Vehicle</span><span class="mrv" id="mType">-</span></div>
-    <div class="mr"><span class="mrl">To</span><span class="mrv" id="mTo">-</span></div>
-    <div class="mr"><span class="mrl">Total Fare</span><span class="mrv" id="mFare" style="color:var(--blue);font-weight:800;">-</span></div>
-    <div class="mbtns">
-      <button class="mcancel" onclick="closeModal('modalConfirm')">Back</button>
-      <button class="mok" onclick="startSearch()">Request Now</button>
-    </div>
-  </div>
-</div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as fbOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getDatabase,ref,set,push,get,onValue,update}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
 
-<div class="toast" id="toast">Message here</div>
+const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
+const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
+let cu=null;
+window.db = db;
 
-<script>
-mapboxgl.accessToken = 'pk.eyJ1IjoicGhpbGlwLXByZXRvcml1cyIsImEiOiJjbHgxdTZvOGYwaTF1MnFxeXNtd2szMnp0In0.zVvM_Y97Lp8z2B2R8q647g';
+// --- REMOTE CONFIG & YOCO ---
+const rc = getRemoteConfig(app);
+rc.settings.minimumFetchIntervalMillis = 3600000;
+let yocoPublicKey = 'pk_test_ed3c54a6gOol69qa7f45';
 
-let user = null;
-let map, dMk, wULat, wULng, selType=null, searchTimer=null;
-const VEHICLES=[{id:'vx1',name:'Vynix Go',base:8.5,min:25,icon:'🚗',speed:3},{id:'vx2',name:'Vynix X',base:11.5,min:38,icon:'✨',speed:5},{id:'vx3',name:'Vynix Black',base:18.0,min:70,icon:'🕶️',speed:8}];
-const DEFAULT_ZOOM = 13.5;
+fetchAndActivate(rc).then(() => {
+  const remoteKey = getValue(rc, 'yoco_public_key').asString();
+  if(remoteKey) { yocoPublicKey = remoteKey; }
+}).catch(console.error);
 
-function geolocate(){
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(p=>{
-      wULat=p.coords.latitude; wULng=p.coords.longitude;
-      map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, padding:{bottom:getMobilePadding()}});
-      new mapboxgl.Marker({element: createMarker('cmarker')}).setLngLat([wULng,wULat]).addTo(map);
-      fetchAddr(wULng,wULat);
-    });
+// ── GOOGLE SHEET HELPERS ──────────────────────────────────────────────
+function openGoogleSheet(mode) {
+  const bg = document.getElementById('googleSheetBg');
+  const headline = document.getElementById('gsHeadline');
+  const sub = document.getElementById('gsSub');
+  const btnLabel = document.getElementById('gsBtnLabel');
+  if (mode === 'create') {
+    headline.textContent = 'Create your account';
+    sub.textContent = 'Sign up with Google to start booking rides, track your trips, and manage your wallet.';
+    btnLabel.textContent = 'Sign up with Google';
+  } else {
+    headline.textContent = 'Welcome back';
+    sub.textContent = 'Sign in with your Google account to continue booking rides and managing your wallet.';
+    btnLabel.textContent = 'Continue with Google';
   }
+  bg.classList.add('show');
+}
+function closeGoogleSheet() {
+  document.getElementById('googleSheetBg').classList.remove('show');
 }
 
-async function fetchAddr(ln,lt){
-  try{
-    const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${ln},${lt}.json?access_token=${mapboxgl.accessToken}`);
-    const d=await r.json();
-    if(d.features && d.features[0]){
-      const f=d.features[0];
-      document.getElementById('originMain').innerText=f.text;
-      document.getElementById('originSub').innerText=f.place_name.split(',').slice(1).join(',').trim();
-    }
-  }catch(e){}
-}
-
-function createMarker(cls){let e=document.createElement('div');e.className=cls;return e;}
-function getMobilePadding(){return window.innerWidth<900?320:0;}
-
-window.onload=()=>{
-  initApp();
-  map=new mapboxgl.Map({container:'map', style:'mapbox://styles/mapbox/light-v11', center:[28.2293, -25.7479], zoom:12, pitch:45});
-  const gc=new MapboxGeocoder({accessToken:mapboxgl.accessToken, mapboxgl:mapboxgl, placeholder:'Where are you going?', marker:false});
-  document.getElementById('geoContainer').appendChild(gc.onAdd(map));
-  
-  gc.on('result', e=>{
-    if(dMk) dMk.remove();
-    const coords = e.result.geometry.coordinates;
-    dMk=new mapboxgl.Marker({element:createMarker('dmarker')}).setLngLat(coords).addTo(map);
-    map.fitBounds([[Math.min(wULng,coords[0])-.008, Math.min(wULat,coords[1])-.008],[Math.max(wULng,coords[0])+.008, Math.max(wULat,coords[1])+.008]], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}});
-    renderRides(e.result.place_name);
-  });
+document.getElementById('btnLogin').onclick = () => openGoogleSheet('login');
+document.getElementById('btnCreate').onclick = () => openGoogleSheet('create');
+document.getElementById('skipAuth').onclick = () => {
+  document.getElementById('authOverlay').classList.remove('show');
+  window.showToast('Demo mode — rides won\'t be saved');
+};
+document.getElementById('gsClose').onclick = closeGoogleSheet;
+document.getElementById('googleSheetBg').addEventListener('click', e => {
+  if (e.target === document.getElementById('googleSheetBg')) closeGoogleSheet();
+});
+document.getElementById('gsGoogleBtn').onclick = () => {
+  closeGoogleSheet();
+  signInWithPopup(auth, gp).catch(() => window.showToast('Sign-in cancelled'));
 };
 
-function renderRides(dest){
-  const dist=getDist(wULng,wULat,dMk.getLngLat().lng,dMk.getLngLat().lat);
-  const list=document.getElementById('rideList'); list.innerHTML='';
-  VEHICLES.forEach(v=>{
-    const f=Math.max(v.min, dist*v.base).toFixed(2);
-    const c=document.createElement('div'); c.className='rcard';
-    c.onclick=()=>{
-      document.querySelectorAll('.rcard').forEach(r=>r.classList.remove('sel'));
-      c.classList.add('sel'); selType={...v, fare:f, dest};
-      document.getElementById('confirmRideBtn').style.display='block';
-    };
-    c.innerHTML=`<div class="rinfo"><div class="rav">${v.icon}</div><div><div class="rname">${v.name}</div><div class="rmeta">Nearby • ${v.speed}m away</div><div class="rtbadge">Reliable</div></div></div><div class="rprice">R${f}</div>`;
-    list.appendChild(c);
+// ── NOTIFICATIONS ─────────────────────────────────────────────────────
+window.openNotifModal = function() {
+  // load saved prefs from localStorage
+  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
+  ['ride','arriving','promo','weekly','wallet'].forEach(k => {
+    const el = document.getElementById(`notif-${k}`);
+    if(el && prefs[k] !== undefined) el.checked = prefs[k];
   });
+  document.getElementById('notifModal').classList.add('show');
+};
+window.closeNotifModal = function() {
+  document.getElementById('notifModal').classList.remove('show');
+};
+window.saveNotifPrefs = function() {
+  const prefs = {};
+  ['ride','arriving','promo','weekly','wallet'].forEach(k => {
+    const el = document.getElementById(`notif-${k}`);
+    if(el) prefs[k] = el.checked;
+  });
+  localStorage.setItem('vx_notif_prefs', JSON.stringify(prefs));
+  updateNotifSummary(prefs);
+  window.closeNotifModal();
+  window.showToast('Notification preferences saved');
+};
+function updateNotifSummary(prefs) {
+  const labels = {ride:'Ride updates', arriving:'Driver alerts', promo:'Offers', weekly:'Weekly digest', wallet:'Wallet activity'};
+  const active = Object.entries(prefs).filter(([,v])=>v).map(([k])=>labels[k]||k);
+  const el = document.getElementById('notifSummary');
+  if(el) el.textContent = active.length ? active.join(' · ') : 'All notifications off';
 }
+// init summary from saved
+(function(){
+  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{"ride":true,"arriving":true,"wallet":true}');
+  updateNotifSummary(prefs);
+})();
 
-function getDist(ln1,lt1,ln2,lt2){
-  const R=6371; const dLat=(lt2-lt1)*Math.PI/180; const dLon=(ln2-ln1)*Math.PI/180;
-  const a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lt1*Math.PI/180)*Math.cos(lt2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
-  return R*(2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
-}
+// ── PAYMENT METHODS ───────────────────────────────────────────────────
+window.openPayModal = function() {
+  // show wallet balance in pay modal
+  const walBal = document.getElementById('walletBal');
+  const payBal = document.getElementById('payModalWalletBal');
+  const payStatus = document.getElementById('payModalWalletStatus');
+  if(walBal && payBal) {
+    payBal.textContent = 'Balance: ' + walBal.textContent;
+    const balNum = parseFloat((walBal.textContent||'0').replace('R','').trim());
+    if(payStatus) {
+      if(balNum > 0) { payStatus.textContent = 'Funded'; payStatus.className = 'pm-badge'; }
+      else { payStatus.textContent = 'Empty'; payStatus.style.background='rgba(229,53,53,.08)'; payStatus.style.color='var(--red)'; }
+    }
+  }
+  document.getElementById('payModal').classList.add('show');
+};
+window.closePayModal = function() {
+  document.getElementById('payModal').classList.remove('show');
+};
 
-function requestRide(){
-  if(!selType) return;
-  document.getElementById('mType').innerText=selType.name;
-  document.getElementById('mTo').innerText=selType.dest;
-  document.getElementById('mFare').innerText=`R${selType.fare}`;
-  document.getElementById('modalConfirm').classList.add('show');
-}
+// ── SAVED PLACES ──────────────────────────────────────────────────────
+window.openPlacesModal = function() {
+  // load from Firebase or localStorage
+  const load = (data) => {
+    document.getElementById('sp-home').value = data.home || '';
+    document.getElementById('sp-work').value = data.work || '';
+    document.getElementById('sp-fav').value  = data.fav  || '';
+  };
+  if(cu) {
+    get(ref(db, `users/${cu.uid}/savedPlaces`)).then(snap => {
+      load(snap.val() || {});
+    }).catch(()=>{ load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); });
+  } else {
+    load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}'));
+  }
+  document.getElementById('placesModal').classList.add('show');
+};
+window.closePlacesModal = function() {
+  document.getElementById('placesModal').classList.remove('show');
+};
+window.savePlaces = async function() {
+  const data = {
+    home: document.getElementById('sp-home').value.trim(),
+    work: document.getElementById('sp-work').value.trim(),
+    fav:  document.getElementById('sp-fav').value.trim(),
+  };
+  localStorage.setItem('vx_saved_places', JSON.stringify(data));
+  if(cu) {
+    try { await set(ref(db, `users/${cu.uid}/savedPlaces`), data); } catch(e){}
+  }
+  // update summary label
+  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+  const sumEl = document.getElementById('savedPlacesSummary');
+  if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
+  window.closePlacesModal();
+  window.showToast('Saved places updated');
+};
+// init saved places summary
+(function(){
+  const data = JSON.parse(localStorage.getItem('vx_saved_places')||'{}');
+  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+  const sumEl = document.getElementById('savedPlacesSummary');
+  if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
+})();
 
-function startSearch(){
-  if(user.balance < parseFloat(selType.fare)){
-    window.showToast('Insufficient balance! Please top up.');
-    closeModal('modalConfirm');
-    switchTab('wallet');
+// ── YOCO ──────────────────────────────────────────────────────────────
+window.triggerYocoPayment = function(amount, description, onSuccessCallback, restoreModalId) {
+  if (typeof window.YocoSDK === 'undefined') {
+    window.showToast("Payment system currently unavailable.");
     return;
   }
-  closeModal('modalConfirm');
-  document.getElementById('searchOverlay').classList.add('show');
-  let time=25; let fill=document.getElementById('circFill');
-  fill.style.strokeDashoffset=0;
-  searchTimer=setInterval(()=>{
-    time--; document.getElementById('timeLeft').innerText=time;
-    fill.style.strokeDashoffset=283 - (283*(25-time)/25);
-    if(time<=0){ clearInterval(searchTimer); acceptRide(); }
-  },1000);
+  if (restoreModalId) document.getElementById(restoreModalId).classList.remove('show');
+  document.body.classList.add('yoco-active');
+  const isMobile = window.innerWidth < 900;
+  const bookPanel = document.getElementById('bookPanel');
+  const activePanel = document.getElementById('activeRidePanel');
+  let bookPanelWasVisible = false, activePanelWasVisible = false;
+  if (isMobile) {
+    if (bookPanel && bookPanel.style.display !== 'none') {
+      bookPanelWasVisible = true;
+      bookPanel.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      bookPanel.style.transform = 'translateY(110%)';
+      bookPanel.style.opacity = '0';
+    }
+    if (activePanel && activePanel.classList.contains('show')) {
+      activePanelWasVisible = true;
+      activePanel.classList.remove('show');
+    }
+  }
+  const restoreSheets = () => {
+    document.body.classList.remove('yoco-active');
+    if (isMobile) {
+      if (bookPanelWasVisible && bookPanel) { bookPanel.style.transform = ''; bookPanel.style.opacity = ''; }
+      if (activePanelWasVisible && activePanel) activePanel.classList.add('show');
+    }
+  };
+  const yoco = new window.YocoSDK({ publicKey: yocoPublicKey });
+  yoco.showPopup({
+    amountInCents: Math.round(amount * 100), currency: 'ZAR', name: 'VynixRide', description,
+    callback: function (result) {
+      restoreSheets();
+      if (result.error) {
+        if (restoreModalId) document.getElementById(restoreModalId).classList.add('show');
+        window.showToast("Payment failed: " + result.error.message);
+      } else { onSuccessCallback(result.id); }
+    }
+  });
+  if (window.innerWidth >= 900) {
+    setTimeout(() => {
+      const yocoContainers = document.querySelectorAll('div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"], body > div[style*="position: fixed"]');
+      yocoContainers.forEach(el => {
+        el.style.setProperty('z-index', '2147483647', 'important');
+        if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
+          el.style.setProperty('left', 'auto', 'important');
+          el.style.setProperty('right', '40px', 'important');
+          el.style.setProperty('transform', 'none', 'important');
+        }
+      });
+    }, 120);
+  }
+};
+
+function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function updateUI(u){
+  cu=u;
+  const n=u?(u.displayName||'Rider'):'Guest',e=u?u.email:'Not signed in',i=window.ini2(n);
+  ['sbAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=i;});
+  s('sbName',n);s('sbEmail',e);s('profName',n);s('profEmail',e);
+  const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
+  if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';}
+  else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
 }
 
-function acceptRide(){
+onAuthStateChanged(auth,async u=>{
+  document.getElementById('initLoader').classList.add('hide');
+  updateUI(u);
+  if(!u){
+    document.getElementById('authOverlay').classList.add('show');
+    return;
+  }
+  document.getElementById('authOverlay').classList.remove('show');
+  closeGoogleSheet();
+  const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
+  if(!ws.exists()) await set(ref(db,`users/${u.uid}/wallet/balance`), 0);
+  onValue(ref(db,`users/${u.uid}/trips`),snap=>{
+    renderTrips(Object.values(snap.val()||{}).reverse());
+  });
+  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{
+    const d=snap.val()||{balance:0};
+    document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;
+    renderTx(d.transactions||{});
+  });
+  // load saved places summary
+  get(ref(db,`users/${u.uid}/savedPlaces`)).then(snap=>{
+    const data = snap.val()||{};
+    const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+    const sumEl = document.getElementById('savedPlacesSummary');
+    if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
+  }).catch(()=>{});
+});
+
+function renderTrips(list){
+  const el=document.getElementById('tripsList');
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
+  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
+}
+function renderTx(obj){
+  const el=document.getElementById('txList'),list=Object.values(obj).reverse();
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
+  el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
+}
+
+window.initiateRidePayment = async function(){
+  if(!cu) { window.showToast('Please sign in first'); return; }
+  const r = window._rides.find(x => x.id === window._selId);
+  window.triggerYocoPayment(
+    r.price, `Ride: ${r.type}`,
+    async (token) => {
+      try {
+        const dest = window._destName.split(',').slice(0,2).join(',');
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
+        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
+        document.getElementById('bookPanel').style.display = 'none';
+        if(window._mapFly) window._mapFly();
+        window.startSearchTimer();
+      } catch(e) { window.showToast('Database error after payment.'); }
+    },
+    'confirmModal'
+  );
+};
+
+window.executeYocoTopUp = async function() {
+  if(!cu) { window.showToast("Sign in first."); return; }
+  const amt = parseFloat(document.getElementById('yocoAmount').value);
+  if(isNaN(amt) || amt < 10) { window.showToast("Enter a valid amount (Min R10)"); return; }
+  window.triggerYocoPayment(amt, 'Wallet Top-Up', async (token) => {
+    try {
+      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
+      const snap = await get(wRef);
+      const curr = snap.val() || 0;
+      await update(ref(db, `users/${cu.uid}/wallet`), { balance: curr + amt });
+      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
+      document.getElementById('yocoAmount').value = '';
+      window.showToast(`Successfully added R${amt.toFixed(2)}`);
+    } catch(e) { window.showToast("Database error saving top-up."); }
+  }, 'topUpModal');
+};
+
+window.executeVoucher = async function() {
+  if(!cu) { window.showToast("Sign in first."); return; }
+  const code = document.getElementById('voucherCode').value.trim().toUpperCase();
+  if(!code) { window.showToast("Please enter a code"); return; }
+  try {
+    const vRef = ref(db, `vouchers/${code}`);
+    const snap = await get(vRef);
+    if(snap.exists()) {
+      const data = snap.val();
+      if(data.used) { window.showToast("Voucher has already been used."); return; }
+      const amt = parseFloat(data.amount);
+      if(isNaN(amt)) { window.showToast("Invalid voucher data."); return; }
+      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
+      const wSnap = await get(wRef);
+      const curr = wSnap.val() || 0;
+      const updates = {};
+      updates[`users/${cu.uid}/wallet/balance`] = curr + amt;
+      updates[`vouchers/${code}/used`] = true;
+      updates[`vouchers/${code}/redeemedBy`] = cu.uid;
+      await update(ref(db), updates);
+      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Redeemed Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
+      window.closeTopUpModal();
+      window.showToast(`R${amt.toFixed(2)} added from voucher!`);
+      document.getElementById('voucherCode').value = '';
+    } else { window.showToast("Invalid voucher code."); }
+  } catch(e) { window.showToast("Error processing voucher."); }
+};
+
+window.handleAuthAction=()=>{ if(cu)return; openGoogleSheet('login'); };
+window.doSignOut=async()=>{
+  await fbOut(auth);
+  document.getElementById('tripsList').innerHTML='';
+  document.getElementById('txList').innerHTML='';
+  document.getElementById('walletBal').textContent='R 0.00';
+  window.showToast('Signed out');
+  document.getElementById('authOverlay').classList.add('show');
+};
+
+// Active Driver Polling
+let realDrivers = {}, driverMarkersObj = {}, noDriverToastShown = false;
+import { onValue as rtdbOnValue, ref as rtdbRef } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+setTimeout(() => {
+  if (window.db) {
+    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => { realDrivers = snap.val() || {}; });
+    setInterval(() => {
+      const driverIds = Object.keys(realDrivers);
+      if (driverIds.length === 0) {
+        if (!noDriverToastShown) { window.showToast('No drivers currently available nearby.'); noDriverToastShown = true; }
+      } else { noDriverToastShown = false; }
+      Object.keys(driverMarkersObj).forEach(id => {
+        if(!realDrivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
+      });
+      driverIds.forEach(id => {
+        const d = realDrivers[id];
+        if(d.lat && d.lng && window.mapboxgl) {
+          if(driverMarkersObj[id]) { driverMarkersObj[id].setLngLat([d.lng, d.lat]); }
+          else {
+            const el = document.createElement('div'); el.className = 'car-marker'; el.innerHTML = '🚕';
+            driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window._mapInstance);
+          }
+        }
+      });
+    }, 5000);
+  }
+}, 2000);
+</script>
+
+<script>
+window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
+
+const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
+mapboxgl.accessToken=TK;
+const DLNG=28.9934,DLAT=-24.1991;
+const DEFAULT_ZOOM = 15.5;
+
+const map=new mapboxgl.Map({
+  container:'map', style:'mapbox://styles/mapbox/light-v11',
+  center:[DLNG,DLAT],zoom:DEFAULT_ZOOM, attributionControl:false, logoPosition:'bottom-right'
+});
+window._mapInstance = map;
+map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
+map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
+
+const oEl=document.createElement('div'); oEl.className='cmarker';
+const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
+let dMk=null,wULng=DLNG,wULat=DLAT,destName='';
+let searchInterval = null, searchTimeout = null;
+
+function getMobilePadding() { return window.innerWidth < 900 ? window.innerHeight * 0.40 : 55; }
+window._mapFly = () => map.flyTo({ center: [wULng, wULat], zoom: DEFAULT_ZOOM, padding: {bottom: 0} });
+
+window.zoomToCurrent = function() {
+  if(wULng && wULat) { map.flyTo({center: [wULng, wULat], zoom: DEFAULT_ZOOM, speed: 1.2, padding: {bottom: getMobilePadding()}}); }
+}
+
+window.requestLocation = function() {
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      document.getElementById('locModal').classList.remove('show');
+      const{latitude:la,longitude:lo}=pos.coords;
+      wULng=lo; wULat=la; oMk.setLngLat([lo,la]);
+      map.flyTo({center:[lo,la],zoom:DEFAULT_ZOOM,speed:1.2, padding:{bottom: getMobilePadding()}});
+      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lo},${la}.json?access_token=${TK}&types=place,neighborhood,address&limit=1`)
+        .then(r=>r.json()).then(d=>{
+          const lbl=d.features?.[0]?.place_name||`${la.toFixed(4)},${lo.toFixed(4)}`;
+          document.getElementById('originLabel').textContent=lbl.split(',').slice(0,2).join(',');
+        });
+    }, err => {
+      document.getElementById('locModal').classList.add('show');
+      document.getElementById('originLabel').textContent='Mokopane, Limpopo (Default)';
+    });
+  } else {
+    window.showToast("Geolocation not supported.");
+    document.getElementById('originLabel').textContent='Mokopane, Limpopo';
+  }
+}
+window.requestLocation();
+
+const geocoder=new MapboxGeocoder({
+  accessToken:TK,mapboxgl:mapboxgl, placeholder:'Search destination…', countries:'ZA',
+  proximity:{longitude:DLNG,latitude:DLAT}, types:'poi,address,place,neighborhood,locality', flyTo:false,marker:false,
+});
+document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
+
+function clearRoute(){
+  if(map.getLayer('route'))map.removeLayer('route');
+  if(map.getSource('route'))map.removeSource('route');
+}
+function drawRoute(o,d){
+  fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${o[0]},${o[1]};${d[0]},${d[1]}?geometries=geojson&access_token=${TK}`)
+    .then(r=>r.json()).then(data=>{
+      if(!data.routes?.length)return;
+      const geom=data.routes[0].geometry;
+      window._distKm=data.routes[0].distance/1000;
+      window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
+      clearRoute();
+      map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:geom}});
+      map.addLayer({id:'route',type:'line',source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#1A3BFF','line-width':4.5,'line-opacity':.72} });
+      updatePrices();
+    }).catch(()=>{ window._distKm=haversine(wULat,wULng,d[1],d[0]); window._tripDurationMins=0; updatePrices(); });
+}
+
+geocoder.on('result',e=>{
+  const[lng,lat]=e.result.geometry.coordinates;
+  destName=e.result.place_name||e.result.text;
+  window._destName=destName;
+  if(dMk)dMk.remove();
+  const de=document.createElement('div'); de.className='dmarker';
+  dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
+  map.fitBounds([[Math.min(wULng,lng)-.008,Math.min(wULat,lat)-.008],[Math.max(wULng,lng)+.008,Math.max(wULat,lat)+.008]],
+    {padding:{top:55,bottom:getMobilePadding(),left:55,right:55},duration:850,essential:true});
+  drawRoute([wULng,wULat],[lng,lat]);
+  const r=window._rides.find(x=>x.id===window._selId);
+  const btn = document.getElementById('confirmBtn');
+  btn.style.display = 'block'; btn.textContent = `Book ${r.type}`;
+});
+geocoder.on('clear',()=>{
+  if(dMk){dMk.remove();dMk=null;}
+  clearRoute(); destName=''; window._destName='';
+  document.getElementById('confirmBtn').style.display = 'none';
+  window._distKm=0; window._tripDurationMins=0; renderRides();
+  map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}});
+});
+
+const BASE=[
+  {id:1,type:'VynixGo',     baseFare:20,perKm:5.5, capacity:4, driver:'Kabelo P.', specs:'Compact · Economy'},
+  {id:2,type:'VynixComfort',baseFare:30,perKm:8,   capacity:4, driver:'Thabo M.',  specs:'Newer cars · Legroom'},
+  {id:3,type:'VynixXL',     baseFare:45,perKm:12,  capacity:6, driver:'Lesego R.', specs:'SUVs & Vans · 6 seats'}
+];
+window._rides=BASE.map(r=>({...r,price:r.baseFare, time: '3 min'}));
+window._selId=1; window._distKm=0; window._destName=''; window._tripDurationMins=0;
+
+function haversine(la1,lo1,la2,lo2){
+  const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function updatePrices(){
+  const km=window._distKm||0;
+  window._rides=BASE.map(r=>({
+    ...r, price:Math.round((r.baseFare+r.perKm*km)*10)/10, time: `${3 + (r.id - 1)} min`,
+    tripTime: window._tripDurationMins ? `${window._tripDurationMins} min` : 'N/A'
+  }));
+  renderRides();
+}
+function renderRides(){
+  document.getElementById('rideList').innerHTML=window._rides.map(r=>`
+    <div class="rcard ${r.id===window._selId?'sel':''}" onclick="selRide(${r.id})">
+      <div class="rinfo">
+        <div class="rav">${ini2(r.driver)}</div>
+        <div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">👤${r.capacity}</span></div>
+        <div class="rmeta">${r.specs}</div></div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="rprice">R ${r.price.toFixed(2)}</div>
+        <div class="rtbadge">${r.time}</div>
+      </div>
+    </div>`).join('');
+}
+
+window.selRide=function(id){
+  window._selId=id; renderRides();
+  const r=window._rides.find(x=>x.id===id);
+  if(window._destName) { document.getElementById('confirmBtn').textContent=`Book ${r.type}`; }
+};
+
+window.openModal=function(){
+  if(!window._destName){window.showToast('Search for a destination first');return;}
+  const r=window._rides.find(x=>x.id===window._selId);
+  document.getElementById('m-type').textContent=r.type;
+  document.getElementById('m-driver').textContent=r.driver;
+  document.getElementById('m-eta').textContent=r.time;
+  document.getElementById('m-trip-time').textContent=r.tripTime || 'N/A';
+  document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
+  document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+  document.getElementById('confirmModal').classList.add('show');
+};
+window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
+
+window.openTopUpModal = () => document.getElementById('topUpModal').classList.add('show');
+window.closeTopUpModal = () => document.getElementById('topUpModal').classList.remove('show');
+
+window.cancelSearch = function(msg = 'Search cancelled.') {
+  clearInterval(searchInterval); clearTimeout(searchTimeout);
   document.getElementById('searchOverlay').classList.remove('show');
-  document.getElementById('bookPanel').style.display='none';
-  const ap=document.getElementById('activeRidePanel'); ap.style.display='flex';
-  setTimeout(()=>ap.classList.add('show'),50);
-  document.getElementById('adFare').innerText=`R${selType.fare}`;
-  const dist=getDist(wULng,wULat,dMk.getLngLat().lng,dMk.getLngLat().lat);
-  document.getElementById('adDist').innerText=`${dist.toFixed(1)} km`;
-  
-  // Create car moving on map (simulated)
-  simulateCar();
-  
-  // Deduct Balance
-  user.balance -= parseFloat(selType.fare);
-  user.trips.unshift({id:'TR'+Math.floor(Math.random()*9999), type:selType.name, fare:selType.fare, date:new Date().toLocaleDateString(), status:'Completed'});
-  user.tx.unshift({label:'Ride Fare', date:new Date().toLocaleDateString(), amt:selType.fare, type:'dr'});
-  save(); syncUI();
-}
+  document.getElementById('bookPanel').style.display = 'flex';
+  window.showToast(msg);
+  if(dMk) {
+    map.fitBounds([
+      [Math.min(wULng, dMk.getLngLat().lng)-.008, Math.min(wULat, dMk.getLngLat().lat)-.008],
+      [Math.max(wULng, dMk.getLngLat().lng)+.008, Math.max(wULat, dMk.getLngLat().lat)+.008]
+    ], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}});
+  }
+};
 
-function simulateCar(){
-  let carEl = document.createElement('div'); carEl.className='car-marker'; carEl.innerHTML='🚗';
-  let carMk = new mapboxgl.Marker({element: carEl}).setLngLat([wULng + 0.005, wULat + 0.005]).addTo(map);
-}
+window.startSearchTimer = function() {
+  const overlay = document.getElementById('searchOverlay');
+  overlay.classList.add('show');
+  let timeLeft = 60;
+  const circle = document.getElementById('searchProgress');
+  const text = document.getElementById('searchTimerTxt');
+  circle.style.strokeDashoffset = "0"; text.textContent = "60s";
+  clearInterval(searchInterval); clearTimeout(searchTimeout);
+  searchInterval = setInterval(() => {
+    timeLeft--; text.textContent = timeLeft + "s";
+    const offset = 283 - (timeLeft / 60) * 283;
+    circle.style.strokeDashoffset = offset;
+    if(timeLeft <= 0) clearInterval(searchInterval);
+  }, 1000);
+  searchTimeout = setTimeout(() => {
+    window.cancelSearch('No drivers accepted. Payment will be refunded.');
+  }, 60000);
+};
 
-function cancelSearch(){
-  clearInterval(searchTimer);
-  document.getElementById('searchOverlay').classList.remove('show');
-}
-
-window.cancelCurrentRide = function() {
+window.cancelActiveRide = function() {
   const ap = document.getElementById('activeRidePanel');
   ap.classList.remove('show');
   setTimeout(() => {
@@ -978,104 +1826,19 @@ window.switchTab=function(name){
     const bn=document.getElementById(`bn-${t}`);if(bn)bn.classList.toggle('act',t===name);
   });
   document.querySelectorAll('.nl[data-tab]').forEach(el=>el.classList.toggle('act',el.dataset.tab===name));
-  if(name==='ride') setTimeout(()=>map.resize(),100);
+  if(name==='ride') setTimeout(()=>map.resize(),40);
 };
 
-window.showToast=function(m){
-  const t=document.getElementById('toast'); t.innerText=m; t.classList.add('show');
+window.showToast=function(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3000);
 };
 
-function closeModal(id){document.getElementById(id).classList.remove('show');}
-function openTopup(){document.getElementById('modalTopup').classList.add('show');}
-
-// ── YOCO INTEGRATION ───────────────────────────────────────────
-const yoco = new window.YocoSDK({ publicKey: 'pk_test_ed3c84a6y9705un9S764' });
-
-window.processTopup = function() {
-  const amt = parseFloat(document.getElementById('topupAmt').value);
-  if(isNaN(amt) || amt < 10){ window.showToast('Minimum R10'); return; }
-  
-  const btn = document.querySelector('#modalTopup .mok');
-  const spin = document.getElementById('topupSpin');
-  btn.disabled = true; spin.classList.add('on');
-
-  yoco.showPaymentWidget({
-    amountInCents: amt * 100,
-    currency: 'ZAR',
-    name: 'VynixRide Wallet',
-    description: 'Top up your account balance',
-    callback: function (result) {
-      btn.disabled = false; spin.classList.remove('on');
-      if (result.error) {
-        window.showToast("Payment failed: " + result.error.message);
-      } else {
-        user.balance += amt;
-        user.tx.unshift({label:'Wallet Topup', date:new Date().toLocaleDateString(), amt:amt.toFixed(2), type:'cr'});
-        save(); syncUI();
-        closeModal('modalTopup');
-        window.showToast(`Success! R${amt} added.`);
-      }
-    }
-  });
-};
-
-// ── AUTH & CORE ──────────────────────────────────────────────
-function initApp(){
-  const stored = localStorage.getItem('vynix_user');
-  setTimeout(() => {
-    document.getElementById('initLoader').classList.add('hide');
-    if(stored){ user = JSON.parse(stored); syncUI(); }
-    else { document.getElementById('authOverlay').classList.add('show'); }
-  }, 1800);
-}
-
-window.handleAuth = function(){
-  const e = document.getElementById('authEmail').value;
-  const p = document.getElementById('authPass').value;
-  if(!e || !p){ window.showToast('Please fill all fields'); return; }
-  
-  const spin = document.getElementById('authSpin');
-  spin.classList.add('on');
-  
-  setTimeout(() => {
-    user = { 
-      name: e.split('@')[0], email: e, balance: 0, 
-      trips: [], tx: [] 
-    };
-    save(); syncUI();
-    document.getElementById('authOverlay').classList.remove('show');
-    window.showToast('Welcome to VynixRide!');
-  }, 1500);
-};
-
-function syncUI(){
-  if(!user) return;
-  const initials = user.name.split(' ').map(n=>n[0]).join('').toUpperCase().substring(0,2);
-  document.getElementById('sideName').innerText = user.name;
-  document.getElementById('sideEmail').innerText = user.email;
-  document.getElementById('accName').innerText = user.name;
-  document.getElementById('accEmail').innerText = user.email;
-  document.getElementById('sideAv').innerText = initials;
-  document.getElementById('accAv').innerText = initials;
-  document.getElementById('drvAv').innerText = initials;
-  document.getElementById('walletBal').innerText = `R${user.balance.toFixed(2)}`;
-  
-  const tl = document.getElementById('tripsList'); tl.innerHTML = '';
-  if(user.trips.length === 0) tl.innerHTML = '<div class="empty"><div class="empty-ico">📍</div><p>No trips yet. Ready to go?</p></div>';
-  user.trips.forEach(t => {
-    tl.innerHTML += `<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.date} • ${t.status}</div></div><div class="tc-fare">R${t.fare}</div></div><div class="tc-badge">✓ Payment Verified</div></div>`;
-  });
-
-  const xl = document.getElementById('txList'); xl.innerHTML = '';
-  user.tx.forEach(x => {
-    xl.innerHTML += `<div class="txi"><div><div class="txl">${x.label}</div><div class="txd">${x.date}</div></div><div class="txa ${x.type}">${x.type==='cr'?'+':'-'}R${x.amt}</div></div>`;
-  });
-}
-
-function save(){ localStorage.setItem('vynix_user', JSON.stringify(user)); }
-window.logout = function(){ localStorage.clear(); location.reload(); };
-
+const mapWrap = document.getElementById('tab-ride');
+if(window.ResizeObserver) { new ResizeObserver(() => { if(map) map.resize(); }).observe(mapWrap); }
+renderRides();
+document.getElementById('tab-ride').style.display='block';
 </script>
 </body>
 </html>
