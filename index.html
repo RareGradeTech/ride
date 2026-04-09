@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VynixRide</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
@@ -20,13 +20,26 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);}
 
-/* ── YOCO IFRAME / OVERLAY ALWAYS ON TOP ─────────────────────────── */
+/* ── YOCO — always on top, right-aligned on desktop ─────────────────── */
 iframe[src*="yoco"],
 div[class*="yoco"],
 div[id*="yoco"],
 .yoco-popup,
 .yoco-modal,
-.yoco-overlay { z-index: 99999 !important; }
+.yoco-overlay {
+  z-index: 99999 !important;
+}
+/* Push Yoco popup to the right on desktop so it never sits over the booking panel */
+@media(min-width:900px){
+  .yoco-popup,
+  .yoco-modal,
+  div[class*="yoco-popup"],
+  div[id*="yoco-popup"] {
+    left: auto !important;
+    right: 40px !important;
+    transform: none !important;
+  }
+}
 
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative;}
 
@@ -306,12 +319,13 @@ div[id*="yoco"],
 .srt{font-size:14px;font-weight:500;}
 .sra{color:var(--muted);font-size:13px;}
 
-/* ── AUTH OVERLAY — REDESIGNED ─────────────────────────────────────── */
+/* ── AUTH OVERLAY — Plus Jakarta Sans font ─────────────────────────── */
 .auth-overlay{
   position:fixed;inset:0;z-index:998;
   background:linear-gradient(140deg,#0818A8 0%,#0C0C1F 55%,#1A0A3C 100%);
   display:none;align-items:center;justify-content:center;padding:24px;
   opacity:0;transition:opacity .35s;
+  font-family:'Plus Jakarta Sans',sans-serif;
 }
 .auth-overlay.show{display:flex;opacity:1;}
 
@@ -343,21 +357,22 @@ div[id*="yoco"],
 .auth-mark{
   width:50px;height:50px;background:var(--blue);border-radius:14px;
   display:flex;align-items:center;justify-content:center;
-  font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:800;color:#fff;
   box-shadow:0 8px 24px rgba(26,59,255,.55);
   flex-shrink:0;
 }
 .auth-brand-name{
-  font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;
   color:#fff;letter-spacing:-.4px;
 }
 
 /* headline */
 .auth-headline{
-  font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:22px;font-weight:800;
   color:#fff;text-align:center;line-height:1.3;margin-bottom:8px;letter-spacing:-.3px;
 }
 .auth-sub{
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:13.5px;color:rgba(255,255,255,.55);text-align:center;
   margin-bottom:32px;line-height:1.55;font-weight:400;
 }
@@ -368,6 +383,7 @@ div[id*="yoco"],
 }
 .auth-feat{
   display:flex;align-items:center;gap:6px;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:12px;color:rgba(255,255,255,.5);font-weight:500;
 }
 .auth-feat-dot{
@@ -382,7 +398,7 @@ div[id*="yoco"],
   border:none;
   border-radius:14px;
   font-size:15px;font-weight:700;cursor:pointer;
-  font-family:'DM Sans',sans-serif;transition:.2s;color:#1a1a2e;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:.2s;color:#1a1a2e;
   box-shadow:0 4px 20px rgba(0,0,0,.28);
   letter-spacing:.01em;
 }
@@ -394,26 +410,27 @@ div[id*="yoco"],
   display:flex;align-items:center;gap:12px;margin:20px 0;
 }
 .auth-sep-line{flex:1;height:1px;background:rgba(255,255,255,.1);}
-.auth-sep-txt{font-size:12px;color:rgba(255,255,255,.3);white-space:nowrap;}
+.auth-sep-txt{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;color:rgba(255,255,255,.3);white-space:nowrap;}
 
 .auth-skip{
   display:block;width:100%;text-align:center;padding:13px;
   border:1px solid rgba(255,255,255,.14);border-radius:12px;
   color:rgba(255,255,255,.55);font-size:13px;font-weight:500;
   cursor:pointer;transition:.2s;background:transparent;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Plus Jakarta Sans',sans-serif;
 }
 .auth-skip:hover{border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.8);background:rgba(255,255,255,.05);}
 
 /* trust line */
 .auth-trust{
   text-align:center;margin-top:20px;
+  font-family:'Plus Jakarta Sans',sans-serif;
   font-size:11.5px;color:rgba(255,255,255,.28);
   display:flex;align-items:center;justify-content:center;gap:5px;
 }
 .auth-trust-icon{font-size:12px;}
 
-/* modal — z-index raised to 500 so it's above panels but below Yoco (99999) */
+/* modal — z-index 500 so above panels but below Yoco (99999) */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
   display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 @media(min-width:900px){.mbg{align-items:center;}}
@@ -814,6 +831,23 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
       }
     }
   });
+
+  // After Yoco renders, push it to the right on desktop
+  if (window.innerWidth >= 900) {
+    setTimeout(() => {
+      const yocoContainers = document.querySelectorAll(
+        'div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"]'
+      );
+      yocoContainers.forEach(el => {
+        el.style.setProperty('z-index', '99999', 'important');
+        if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
+          el.style.setProperty('left', 'auto', 'important');
+          el.style.setProperty('right', '40px', 'important');
+          el.style.setProperty('transform', 'none', 'important');
+        }
+      });
+    }, 120);
+  }
 }
 
 function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
