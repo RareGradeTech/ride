@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VynixRide</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
@@ -313,19 +313,202 @@ body.yoco-active .bnav {
 .t-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; outline: none; transition: .2s; }
 .t-input:focus { border-color: var(--blue); }
 
-/* account */
-.prof-banner{background:linear-gradient(135deg,#1E40FF,var(--blue)); border-radius:20px;padding:22px 20px;margin-bottom:22px; display:flex;align-items:center;gap:14px;color:#fff;}
-.prof-av-lg{width:58px;height:58px;border-radius:50%; background:rgba(255,255,255,.25);color:#fff; display:flex;align-items:center;justify-content:center; font-size:21px;font-weight:800;font-family:'Syne',sans-serif; flex-shrink:0;border:2px solid rgba(255,255,255,.4);}
-.prof-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
-.prof-email{font-size:12px;opacity:.75;margin-top:2px;}
-.ss{background:var(--card);border-radius:16px;margin-bottom:12px; overflow:hidden;border:1px solid var(--border);}
-.sr{display:flex;align-items:center;justify-content:space-between; padding:15px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;}
+/* ═══════════════════════════════════════════════
+   ACCOUNT PAGE — Outfit font, fresh styling
+   ═══════════════════════════════════════════════ */
+#tab-account { font-family: 'Outfit', sans-serif; }
+#tab-account .ph {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px; font-weight: 800;
+  letter-spacing: -.6px; margin-bottom: 20px;
+}
+.prof-banner{
+  background: linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff);
+  border-radius: 20px; padding: 22px 20px; margin-bottom: 20px;
+  display: flex; align-items: center; gap: 14px; color: #fff;
+  position: relative; overflow: hidden;
+}
+.prof-banner::after {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,255,255,.06); pointer-events: none;
+}
+.prof-av-lg{
+  width: 58px; height: 58px; border-radius: 16px;
+  background: rgba(255,255,255,.22); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  flex-shrink: 0; border: 2px solid rgba(255,255,255,.35);
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+}
+.prof-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 19px; font-weight: 700; letter-spacing: -.2px;
+}
+.prof-email { font-size: 13px; opacity: .72; margin-top: 3px; font-weight: 400; }
+
+/* Account section group */
+.acc-section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px; font-weight: 700;
+  color: var(--muted); letter-spacing: .1em;
+  text-transform: uppercase;
+  margin: 18px 0 8px 4px;
+}
+.ss{
+  background: var(--card); border-radius: 18px; margin-bottom: 12px;
+  overflow: hidden; border: 1px solid var(--border);
+  box-shadow: 0 2px 10px rgba(0,0,0,.04);
+}
+.sr{
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 15px 18px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .15s; user-select: none;
+}
 .sr:last-child{border:none;}
-.sr:hover{background:var(--bg);}
-.srl{display:flex;align-items:center;gap:11px;}
-.sri{width:30px;height:30px;border-radius:8px;background:rgba(26,59,255,.08); display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.srt{font-size:14px;font-weight:500;}
-.sra{color:var(--muted);font-size:13px;}
+.sr:hover{background: rgba(26,59,255,.03);}
+.sr:active{background: rgba(26,59,255,.06);}
+.srl{display:flex;align-items:center;gap:12px;}
+.sri{
+  width: 34px; height: 34px; border-radius: 10px;
+  background: rgba(26,59,255,.07);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.srt{
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px; font-weight: 500; color: var(--ink);
+}
+.sra{ color: var(--muted); font-size: 16px; font-weight: 400; }
+
+/* ── Toggle Switch ──────────────────────────────── */
+.ts { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+.ts input { opacity: 0; width: 0; height: 0; position: absolute; }
+.ts-slider {
+  position: absolute; inset: 0; background: var(--border);
+  border-radius: 26px; cursor: pointer; transition: background .22s;
+}
+.ts-slider::before {
+  content: ''; position: absolute;
+  width: 20px; height: 20px; left: 3px; top: 3px;
+  background: #fff; border-radius: 50%; transition: transform .22s;
+  box-shadow: 0 1px 5px rgba(0,0,0,.22);
+}
+.ts input:checked + .ts-slider { background: var(--blue); }
+.ts input:checked + .ts-slider::before { transform: translateX(18px); }
+
+/* ── Notification rows ─────────────────────────── */
+.notif-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.notif-row:last-child { border: none; }
+.notif-left { flex: 1; padding-right: 16px; }
+.notif-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
+}
+.notif-sub { font-size: 12px; color: var(--muted); font-family: 'Outfit', sans-serif; }
+
+/* ── Payment method cards ──────────────────────── */
+.pm-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 18px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background .15s;
+}
+.pm-card:last-child { border: none; }
+.pm-card:hover { background: rgba(26,59,255,.03); }
+.pm-icon {
+  width: 40px; height: 28px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0; border: 1.5px solid var(--border);
+  background: #fff;
+}
+.pm-label { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; }
+.pm-sub { font-size: 12px; color: var(--muted); margin-top: 1px; font-family: 'Outfit', sans-serif; }
+.pm-badge {
+  margin-left: auto; font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  background: rgba(23,168,90,.1); color: var(--green);
+  font-family: 'Outfit', sans-serif;
+}
+.pm-default-badge {
+  background: rgba(26,59,255,.08); color: var(--blue);
+}
+
+/* ── Saved Places ─────────────────────────────── */
+.sp-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.sp-row:last-child { border: none; }
+.sp-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.sp-icon.home { background: rgba(255,174,0,.12); }
+.sp-icon.work { background: rgba(26,59,255,.09); }
+.sp-icon.fav  { background: rgba(229,53,53,.09); }
+.sp-field-wrap { flex: 1; }
+.sp-field-label {
+  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px;
+}
+.sp-field {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border); font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 500; outline: none;
+  color: var(--ink); transition: border-color .18s; background: var(--bg);
+}
+.sp-field:focus { border-color: var(--blue); background: #fff; }
+.sp-field::placeholder { color: #b0b3c6; }
+
+/* account modal overrides */
+.mbg-acc { font-family: 'Outfit', sans-serif; }
+.mbg-acc .mh { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; }
+.mbg-acc .mcancel { font-family: 'Outfit', sans-serif; }
+.mbg-acc .mok { font-family: 'Outfit', sans-serif; }
+
+/* account */
+.account-version {
+  text-align: center; font-family: 'Outfit', sans-serif;
+  font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 4px;
+}
+
+/* modal — z-index 500 so above panels but below Yoco */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
+  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+@media(min-width:900px){.mbg{align-items:center;}}
+.mbg.show{display:flex;}
+.modal{background:#fff;border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px));
+  width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
+@media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
+@keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mh{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
+.mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.mr:last-of-type{border:none;}
+.mrl{font-size:13px;color:var(--muted);}
+.mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
+.mbtns{display:flex;gap:11px;margin-top:20px;}
+.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'DM Sans',sans-serif; transition:.1s;}
+.mcancel:hover{background:var(--bg);}
+.mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;
+  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'DM Sans',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
+
+/* toast */
+.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%;
+  transform:translateX(-50%) translateY(10px); background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;
+  font-size:13px;font-weight:600;opacity:0;pointer-events:none; transition:.22s;z-index:600;white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,.25);}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(min-width:900px){.toast{bottom:26px;}}
+
+.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;display:none;}
+.spin.on{display:inline-block;}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+.empty{text-align:center;padding:44px 20px;color:var(--muted);}
+.empty-ico{font-size:34px;margin-bottom:10px;}
 
 /* ═══════════════════════════════════════════════════════════
    AUTH OVERLAY — Full-bleed photo background, Uber-style
@@ -339,7 +522,6 @@ body.yoco-active .bnav {
 }
 .auth-overlay.show { display: flex; opacity: 1; }
 
-/* Background photo */
 .auth-bg {
   position: absolute; inset: 0;
   background: url('https://i.postimg.cc/J0qmPWc6/c-SZtc.jpg') center center / cover no-repeat;
@@ -351,7 +533,6 @@ body.yoco-active .bnav {
   to   { transform: scale(1.12); }
 }
 
-/* Gradient layers over the photo */
 .auth-scrim {
   position: absolute; inset: 0;
   background:
@@ -362,7 +543,6 @@ body.yoco-active .bnav {
       rgba(0,0,0,0.88) 100%);
 }
 
-/* Top logo strip */
 .auth-topbar {
   position: relative; z-index: 2;
   display: flex; align-items: center; gap: 12px;
@@ -382,10 +562,8 @@ body.yoco-active .bnav {
   text-shadow: 0 2px 12px rgba(0,0,0,0.35);
 }
 
-/* Spacer pushes content to bottom */
 .auth-spacer { flex: 1; position: relative; z-index: 2; }
 
-/* Bottom sheet content */
 .auth-bottom {
   position: relative; z-index: 2;
   padding: 32px 28px calc(44px + env(safe-area-inset-bottom, 0px));
@@ -404,7 +582,6 @@ body.yoco-active .bnav {
   line-height: 1.55; max-width: 320px;
 }
 
-/* Pill buttons */
 .auth-pills {
   display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;
 }
@@ -509,14 +686,12 @@ body.yoco-active .bnav {
   to   { transform: translateY(0);    opacity: 1; }
 }
 
-/* Sheet drag pill */
 .gs-pill {
   width: 36px; height: 4px; background: #E2E4F0;
   border-radius: 4px; margin: 0 auto 22px;
 }
 @media(min-width:900px){ .gs-pill { display: none; } }
 
-/* Brand row inside sheet */
 .gs-brand {
   display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
 }
@@ -543,7 +718,6 @@ body.yoco-active .bnav {
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Big Google button inside sheet */
 .gs-google-btn {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
   padding: 16px 24px; border-radius: 14px;
@@ -578,40 +752,6 @@ body.yoco-active .bnav {
 }
 .gs-close:hover { background: var(--border); }
 .gs-close-wrap { position: relative; }
-
-/* modal — z-index 500 so above panels but below Yoco */
-.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
-  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
-@media(min-width:900px){.mbg{align-items:center;}}
-.mbg.show{display:flex;}
-.modal{background:#fff;border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px));
-  width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
-@media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
-@keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mh{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
-.mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
-.mr:last-of-type{border:none;}
-.mrl{font-size:13px;color:var(--muted);}
-.mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
-.mbtns{display:flex;gap:11px;margin-top:20px;}
-.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'DM Sans',sans-serif; transition:.1s;}
-.mcancel:hover{background:var(--bg);}
-.mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;
-  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'DM Sans',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
-
-/* toast */
-.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%;
-  transform:translateX(-50%) translateY(10px); background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;
-  font-size:13px;font-weight:600;opacity:0;pointer-events:none; transition:.22s;z-index:600;white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,.25);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-@media(min-width:900px){.toast{bottom:26px;}}
-
-.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;display:none;}
-.spin.on{display:inline-block;}
-@keyframes sp{to{transform:rotate(360deg)}}
-
-.empty{text-align:center;padding:44px 20px;color:var(--muted);}
-.empty-ico{font-size:34px;margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -621,9 +761,7 @@ body.yoco-active .bnav {
   <div style="font-family:'Syne',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════
-     AUTH OVERLAY — Full-bleed photo background
-     ═══════════════════════════════════════════════════════ -->
+<!-- AUTH OVERLAY -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-bg"></div>
   <div class="auth-scrim"></div>
@@ -669,11 +807,10 @@ body.yoco-active .bnav {
   </div>
 </div>
 
-<!-- ── GOOGLE SIGN-IN BOTTOM SHEET ───────────────────────────────────── -->
+<!-- GOOGLE SIGN-IN SHEET -->
 <div class="google-sheet-bg" id="googleSheetBg">
   <div class="google-sheet">
     <div class="gs-pill"></div>
-
     <div class="gs-close-wrap">
       <button class="gs-close" id="gsClose" aria-label="Close">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
@@ -681,15 +818,12 @@ body.yoco-active .bnav {
         </svg>
       </button>
     </div>
-
     <div class="gs-brand">
       <div class="gs-brand-dot">VX</div>
       <div class="gs-brand-name">VynixRide</div>
     </div>
-
     <div class="gs-headline" id="gsHeadline">Welcome back</div>
     <div class="gs-sub" id="gsSub">Sign in with your Google account to continue booking rides and managing your wallet.</div>
-
     <button class="gs-google-btn" id="gsGoogleBtn">
       <svg width="20" height="20" viewBox="0 0 48 48">
         <path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
@@ -699,13 +833,11 @@ body.yoco-active .bnav {
       </svg>
       <span id="gsBtnLabel">Continue with Google</span>
     </button>
-
     <div class="gs-divider">
       <div class="gs-divider-line"></div>
       <span>Google handles sign-in securely</span>
       <div class="gs-divider-line"></div>
     </div>
-
     <div class="gs-note">
       By continuing you agree to VynixRide's Terms of Service.<br>
       New users will have an account created automatically.
@@ -713,6 +845,7 @@ body.yoco-active .bnav {
   </div>
 </div>
 
+<!-- LOC MODAL -->
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="mh">Enable Location</div>
@@ -725,10 +858,10 @@ body.yoco-active .bnav {
   </div>
 </div>
 
+<!-- TOP UP MODAL -->
 <div class="mbg" id="topUpModal">
   <div class="modal">
     <div class="mh">Add Funds</div>
-    
     <div class="input-wrap">
       <div class="slabel">Top Up via Yoco (ZAR)</div>
       <input type="number" id="yocoAmount" class="t-input" placeholder="e.g. 150">
@@ -736,9 +869,7 @@ body.yoco-active .bnav {
     <div class="mbtns" style="margin-bottom: 24px;">
       <button class="mok" onclick="executeYocoTopUp()" style="width:100%">Pay with Yoco</button>
     </div>
-
     <div style="text-align:center; font-size:12px; color:var(--muted); margin-bottom: 16px;">— OR —</div>
-
     <div class="input-wrap">
       <div class="slabel">Redeem Voucher Code</div>
       <input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform: uppercase;">
@@ -750,6 +881,7 @@ body.yoco-active .bnav {
   </div>
 </div>
 
+<!-- CONFIRM MODAL -->
 <div class="mbg" id="confirmModal">
   <div class="modal">
     <div class="mh">Confirm Booking</div>
@@ -767,6 +899,127 @@ body.yoco-active .bnav {
   </div>
 </div>
 
+<!-- ── NOTIFICATIONS MODAL ─────────────────────────────── -->
+<div class="mbg mbg-acc" id="notifModal">
+  <div class="modal" style="text-align:left;">
+    <div class="mh" style="font-family:'Outfit',sans-serif;">Notifications</div>
+    <div class="ss" style="margin-bottom:0; border-radius:14px;">
+      <div class="notif-row">
+        <div class="notif-left">
+          <div class="notif-title">Ride status updates</div>
+          <div class="notif-sub">Driver accepted, arriving, trip started & completed</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-ride" checked><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row">
+        <div class="notif-left">
+          <div class="notif-title">Driver arriving alert</div>
+          <div class="notif-sub">Get notified when your driver is 2 minutes away</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-arriving" checked><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row">
+        <div class="notif-left">
+          <div class="notif-title">Promotional offers</div>
+          <div class="notif-sub">Discounts, promo codes and special deals</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-promo"><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row">
+        <div class="notif-left">
+          <div class="notif-title">Weekly trip summary</div>
+          <div class="notif-sub">A weekly digest of your rides and spending</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-weekly"><span class="ts-slider"></span></label>
+      </div>
+      <div class="notif-row" style="border:none;">
+        <div class="notif-left">
+          <div class="notif-title">Wallet activity</div>
+          <div class="notif-sub">Top-ups, deductions and voucher redemptions</div>
+        </div>
+        <label class="ts"><input type="checkbox" id="notif-wallet" checked><span class="ts-slider"></span></label>
+      </div>
+    </div>
+    <div class="mbtns" style="margin-top:20px;">
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closeNotifModal()">Close</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="saveNotifPrefs()">Save Preferences</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAYMENT METHODS MODAL ───────────────────────────── -->
+<div class="mbg mbg-acc" id="payModal">
+  <div class="modal" style="text-align:left;">
+    <div class="mh" style="font-family:'Outfit',sans-serif;">Payment Methods</div>
+    <div class="ss" style="margin-bottom:16px; border-radius:14px;">
+      <div class="pm-card">
+        <div class="pm-icon">💳</div>
+        <div>
+          <div class="pm-label">Pay by Card (Yoco)</div>
+          <div class="pm-sub">Visa, Mastercard — secure checkout</div>
+        </div>
+        <span class="pm-badge pm-default-badge">Default</span>
+      </div>
+      <div class="pm-card">
+        <div class="pm-icon">👛</div>
+        <div>
+          <div class="pm-label">VynixRide Wallet</div>
+          <div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div>
+        </div>
+        <span class="pm-badge" id="payModalWalletStatus">—</span>
+      </div>
+    </div>
+    <div style="background:rgba(26,59,255,.04); border:1.5px solid rgba(26,59,255,.12); border-radius:12px; padding:13px 15px; margin-bottom:16px;">
+      <div style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; color:var(--blue); margin-bottom:4px;">About payments</div>
+      <div style="font-family:'Outfit',sans-serif; font-size:12.5px; color:var(--muted); line-height:1.55;">
+        All card payments are processed securely via Yoco. Your card details are never stored on VynixRide servers. Top up your wallet for even faster checkout.
+      </div>
+    </div>
+    <div class="mbtns">
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePayModal()">Close</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="closePayModal(); openTopUpModal();">Top Up Wallet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── SAVED PLACES MODAL ──────────────────────────────── -->
+<div class="mbg mbg-acc" id="placesModal">
+  <div class="modal" style="text-align:left;">
+    <div class="mh" style="font-family:'Outfit',sans-serif;">Saved Places</div>
+    <div class="ss" style="margin-bottom:16px; border-radius:14px;">
+      <div class="sp-row">
+        <div class="sp-icon home">🏠</div>
+        <div class="sp-field-wrap">
+          <div class="sp-field-label">Home</div>
+          <input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…">
+        </div>
+      </div>
+      <div class="sp-row">
+        <div class="sp-icon work">🏢</div>
+        <div class="sp-field-wrap">
+          <div class="sp-field-label">Work</div>
+          <input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…">
+        </div>
+      </div>
+      <div class="sp-row" style="border:none;">
+        <div class="sp-icon fav">⭐</div>
+        <div class="sp-field-wrap">
+          <div class="sp-field-label">Favourite</div>
+          <input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…">
+        </div>
+      </div>
+    </div>
+    <p style="font-family:'Outfit',sans-serif; font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.55;">
+      Saved places appear as quick-select options when booking a ride. They are stored to your account.
+    </p>
+    <div class="mbtns">
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePlacesModal()">Cancel</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="savePlaces()">Save Places</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay">
   <div class="circular-progress">
     <svg viewBox="0 0 100 100">
@@ -892,12 +1145,21 @@ body.yoco-active .bnav {
     <div id="txList"></div>
   </div>
 
+  <!-- ══════════════════════════════════════════
+       ACCOUNT PAGE — Outfit font, full layout
+       ══════════════════════════════════════════ -->
   <div class="fpage" id="tab-account">
     <div class="ph">Account</div>
+
     <div class="prof-banner">
       <div class="prof-av-lg" id="profAv">?</div>
-      <div><div class="prof-name" id="profName">Guest</div><div class="prof-email" id="profEmail">Not signed in</div></div>
+      <div>
+        <div class="prof-name" id="profName">Guest</div>
+        <div class="prof-email" id="profEmail">Not signed in</div>
+      </div>
     </div>
+
+    <div class="acc-section-title">My Account</div>
     <div class="ss">
       <div class="sr" id="authRow" onclick="handleAuthAction()">
         <div class="srl">
@@ -905,33 +1167,65 @@ body.yoco-active .bnav {
           <span class="srt" id="authLabel">Sign in with Google</span>
         </div><span class="sra">›</span>
       </div>
-      <div class="sr">
+    </div>
+
+    <div class="acc-section-title">Preferences</div>
+    <div class="ss">
+      <div class="sr" onclick="openNotifModal()">
         <div class="srl">
-          <div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg></div>
-          <span class="srt">Notifications</span>
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div>
+            <span class="srt">Notifications</span>
+            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;" id="notifSummary">Ride updates · Wallet activity</div>
+          </div>
         </div><span class="sra">›</span>
       </div>
-      <div class="sr">
+      <div class="sr" onclick="openPayModal()">
         <div class="srl">
-          <div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
-          <span class="srt">Payment Methods</span>
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
+            </svg>
+          </div>
+          <div>
+            <span class="srt">Payment Methods</span>
+            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;">Card (Yoco) · Wallet</div>
+          </div>
         </div><span class="sra">›</span>
       </div>
-      <div class="sr">
+      <div class="sr" onclick="openPlacesModal()">
         <div class="srl">
-          <div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-          <span class="srt">Saved Places</span>
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <span class="srt">Saved Places</span>
+            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;" id="savedPlacesSummary">Home · Work · Favourite</div>
+          </div>
         </div><span class="sra">›</span>
       </div>
     </div>
+
     <div class="ss" id="signOutSection" style="display:none">
       <div class="sr" onclick="doSignOut()">
         <div class="srl">
-          <div class="sri" style="background:rgba(229,53,53,.08)"><svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
-          <span class="srt" style="color:var(--red)">Sign Out</span>
+          <div class="sri" style="background:rgba(229,53,53,.08)">
+            <svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+          </div>
+          <span class="srt" style="color:var(--red); font-family:'Outfit',sans-serif;">Sign Out</span>
         </div><span class="sra" style="color:var(--red)">›</span>
       </div>
     </div>
+
+    <div class="account-version">VynixRide v1.0 · South Africa 🇿🇦</div>
   </div>
 
   <nav class="bnav">
@@ -963,12 +1257,12 @@ import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/fi
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
 let cu=null;
-window.db = db; 
+window.db = db;
 
 // --- REMOTE CONFIG & YOCO ---
 const rc = getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis = 3600000;
-let yocoPublicKey = 'pk_test_ed3c54a6gOol69qa7f45'; 
+let yocoPublicKey = 'pk_test_ed3c54a6gOol69qa7f45';
 
 fetchAndActivate(rc).then(() => {
   const remoteKey = getValue(rc, 'yoco_public_key').asString();
@@ -977,7 +1271,6 @@ fetchAndActivate(rc).then(() => {
 
 // ── GOOGLE SHEET HELPERS ──────────────────────────────────────────────
 function openGoogleSheet(mode) {
-  // mode: 'login' | 'create'
   const bg = document.getElementById('googleSheetBg');
   const headline = document.getElementById('gsHeadline');
   const sub = document.getElementById('gsSub');
@@ -993,49 +1286,138 @@ function openGoogleSheet(mode) {
   }
   bg.classList.add('show');
 }
-
 function closeGoogleSheet() {
   document.getElementById('googleSheetBg').classList.remove('show');
 }
 
-// Button wiring — auth overlay
 document.getElementById('btnLogin').onclick = () => openGoogleSheet('login');
 document.getElementById('btnCreate').onclick = () => openGoogleSheet('create');
 document.getElementById('skipAuth').onclick = () => {
   document.getElementById('authOverlay').classList.remove('show');
   window.showToast('Demo mode — rides won\'t be saved');
 };
-
-// Sheet close & backdrop
 document.getElementById('gsClose').onclick = closeGoogleSheet;
 document.getElementById('googleSheetBg').addEventListener('click', e => {
   if (e.target === document.getElementById('googleSheetBg')) closeGoogleSheet();
 });
-
-// The actual Google sign-in from the sheet
 document.getElementById('gsGoogleBtn').onclick = () => {
   closeGoogleSheet();
   signInWithPopup(auth, gp).catch(() => window.showToast('Sign-in cancelled'));
 };
 
+// ── NOTIFICATIONS ─────────────────────────────────────────────────────
+window.openNotifModal = function() {
+  // load saved prefs from localStorage
+  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
+  ['ride','arriving','promo','weekly','wallet'].forEach(k => {
+    const el = document.getElementById(`notif-${k}`);
+    if(el && prefs[k] !== undefined) el.checked = prefs[k];
+  });
+  document.getElementById('notifModal').classList.add('show');
+};
+window.closeNotifModal = function() {
+  document.getElementById('notifModal').classList.remove('show');
+};
+window.saveNotifPrefs = function() {
+  const prefs = {};
+  ['ride','arriving','promo','weekly','wallet'].forEach(k => {
+    const el = document.getElementById(`notif-${k}`);
+    if(el) prefs[k] = el.checked;
+  });
+  localStorage.setItem('vx_notif_prefs', JSON.stringify(prefs));
+  updateNotifSummary(prefs);
+  window.closeNotifModal();
+  window.showToast('Notification preferences saved');
+};
+function updateNotifSummary(prefs) {
+  const labels = {ride:'Ride updates', arriving:'Driver alerts', promo:'Offers', weekly:'Weekly digest', wallet:'Wallet activity'};
+  const active = Object.entries(prefs).filter(([,v])=>v).map(([k])=>labels[k]||k);
+  const el = document.getElementById('notifSummary');
+  if(el) el.textContent = active.length ? active.join(' · ') : 'All notifications off';
+}
+// init summary from saved
+(function(){
+  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{"ride":true,"arriving":true,"wallet":true}');
+  updateNotifSummary(prefs);
+})();
+
+// ── PAYMENT METHODS ───────────────────────────────────────────────────
+window.openPayModal = function() {
+  // show wallet balance in pay modal
+  const walBal = document.getElementById('walletBal');
+  const payBal = document.getElementById('payModalWalletBal');
+  const payStatus = document.getElementById('payModalWalletStatus');
+  if(walBal && payBal) {
+    payBal.textContent = 'Balance: ' + walBal.textContent;
+    const balNum = parseFloat((walBal.textContent||'0').replace('R','').trim());
+    if(payStatus) {
+      if(balNum > 0) { payStatus.textContent = 'Funded'; payStatus.className = 'pm-badge'; }
+      else { payStatus.textContent = 'Empty'; payStatus.style.background='rgba(229,53,53,.08)'; payStatus.style.color='var(--red)'; }
+    }
+  }
+  document.getElementById('payModal').classList.add('show');
+};
+window.closePayModal = function() {
+  document.getElementById('payModal').classList.remove('show');
+};
+
+// ── SAVED PLACES ──────────────────────────────────────────────────────
+window.openPlacesModal = function() {
+  // load from Firebase or localStorage
+  const load = (data) => {
+    document.getElementById('sp-home').value = data.home || '';
+    document.getElementById('sp-work').value = data.work || '';
+    document.getElementById('sp-fav').value  = data.fav  || '';
+  };
+  if(cu) {
+    get(ref(db, `users/${cu.uid}/savedPlaces`)).then(snap => {
+      load(snap.val() || {});
+    }).catch(()=>{ load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); });
+  } else {
+    load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}'));
+  }
+  document.getElementById('placesModal').classList.add('show');
+};
+window.closePlacesModal = function() {
+  document.getElementById('placesModal').classList.remove('show');
+};
+window.savePlaces = async function() {
+  const data = {
+    home: document.getElementById('sp-home').value.trim(),
+    work: document.getElementById('sp-work').value.trim(),
+    fav:  document.getElementById('sp-fav').value.trim(),
+  };
+  localStorage.setItem('vx_saved_places', JSON.stringify(data));
+  if(cu) {
+    try { await set(ref(db, `users/${cu.uid}/savedPlaces`), data); } catch(e){}
+  }
+  // update summary label
+  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+  const sumEl = document.getElementById('savedPlacesSummary');
+  if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
+  window.closePlacesModal();
+  window.showToast('Saved places updated');
+};
+// init saved places summary
+(function(){
+  const data = JSON.parse(localStorage.getItem('vx_saved_places')||'{}');
+  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+  const sumEl = document.getElementById('savedPlacesSummary');
+  if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
+})();
+
+// ── YOCO ──────────────────────────────────────────────────────────────
 window.triggerYocoPayment = function(amount, description, onSuccessCallback, restoreModalId) {
   if (typeof window.YocoSDK === 'undefined') {
     window.showToast("Payment system currently unavailable.");
     return;
   }
-
-  if (restoreModalId) {
-    document.getElementById(restoreModalId).classList.remove('show');
-  }
-
+  if (restoreModalId) document.getElementById(restoreModalId).classList.remove('show');
   document.body.classList.add('yoco-active');
-
   const isMobile = window.innerWidth < 900;
   const bookPanel = document.getElementById('bookPanel');
   const activePanel = document.getElementById('activeRidePanel');
-  let bookPanelWasVisible = false;
-  let activePanelWasVisible = false;
-
+  let bookPanelWasVisible = false, activePanelWasVisible = false;
   if (isMobile) {
     if (bookPanel && bookPanel.style.display !== 'none') {
       bookPanelWasVisible = true;
@@ -1048,44 +1430,27 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
       activePanel.classList.remove('show');
     }
   }
-
   const restoreSheets = () => {
     document.body.classList.remove('yoco-active');
     if (isMobile) {
-      if (bookPanelWasVisible && bookPanel) {
-        bookPanel.style.transform = '';
-        bookPanel.style.opacity = '';
-      }
-      if (activePanelWasVisible && activePanel) {
-        activePanel.classList.add('show');
-      }
+      if (bookPanelWasVisible && bookPanel) { bookPanel.style.transform = ''; bookPanel.style.opacity = ''; }
+      if (activePanelWasVisible && activePanel) activePanel.classList.add('show');
     }
   };
-
   const yoco = new window.YocoSDK({ publicKey: yocoPublicKey });
   yoco.showPopup({
-    amountInCents: Math.round(amount * 100),
-    currency: 'ZAR',
-    name: 'VynixRide',
-    description: description,
+    amountInCents: Math.round(amount * 100), currency: 'ZAR', name: 'VynixRide', description,
     callback: function (result) {
       restoreSheets();
       if (result.error) {
-        if (restoreModalId) {
-          document.getElementById(restoreModalId).classList.add('show');
-        }
+        if (restoreModalId) document.getElementById(restoreModalId).classList.add('show');
         window.showToast("Payment failed: " + result.error.message);
-      } else {
-        onSuccessCallback(result.id);
-      }
+      } else { onSuccessCallback(result.id); }
     }
   });
-
   if (window.innerWidth >= 900) {
     setTimeout(() => {
-      const yocoContainers = document.querySelectorAll(
-        'div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"], body > div[style*="position: fixed"]'
-      );
+      const yocoContainers = document.querySelectorAll('div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"], body > div[style*="position: fixed"]');
       yocoContainers.forEach(el => {
         el.style.setProperty('z-index', '2147483647', 'important');
         if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
@@ -1096,7 +1461,7 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
       });
     }, 120);
   }
-}
+};
 
 function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
 function updateUI(u){
@@ -1119,9 +1484,7 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('authOverlay').classList.remove('show');
   closeGoogleSheet();
   const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
-  if(!ws.exists()){
-    await set(ref(db,`users/${u.uid}/wallet/balance`), 0);
-  }
+  if(!ws.exists()) await set(ref(db,`users/${u.uid}/wallet/balance`), 0);
   onValue(ref(db,`users/${u.uid}/trips`),snap=>{
     renderTrips(Object.values(snap.val()||{}).reverse());
   });
@@ -1130,6 +1493,13 @@ onAuthStateChanged(auth,async u=>{
     document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;
     renderTx(d.transactions||{});
   });
+  // load saved places summary
+  get(ref(db,`users/${u.uid}/savedPlaces`)).then(snap=>{
+    const data = snap.val()||{};
+    const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+    const sumEl = document.getElementById('savedPlacesSummary');
+    if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
+  }).catch(()=>{});
 });
 
 function renderTrips(list){
@@ -1146,10 +1516,8 @@ function renderTx(obj){
 window.initiateRidePayment = async function(){
   if(!cu) { window.showToast('Please sign in first'); return; }
   const r = window._rides.find(x => x.id === window._selId);
-
   window.triggerYocoPayment(
-    r.price,
-    `Ride: ${r.type}`,
+    r.price, `Ride: ${r.type}`,
     async (token) => {
       try {
         const dest = window._destName.split(',').slice(0,2).join(',');
@@ -1166,26 +1534,19 @@ window.initiateRidePayment = async function(){
 
 window.executeYocoTopUp = async function() {
   if(!cu) { window.showToast("Sign in first."); return; }
-  const input = document.getElementById('yocoAmount').value;
-  const amt = parseFloat(input);
+  const amt = parseFloat(document.getElementById('yocoAmount').value);
   if(isNaN(amt) || amt < 10) { window.showToast("Enter a valid amount (Min R10)"); return; }
-
-  window.triggerYocoPayment(
-    amt,
-    `Wallet Top-Up`,
-    async (token) => {
-      try {
-        const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
-        const snap = await get(wRef);
-        const curr = snap.val() || 0;
-        await update(ref(db, `users/${cu.uid}/wallet`), { balance: curr + amt });
-        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
-        document.getElementById('yocoAmount').value = '';
-        window.showToast(`Successfully added R${amt.toFixed(2)}`);
-      } catch(e) { window.showToast("Database error saving top-up."); }
-    },
-    'topUpModal'
-  );
+  window.triggerYocoPayment(amt, 'Wallet Top-Up', async (token) => {
+    try {
+      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
+      const snap = await get(wRef);
+      const curr = snap.val() || 0;
+      await update(ref(db, `users/${cu.uid}/wallet`), { balance: curr + amt });
+      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
+      document.getElementById('yocoAmount').value = '';
+      window.showToast(`Successfully added R${amt.toFixed(2)}`);
+    } catch(e) { window.showToast("Database error saving top-up."); }
+  }, 'topUpModal');
 };
 
 window.executeVoucher = async function() {
@@ -1212,9 +1573,7 @@ window.executeVoucher = async function() {
       window.closeTopUpModal();
       window.showToast(`R${amt.toFixed(2)} added from voucher!`);
       document.getElementById('voucherCode').value = '';
-    } else {
-      window.showToast("Invalid voucher code.");
-    }
+    } else { window.showToast("Invalid voucher code."); }
   } catch(e) { window.showToast("Error processing voucher."); }
 };
 
@@ -1229,23 +1588,15 @@ window.doSignOut=async()=>{
 };
 
 // Active Driver Polling
-let realDrivers = {};
-let driverMarkersObj = {};
-let noDriverToastShown = false;
-
+let realDrivers = {}, driverMarkersObj = {}, noDriverToastShown = false;
 import { onValue as rtdbOnValue, ref as rtdbRef } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 setTimeout(() => {
   if (window.db) {
-    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => {
-      realDrivers = snap.val() || {};
-    });
+    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => { realDrivers = snap.val() || {}; });
     setInterval(() => {
       const driverIds = Object.keys(realDrivers);
       if (driverIds.length === 0) {
-        if (!noDriverToastShown) {
-          window.showToast('No drivers currently available nearby.');
-          noDriverToastShown = true;
-        }
+        if (!noDriverToastShown) { window.showToast('No drivers currently available nearby.'); noDriverToastShown = true; }
       } else { noDriverToastShown = false; }
       Object.keys(driverMarkersObj).forEach(id => {
         if(!realDrivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
@@ -1253,18 +1604,16 @@ setTimeout(() => {
       driverIds.forEach(id => {
         const d = realDrivers[id];
         if(d.lat && d.lng && window.mapboxgl) {
-          if(driverMarkersObj[id]) {
-            driverMarkersObj[id].setLngLat([d.lng, d.lat]);
-          } else {
-            const el = document.createElement('div');
-            el.className = 'car-marker'; el.innerHTML = '🚕';
+          if(driverMarkersObj[id]) { driverMarkersObj[id].setLngLat([d.lng, d.lat]); }
+          else {
+            const el = document.createElement('div'); el.className = 'car-marker'; el.innerHTML = '🚕';
             driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window._mapInstance);
           }
         }
       });
-    }, 5000); 
+    }, 5000);
   }
-}, 2000); 
+}, 2000);
 </script>
 
 <script>
@@ -1311,9 +1660,9 @@ window.requestLocation = function() {
       document.getElementById('locModal').classList.add('show');
       document.getElementById('originLabel').textContent='Mokopane, Limpopo (Default)';
     });
-  } else { 
-    window.showToast("Geolocation not supported."); 
-    document.getElementById('originLabel').textContent='Mokopane, Limpopo'; 
+  } else {
+    window.showToast("Geolocation not supported.");
+    document.getElementById('originLabel').textContent='Mokopane, Limpopo';
   }
 }
 window.requestLocation();
@@ -1334,7 +1683,7 @@ function drawRoute(o,d){
       if(!data.routes?.length)return;
       const geom=data.routes[0].geometry;
       window._distKm=data.routes[0].distance/1000;
-      window._tripDurationMins=Math.ceil(data.routes[0].duration/60); 
+      window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
       clearRoute();
       map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:geom}});
       map.addLayer({id:'route',type:'line',source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#1A3BFF','line-width':4.5,'line-opacity':.72} });
@@ -1380,9 +1729,8 @@ function haversine(la1,lo1,la2,lo2){
 
 function updatePrices(){
   const km=window._distKm||0;
-  let minWait = 3; 
   window._rides=BASE.map(r=>({
-    ...r, price:Math.round((r.baseFare+r.perKm*km)*10)/10, time: `${minWait + (r.id - 1)} min`, 
+    ...r, price:Math.round((r.baseFare+r.perKm*km)*10)/10, time: `${3 + (r.id - 1)} min`,
     tripTime: window._tripDurationMins ? `${window._tripDurationMins} min` : 'N/A'
   }));
   renderRides();
@@ -1435,7 +1783,7 @@ window.cancelSearch = function(msg = 'Search cancelled.') {
       [Math.max(wULng, dMk.getLngLat().lng)+.008, Math.max(wULat, dMk.getLngLat().lat)+.008]
     ], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}});
   }
-}
+};
 
 window.startSearchTimer = function() {
   const overlay = document.getElementById('searchOverlay');
@@ -1454,7 +1802,7 @@ window.startSearchTimer = function() {
   searchTimeout = setTimeout(() => {
     window.cancelSearch('No drivers accepted. Payment will be refunded.');
   }, 60000);
-}
+};
 
 window.cancelActiveRide = function() {
   const ap = document.getElementById('activeRidePanel');
@@ -1463,12 +1811,9 @@ window.cancelActiveRide = function() {
     ap.style.display = 'none';
     document.getElementById('bookPanel').style.display = 'flex';
     if(dMk) {
-      map.fitBounds([[Math.min(wULng, dMk.getLngLat().lng)-.008, Math.min(wULat, dMk.getLngLat().lat)-.008],[Math.max(wULng, dMk.getLngLat().lng)+.008, Math.max(wULat, dMk.getLngLat().lat)+.008]
-      ], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}});
-    } else {
-      map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}});
-    }
-  }, 400); 
+      map.fitBounds([[Math.min(wULng, dMk.getLngLat().lng)-.008, Math.min(wULat, dMk.getLngLat().lat)-.008],[Math.max(wULng, dMk.getLngLat().lng)+.008, Math.max(wULat, dMk.getLngLat().lat)+.008]], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}});
+    } else { map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}}); }
+  }, 400);
   window.showToast('Ride cancelled');
 };
 
