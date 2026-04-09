@@ -27,7 +27,7 @@ div[id*="yoco"],
 .yoco-popup,
 .yoco-modal,
 .yoco-overlay {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 /* Push Yoco popup to the right on desktop so it never sits over the booking panel */
 @media(min-width:900px){
@@ -39,6 +39,15 @@ div[id*="yoco"],
     right: 40px !important;
     transform: none !important;
   }
+}
+
+body.yoco-active .panel,
+body.yoco-active .active-panel,
+body.yoco-active .mbg,
+body.yoco-active .bnav {
+  z-index: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative;}
@@ -782,6 +791,9 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
     document.getElementById(restoreModalId).classList.remove('show');
   }
 
+  // Assign class to body to disable stacking contexts & blur on underlying panels
+  document.body.classList.add('yoco-active');
+
   const isMobile = window.innerWidth < 900;
   const bookPanel = document.getElementById('bookPanel');
   const activePanel = document.getElementById('activeRidePanel');
@@ -802,6 +814,7 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
   }
 
   const restoreSheets = () => {
+    document.body.classList.remove('yoco-active');
     if (isMobile) {
       if (bookPanelWasVisible && bookPanel) {
         bookPanel.style.transform = '';
@@ -820,11 +833,11 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
     name: 'VynixRide',
     description: description,
     callback: function (result) {
+      restoreSheets();
       if (result.error) {
         if (restoreModalId) {
           document.getElementById(restoreModalId).classList.add('show');
         }
-        restoreSheets();
         window.showToast("Payment failed: " + result.error.message);
       } else {
         onSuccessCallback(result.id);
@@ -832,14 +845,14 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
     }
   });
 
-  // After Yoco renders, push it to the right on desktop
+  // After Yoco renders, push it to the right on desktop and ensure z-index overrides
   if (window.innerWidth >= 900) {
     setTimeout(() => {
       const yocoContainers = document.querySelectorAll(
-        'div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"]'
+        'div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"], body > div[style*="position: fixed"]'
       );
       yocoContainers.forEach(el => {
-        el.style.setProperty('z-index', '99999', 'important');
+        el.style.setProperty('z-index', '2147483647', 'important');
         if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
           el.style.setProperty('left', 'auto', 'important');
           el.style.setProperty('right', '40px', 'important');
