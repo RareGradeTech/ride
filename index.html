@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VynixRide</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
@@ -18,7 +18,7 @@
   --border:#E2E4F0;--green:#17A85A;--red:#E53535;--nav-h:72px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;font-family:'DM Sans',sans-serif;color:var(--ink);background:var(--bg);}
+html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg);}
 
 /* ── YOCO — always on top, right-aligned on desktop ─────────────────── */
 iframe[src*="yoco"],
@@ -78,7 +78,7 @@ body.yoco-active .bnav {
   box-shadow:4px 0 28px rgba(0,0,0,.06);
 }
 .logo{
-  font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
+  font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
   display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px;
   min-width:240px;
 }
@@ -167,12 +167,12 @@ body.yoco-active .bnav {
 @media(min-width:900px){.drag-handle{display:none;}}
 
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
-.ptitle{font-family:'Syne',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
+.ptitle{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
 .top-cbtn {
   background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff;
   padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700;
   cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s;
-  display: none; font-family: 'DM Sans', sans-serif; letter-spacing: 0.02em;
+  display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em;
 }
 .top-cbtn:active { transform: scale(0.96); }
 
@@ -180,14 +180,14 @@ body.yoco-active .bnav {
 .geo-wrap{margin-bottom:12px;flex-shrink:0;}
 .mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;
   border-radius:13px!important;border:1.5px solid var(--border)!important;
-  box-shadow:none!important;background:#fff!important; font-family:'DM Sans',sans-serif!important;}
+  box-shadow:none!important;background:#fff!important; font-family:'Outfit',sans-serif!important;}
 .mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;
-  color:var(--ink)!important;font-family:'DM Sans',sans-serif!important;
+  color:var(--ink)!important;font-family:'Outfit',sans-serif!important;
   padding:11px 40px 11px 40px!important;height:46px!important;}
 .mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important;}
 .mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important;
   box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important;}
-.mapboxgl-ctrl-geocoder--suggestion{font-family:'DM Sans',sans-serif!important;font-size:13px!important;}
+.mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important;}
 
 .origin-row{display:flex;align-items:center;gap:10px;background:#fff;
   padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);
@@ -212,7 +212,7 @@ body.yoco-active .bnav {
   background:linear-gradient(135deg,var(--blue2),var(--blue));
   color:#fff;display:flex;align-items:center;justify-content:center;
   font-weight:700;font-size:12px;flex-shrink:0;}
-.rname{font-size:14px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:1px;}
+.rname{font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;margin-bottom:1px;}
 .rmeta{font-size:11px;color:var(--muted);}
 .rprice{font-size:15px;font-weight:700;}
 .rtbadge{font-size:10px;font-weight:600;color:var(--blue);
@@ -232,8 +232,8 @@ body.yoco-active .bnav {
 .circular-progress circle { fill: none; stroke-width: 8; stroke-linecap: round; }
 .circ-bg { stroke: var(--border); }
 .circ-fill { stroke: var(--blue); stroke-dasharray: 283; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
-.time-left { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
-.search-title { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
+.time-left { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
+.search-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
 .search-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 500; text-align: center; max-width: 250px; }
 .cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px;
   background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s;}
@@ -259,11 +259,11 @@ body.yoco-active .bnav {
   border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08);}
 .ad-car-info{text-align:right;}
 .ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px;
-  font-family:'Syne',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px; padding-top:18px;border-top:1px solid var(--border);}
 .ad-m-item{display:flex;flex-direction:column;}
 .ad-m-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
-.ad-m-val{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--blue);}
+.ad-m-val{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:var(--blue);}
 
 /* bottom nav */
 .bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
@@ -280,13 +280,13 @@ body.yoco-active .bnav {
   padding:28px 20px calc(var(--nav-h) + env(safe-area-inset-bottom, 20px));}
 @media(min-width:900px){.fpage{padding:32px 36px 32px;}}
 .fpage.show{display:flex;}
-.ph{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
+.ph{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
 
 /* trips */
 .tc{background:var(--card);border-radius:16px;padding:16px 18px; margin-bottom:11px;border:1px solid var(--border);transition:.17s;}
 .tc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);}
 .tc-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.tc-type{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;}
+.tc-type{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;}
 .tc-fare{font-size:15px;font-weight:700;color:var(--blue);}
 .tc-meta{font-size:12px;color:var(--muted);margin-top:4px;}
 .tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px; font-size:11px;font-weight:600;padding:3px 10px;
@@ -297,9 +297,9 @@ body.yoco-active .bnav {
 .w-hero::before{content:'';position:absolute;top:-30px;right:-30px; width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%;}
 .w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px; width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%;}
 .wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500;}
-.wbal{font-family:'Syne',sans-serif;font-size:36px;font-weight:800; margin-bottom:16px;letter-spacing:-.5px;}
+.wbal{font-family:'Outfit',sans-serif;font-size:36px;font-weight:800; margin-bottom:16px;letter-spacing:-.5px;}
 .wbtns{display:flex;gap:10px;position:relative;z-index:1;}
-.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'DM Sans',sans-serif; transition:.2s;}
+.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'Outfit',sans-serif; transition:.2s;}
 .wbtn:hover{background:rgba(255,255,255,.3);}
 .txi{display:flex;justify-content:space-between;align-items:center; padding:13px 0;border-bottom:1px solid var(--border);}
 .txi:last-child{border:none;}
@@ -310,11 +310,11 @@ body.yoco-active .bnav {
 
 /* Inputs for Wallet Topup */
 .input-wrap { margin-bottom: 16px; text-align: left; }
-.t-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; outline: none; transition: .2s; }
+.t-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; outline: none; transition: .2s; }
 .t-input:focus { border-color: var(--blue); }
 
 /* ═══════════════════════════════════════════════
-   ACCOUNT PAGE — Outfit font, fresh styling
+   ACCOUNT PAGE
    ═══════════════════════════════════════════════ */
 #tab-account { font-family: 'Outfit', sans-serif; }
 #tab-account .ph {
@@ -485,16 +485,16 @@ body.yoco-active .bnav {
   width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
 @media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
 @keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mh{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
+.mh{font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
 .mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
 .mr:last-of-type{border:none;}
 .mrl{font-size:13px;color:var(--muted);}
 .mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
 .mbtns{display:flex;gap:11px;margin-top:20px;}
-.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'DM Sans',sans-serif; transition:.1s;}
+.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'Outfit',sans-serif; transition:.1s;}
 .mcancel:hover{background:var(--bg);}
 .mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;
-  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'DM Sans',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
+  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Outfit',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
 
 /* toast */
 .toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%;
@@ -517,7 +517,7 @@ body.yoco-active .bnav {
   position: fixed; inset: 0; z-index: 998;
   display: none; flex-direction: column;
   opacity: 0; transition: opacity .4s;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   overflow: hidden;
 }
 .auth-overlay.show { display: flex; opacity: 1; }
@@ -551,12 +551,12 @@ body.yoco-active .bnav {
 .auth-logo-dot {
   width: 44px; height: 44px; background: #fff; border-radius: 12px;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;
+  font-family: 'Outfit', sans-serif; font-weight: 800;
   font-size: 15px; color: var(--blue); flex-shrink: 0;
   box-shadow: 0 4px 18px rgba(0,0,0,0.28);
 }
 .auth-logo-name {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 22px; font-weight: 800; color: #fff;
   letter-spacing: -.3px;
   text-shadow: 0 2px 12px rgba(0,0,0,0.35);
@@ -570,7 +570,7 @@ body.yoco-active .bnav {
 }
 
 .auth-headline {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: clamp(32px, 8vw, 46px);
   font-weight: 800; color: #fff; line-height: 1.12;
   letter-spacing: -1px; margin-bottom: 12px;
@@ -590,7 +590,7 @@ body.yoco-active .bnav {
   width: 100%; padding: 18px 28px;
   border-radius: 100px; border: none;
   background: #fff; color: #0C0C14;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 16px; font-weight: 800;
   cursor: pointer; letter-spacing: -.1px;
   box-shadow: 0 6px 28px rgba(0,0,0,0.32);
@@ -608,7 +608,7 @@ body.yoco-active .bnav {
   border: 2px solid rgba(255,255,255,.55);
   background: rgba(255,255,255,.08);
   color: #fff;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 16px; font-weight: 700;
   cursor: pointer; letter-spacing: -.1px;
   backdrop-filter: blur(12px);
@@ -621,7 +621,7 @@ body.yoco-active .bnav {
 .auth-demo-link {
   display: block; width: 100%; text-align: center;
   background: none; border: none; padding: 8px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 13px; color: rgba(255,255,255,.42);
   font-weight: 500; cursor: pointer;
   letter-spacing: .01em; transition: color .2s;
@@ -632,7 +632,7 @@ body.yoco-active .bnav {
   display: flex; align-items: center; justify-content: center;
   gap: 6px; margin-top: 14px;
   font-size: 11.5px; color: rgba(255,255,255,.28);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 .auth-trust-bar svg { opacity: .38; flex-shrink: 0; }
 
@@ -675,7 +675,7 @@ body.yoco-active .bnav {
   padding: 10px 28px calc(40px + env(safe-area-inset-bottom, 0px));
   width: 100%; max-width: 480px;
   animation: sheetUp .32s cubic-bezier(.4,0,.2,1);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 @media(min-width:900px){
   .google-sheet-bg { align-items: center; }
@@ -699,23 +699,23 @@ body.yoco-active .bnav {
   width: 36px; height: 36px; background: var(--blue); border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-weight: 800; font-size: 13px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   box-shadow: 0 4px 12px var(--glow); flex-shrink: 0;
 }
 .gs-brand-name {
   font-size: 17px; font-weight: 800; color: var(--ink);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
 .gs-headline {
   font-size: 22px; font-weight: 800; color: var(--ink);
   letter-spacing: -.4px; margin-bottom: 6px; margin-top: 18px;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 .gs-sub {
   font-size: 14px; color: var(--muted); margin-bottom: 28px;
   line-height: 1.55; font-weight: 400;
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
 }
 
 .gs-google-btn {
@@ -723,7 +723,7 @@ body.yoco-active .bnav {
   padding: 16px 24px; border-radius: 14px;
   background: #fff; border: 2px solid #E2E4F0;
   font-size: 15px; font-weight: 700; color: var(--ink);
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer; transition: background .18s, border-color .18s, transform .1s;
   box-shadow: 0 2px 12px rgba(0,0,0,0.08);
   margin-bottom: 12px;
@@ -739,7 +739,7 @@ body.yoco-active .bnav {
 
 .gs-note {
   font-size: 12px; color: var(--muted); text-align: center;
-  line-height: 1.6; font-family: 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.6; font-family: 'Outfit', sans-serif;
 }
 .gs-note a { color: var(--blue); text-decoration: none; font-weight: 600; }
 
@@ -758,7 +758,7 @@ body.yoco-active .bnav {
 
 <div class="init-loader" id="initLoader">
   <div class="loader-spinner"></div>
-  <div style="font-family:'Syne',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
+  <div style="font-family:'Outfit',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
 </div>
 
 <!-- AUTH OVERLAY -->
@@ -1100,7 +1100,7 @@ body.yoco-active .bnav {
         <div class="ad-info">
           <div class="ad-av" id="adAv">K</div>
           <div>
-            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:17px;margin-bottom:2px;" id="adName">Kabelo</div>
+            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;margin-bottom:2px;" id="adName">Kabelo</div>
             <div style="font-size:13px;color:var(--muted);font-weight:500;">⭐ 4.9 · 1,240 rides</div>
           </div>
         </div>
@@ -1146,7 +1146,7 @@ body.yoco-active .bnav {
   </div>
 
   <!-- ══════════════════════════════════════════
-       ACCOUNT PAGE — Outfit font, full layout
+       ACCOUNT PAGE
        ══════════════════════════════════════════ -->
   <div class="fpage" id="tab-account">
     <div class="ph">Account</div>
@@ -1307,7 +1307,6 @@ document.getElementById('gsGoogleBtn').onclick = () => {
 
 // ── NOTIFICATIONS ─────────────────────────────────────────────────────
 window.openNotifModal = function() {
-  // load saved prefs from localStorage
   const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
   ['ride','arriving','promo','weekly','wallet'].forEach(k => {
     const el = document.getElementById(`notif-${k}`);
@@ -1335,7 +1334,6 @@ function updateNotifSummary(prefs) {
   const el = document.getElementById('notifSummary');
   if(el) el.textContent = active.length ? active.join(' · ') : 'All notifications off';
 }
-// init summary from saved
 (function(){
   const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{"ride":true,"arriving":true,"wallet":true}');
   updateNotifSummary(prefs);
@@ -1343,7 +1341,6 @@ function updateNotifSummary(prefs) {
 
 // ── PAYMENT METHODS ───────────────────────────────────────────────────
 window.openPayModal = function() {
-  // show wallet balance in pay modal
   const walBal = document.getElementById('walletBal');
   const payBal = document.getElementById('payModalWalletBal');
   const payStatus = document.getElementById('payModalWalletStatus');
@@ -1363,7 +1360,6 @@ window.closePayModal = function() {
 
 // ── SAVED PLACES ──────────────────────────────────────────────────────
 window.openPlacesModal = function() {
-  // load from Firebase or localStorage
   const load = (data) => {
     document.getElementById('sp-home').value = data.home || '';
     document.getElementById('sp-work').value = data.work || '';
@@ -1391,14 +1387,12 @@ window.savePlaces = async function() {
   if(cu) {
     try { await set(ref(db, `users/${cu.uid}/savedPlaces`), data); } catch(e){}
   }
-  // update summary label
   const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
   const sumEl = document.getElementById('savedPlacesSummary');
   if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
   window.closePlacesModal();
   window.showToast('Saved places updated');
 };
-// init saved places summary
 (function(){
   const data = JSON.parse(localStorage.getItem('vx_saved_places')||'{}');
   const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
@@ -1493,7 +1487,6 @@ onAuthStateChanged(auth,async u=>{
     document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;
     renderTx(d.transactions||{});
   });
-  // load saved places summary
   get(ref(db,`users/${u.uid}/savedPlaces`)).then(snap=>{
     const data = snap.val()||{};
     const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
