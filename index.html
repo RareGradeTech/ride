@@ -1520,6 +1520,24 @@ window.initiateRidePayment = async function(){
         const dest = window._destName.split(',').slice(0,2).join(',');
         await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
         await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
+        // ── Write ride request so drivers can see & accept it ──────────
+        const secPin = Math.floor(1000 + Math.random() * 9000).toString();
+        const rideReqRef = await push(ref(db,'ride_requests'),{
+          status:'pending',
+          riderUid: cu.uid,
+          riderName: cu.displayName || 'Rider',
+          rideType: r.type,
+          fare: r.price,
+          pickup: document.getElementById('originLabel').textContent || 'Current Location',
+          destination: window._destName,
+          distKm: window._distKm || 0,
+          tripMins: window._tripDurationMins || 0,
+          capacity: r.capacity || 4,
+          securityPin: secPin,
+          createdAt: Date.now()
+        });
+        window._activeRideReqId = rideReqRef.key;
+        // ───────────────────────────────────────────────────────────────
         document.getElementById('bookPanel').style.display = 'none';
         if(window._mapFly) window._mapFly();
         window.startSearchTimer();
@@ -1774,6 +1792,13 @@ window.cancelSearch = function(msg = 'Search cancelled.') {
   document.getElementById('searchOverlay').classList.remove('show');
   document.getElementById('bookPanel').style.display = 'flex';
   window.showToast(msg);
+  // Remove the pending ride request from Firebase if not yet accepted
+  if(window._activeRideReqId) {
+    import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js").then(({ref:fbRef,get:fbGet,remove:fbRemove})=>{
+      const reqRef = fbRef(window.db,'ride_requests/'+window._activeRideReqId);
+      fbGet(reqRef).then(snap=>{ if(snap.exists()&&snap.val().status==='pending') fbRemove(reqRef); });
+    }); window._activeRideReqId=null;
+  }
   if(dMk) {
     map.fitBounds([
       [Math.min(wULng, dMk.getLngLat().lng)-.008, Math.min(wULat, dMk.getLngLat().lat)-.008],
