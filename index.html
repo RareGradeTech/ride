@@ -1256,6 +1256,10 @@ import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/fi
 
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
+
+// ── Force account chooser on every sign-in ──────────────────────────
+gp.setCustomParameters({ prompt: 'select_account' });
+
 let cu=null;
 window.db = db;
 
