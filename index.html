@@ -700,7 +700,6 @@ body.yoco-active .bnav {
   <div class="loader-spinner"></div>
   <div style="font-family:'Outfit',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
 </div>
-<!-- AUTH OVERLAY -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-bg"></div>
   <div class="auth-scrim"></div>
@@ -738,7 +737,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- GOOGLE SIGN-IN SHEET -->
 <div class="google-sheet-bg" id="googleSheetBg">
   <div class="google-sheet">
     <div class="gs-pill"></div>
@@ -775,7 +773,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- LOC MODAL -->
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="mh">Enable Location</div>
@@ -787,7 +784,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- TOP UP MODAL -->
 <div class="mbg" id="topUpModal">
   <div class="modal">
     <div class="mh">Add Funds</div>
@@ -809,7 +805,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- CONFIRM MODAL -->
 <div class="mbg" id="confirmModal">
   <div class="modal">
     <div class="mh">Confirm Booking</div>
@@ -820,13 +815,13 @@ body.yoco-active .bnav {
     <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
     <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare">—</b></div>
-    <div class="mbtns">
-      <button class="mcancel" onclick="closeModal()">Cancel</button>
-      <button class="mok" id="bookBtn" onclick="initiateRidePayment()">Pay & Book <span class="spin" id="bspin"></span></button>
+    <div class="mbtns" style="display:flex; flex-direction:column; gap:11px; margin-top:20px;">
+      <button class="mok" onclick="initiateRidePayment('card')" style="width:100%;">Pay with Card</button>
+      <button class="mok" onclick="initiateRidePayment('cash')" style="width:100%; background:var(--green); border-color:var(--green);">Book with Cash</button>
+      <button class="mcancel" onclick="closeModal()" style="width:100%;">Cancel</button>
     </div>
   </div>
 </div>
-<!-- ── NOTIFICATIONS MODAL ─────────────────────────────── -->
 <div class="mbg mbg-acc" id="notifModal">
   <div class="modal" style="text-align:left;">
     <div class="mh" style="font-family:'Outfit',sans-serif;">Notifications</div>
@@ -873,7 +868,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- ── PAYMENT METHODS MODAL ───────────────────────────── -->
 <div class="mbg mbg-acc" id="payModal">
   <div class="modal" style="text-align:left;">
     <div class="mh" style="font-family:'Outfit',sans-serif;">Payment Methods</div>
@@ -907,7 +901,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- ── SAVED PLACES MODAL ──────────────────────────────── -->
 <div class="mbg mbg-acc" id="placesModal">
   <div class="modal" style="text-align:left;">
     <div class="mh" style="font-family:'Outfit',sans-serif;">Saved Places</div>
@@ -943,7 +936,6 @@ body.yoco-active .bnav {
     </div>
   </div>
 </div>
-<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay">
   <div class="circular-progress">
     <svg viewBox="0 0 100 100">
@@ -992,7 +984,7 @@ body.yoco-active .bnav {
     <div id="map"></div>
     <div class="panel" id="bookPanel">
       <div class="drag-handle"></div>
-     
+      
       <div class="locate-btn" onclick="zoomToCurrent()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       </div>
@@ -1059,9 +1051,6 @@ body.yoco-active .bnav {
     <div class="slabel">Transactions</div>
     <div id="txList"></div>
   </div>
-  <!-- ══════════════════════════════════════════
-       ACCOUNT PAGE
-       ══════════════════════════════════════════ -->
   <div class="fpage" id="tab-account">
     <div class="ph">Account</div>
     <div class="prof-banner">
@@ -1395,48 +1384,65 @@ onAuthStateChanged(auth,async u=>{
 function renderTrips(list){
   const el=document.getElementById('tripsList');
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
-  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
+  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px; font-weight:600; padding:2px 6px; border-radius:10px; background:rgba(0,0,0,0.05);">${t.paymentMethod || 'Card'}</span></div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
 }
 function renderTx(obj){
   const el=document.getElementById('txList'),list=Object.values(obj).reverse();
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
-window.initiateRidePayment = async function(){
+window.initiateRidePayment = async function(method = 'card') {
   if(!cu) { window.showToast('Please sign in first'); return; }
   const r = window._rides.find(x => x.id === window._selId);
-  window.triggerYocoPayment(
-    r.price, `Ride: ${r.type}`,
-    async (token) => {
-      try {
-        const dest = window._destName.split(',').slice(0,2).join(',');
-        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
+  
+  const processBooking = async (paymentType) => {
+    try {
+      const dest = window._destName.split(',').slice(0,2).join(',');
+      
+      await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now(), paymentMethod: paymentType});
+      
+      if (paymentType === 'Card') {
         await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
-        // ── Write ride request so drivers can see & accept it ──────────
-        const secPin = Math.floor(1000 + Math.random() * 9000).toString();
-        const rideReqRef = await push(ref(db,'ride_requests'),{
-          status:'pending',
-          riderUid: cu.uid,
-          riderName: cu.displayName || 'Rider',
-          rideType: r.type,
-          fare: r.price,
-          pickup: document.getElementById('originLabel').textContent || 'Current Location',
-          destination: window._destName,
-          distKm: window._distKm || 0,
-          tripMins: window._tripDurationMins || 0,
-          capacity: r.capacity || 4,
-          securityPin: secPin,
-          createdAt: Date.now()
-        });
-        window._activeRideReqId = rideReqRef.key;
-        // ───────────────────────────────────────────────────────────────
-        document.getElementById('bookPanel').style.display = 'none';
-        if(window._mapFly) window._mapFly();
-        window.startSearchTimer();
-      } catch(e) { window.showToast('Database error after payment.'); }
-    },
-    'confirmModal'
-  );
+      }
+
+      // ── Write ride request so drivers can see & accept it ──────────
+      const secPin = Math.floor(1000 + Math.random() * 9000).toString();
+      const rideReqRef = await push(ref(db,'ride_requests'),{
+        status:'pending',
+        riderUid: cu.uid,
+        riderName: cu.displayName || 'Rider',
+        rideType: r.type,
+        fare: r.price,
+        pickup: document.getElementById('originLabel').textContent || 'Current Location',
+        destination: window._destName,
+        distKm: window._distKm || 0,
+        tripMins: window._tripDurationMins || 0,
+        capacity: r.capacity || 4,
+        securityPin: secPin,
+        paymentMethod: paymentType,
+        createdAt: Date.now()
+      });
+      window._activeRideReqId = rideReqRef.key;
+      // ───────────────────────────────────────────────────────────────
+      
+      document.getElementById('confirmModal').classList.remove('show');
+      document.getElementById('bookPanel').style.display = 'none';
+      if(window._mapFly) window._mapFly();
+      window.startSearchTimer();
+    } catch(e) { window.showToast('Database error after payment.'); }
+  };
+
+  if (method === 'card') {
+    window.triggerYocoPayment(
+      r.price, `Ride: ${r.type}`,
+      async (token) => {
+        await processBooking('Card');
+      },
+      'confirmModal'
+    );
+  } else if (method === 'cash') {
+    await processBooking('Cash');
+  }
 };
 window.executeYocoTopUp = async function() {
   if(!cu) { window.showToast("Sign in first."); return; }
