@@ -799,11 +799,13 @@ window.openCancelModal = function(mode) {
 window.confirmCancelAction = async function() {
   if (!selectedReasonText) return;
   window.closeCancelModal();
+  
   if (cancelMode === 'search') {
     window.cancelSearch('Search cancelled: ' + selectedReasonText);
   } else if (cancelMode === 'active') {
-    window.cleanupActiveRide();
+    // IMPORTANT FIX: Update Firebase BEFORE clearing the ID in cleanup
     window.cancelSearch('Ride cancelled: ' + selectedReasonText);
+    window.cleanupActiveRide();
   }
 };
 
@@ -924,7 +926,10 @@ window.cancelSearch = function(msg = 'Search cancelled.') {
   document.getElementById('searchOverlay').classList.remove('show');
   window.showToast(msg);
   if(window.AppState.activeRideReqId) {
-    update(ref(db,'ride_requests/'+window.AppState.activeRideReqId), {status: 'cancelled', cancelReason: selectedReasonText || 'Cancelled by rider'});
+    update(ref(db,'ride_requests/'+window.AppState.activeRideReqId), {
+        status: 'cancelled', 
+        cancelReason: selectedReasonText || 'Cancelled by rider'
+    });
     window.AppState.activeRideReqId=null;
   }
 }
