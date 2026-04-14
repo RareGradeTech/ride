@@ -584,6 +584,25 @@ onAuthStateChanged(auth,async u=>{
       const list = Object.values(snap.val()||{}).reverse();
       document.getElementById('tripsList').innerHTML=list.length ? list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short'}):''}</div></div>`).join('') : '<div style="color:var(--muted);text-align:center;padding:40px;">No trips yet</div>';
   });
+
+  // RESTORE ACTIVE RIDE ON PAGE RELOAD
+  const savedReqId = localStorage.getItem('vynix_active_ride_id');
+  if (savedReqId) {
+      get(ref(db, `ride_requests/${savedReqId}`)).then(snap => {
+          const data = snap.val();
+          if (data && (data.status === 'pending' || data.status === 'accepted')) {
+              window.AppState.activeRideReqId = savedReqId;
+              document.getElementById('bookPanel').style.display = 'none';
+              if (data.status === 'pending') {
+                  document.getElementById('searchOverlay').classList.add('show');
+                  document.getElementById('searchTimerTxt').textContent = "...";
+              }
+              window.listenToActiveRide(savedReqId);
+          } else {
+              localStorage.removeItem('vynix_active_ride_id');
+          }
+      });
+  }
 });
 
 // BOOKING & REALTIME LISTENER
@@ -610,6 +629,7 @@ document.getElementById('bookBtn').addEventListener('click', async () => {
     });
     
     window.AppState.activeRideReqId = rideReqRef.key;
+    localStorage.setItem('vynix_active_ride_id', rideReqRef.key); // Save to Local Storage
     window.AppState.hasNotifiedArrival = false;
     window.AppState.rideWasAccepted = false;
     document.getElementById('adPin').textContent = secPin;
@@ -629,6 +649,7 @@ let currentRideDataCache = null;
 function cleanupActiveRide() {
     window.AppState.activeRideReqId = null;
     window.AppState.rideWasAccepted = false;
+    localStorage.removeItem('vynix_active_ride_id'); // Clear Local Storage
     document.getElementById('activeRidePanel').classList.remove('show');
     setTimeout(() => { document.getElementById('bookPanel').style.display = 'flex'; if (window.AppState.mapFly) window.AppState.mapFly(); }, 400);
     if(driverLocUnsub) { driverLocUnsub(); driverLocUnsub = null; }
@@ -750,6 +771,7 @@ function cancelSearch(msg = 'Search cancelled.') {
   if(window.AppState.activeRideReqId) {
     update(ref(db,'ride_requests/'+window.AppState.activeRideReqId), {status: 'cancelled'});
     window.AppState.activeRideReqId=null;
+    localStorage.removeItem('vynix_active_ride_id');
   }
 }
 document.getElementById('btnCancelSearch').addEventListener('click', () => cancelSearch('Search cancelled by user'));
