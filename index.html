@@ -480,13 +480,32 @@ const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDo
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
 let cu=null; window.db = db;
 
-// MAPBOX
+// 3D MAPBOX INITIALIZATION
 const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
 mapboxgl.accessToken=TK; const DLNG=28.9934,DLAT=-24.1991; const DEFAULT_ZOOM = 15.5;
-const map=new mapboxgl.Map({ container:'map', style: 'mapbox://styles/mapbox/light-v11', center:[DLNG,DLAT],zoom:DEFAULT_ZOOM, attributionControl:false });
+const map=new mapboxgl.Map({ container:'map', style: 'mapbox://styles/mapbox/light-v11', center:[DLNG,DLAT],zoom:DEFAULT_ZOOM, pitch: 45, attributionControl:false });
 window.AppState._mapInstance = map;
 
-map.on('load', () => { const skel = document.getElementById('mapSkeleton'); if(skel) { skel.classList.add('hide'); setTimeout(() => skel.remove(), 400); } });
+map.on('style.load', () => { 
+  const skel = document.getElementById('mapSkeleton'); if(skel) { skel.classList.add('hide'); setTimeout(() => skel.remove(), 400); } 
+  // Add 3D Buildings Layer
+  const layers = map.getStyle().layers;
+  const labelLayerId = layers.find(l => l.type === 'symbol' && l.layout['text-field'])?.id;
+  map.addLayer({
+      'id': '3d-buildings',
+      'source': 'composite',
+      'source-layer': 'building',
+      'filter': ['==', 'extrude', 'true'],
+      'type': 'fill-extrusion',
+      'minzoom': 15,
+      'paint': {
+          'fill-extrusion-color': '#e2e4f0',
+          'fill-extrusion-height': ['get', 'height'],
+          'fill-extrusion-base': ['get', 'min_height'],
+          'fill-extrusion-opacity': 0.6
+      }
+  }, labelLayerId);
+});
 
 const oEl=document.createElement('div'); oEl.className='cmarker';
 const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
@@ -580,29 +599,27 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('signOutSection').style.display=u?'':'none';
   if(!u){ document.getElementById('authOverlay').classList.add('show'); return; }
   document.getElementById('authOverlay').classList.remove('show');
+  
   onValue(ref(db,`users/${u.uid}/trips`),snap=>{ 
       const list = Object.values(snap.val()||{}).reverse();
       document.getElementById('tripsList').innerHTML=list.length ? list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short'}):''}</div></div>`).join('') : '<div style="color:var(--muted);text-align:center;padding:40px;">No trips yet</div>';
   });
 
-  // RESTORE ACTIVE RIDE ON PAGE RELOAD
-  const savedReqId = localStorage.getItem('vynix_active_ride_id');
-  if (savedReqId) {
-      get(ref(db, `ride_requests/${savedReqId}`)).then(snap => {
-          const data = snap.val();
-          if (data && (data.status === 'pending' || data.status === 'accepted')) {
-              window.AppState.activeRideReqId = savedReqId;
-              document.getElementById('bookPanel').style.display = 'none';
-              if (data.status === 'pending') {
-                  document.getElementById('searchOverlay').classList.add('show');
-                  document.getElementById('searchTimerTxt').textContent = "...";
-              }
-              window.listenToActiveRide(savedReqId);
-          } else {
-              localStorage.removeItem('vynix_active_ride_id');
+  // RESTORE ACTIVE RIDE ON PAGE RELOAD USING REALTIME DB
+  get(ref(db, 'ride_requests')).then(snap => {
+      const reqs = snap.val() || {};
+      const activeEntry = Object.entries(reqs).find(([k, v]) => v.riderUid === u.uid && (v.status === 'pending' || v.status === 'accepted'));
+      if (activeEntry) {
+          const [reqId, data] = activeEntry;
+          window.AppState.activeRideReqId = reqId;
+          document.getElementById('bookPanel').style.display = 'none';
+          if (data.status === 'pending') {
+              document.getElementById('searchOverlay').classList.add('show');
+              document.getElementById('searchTimerTxt').textContent = "...";
           }
-      });
-  }
+          window.listenToActiveRide(reqId);
+      }
+  });
 });
 
 // BOOKING & REALTIME LISTENER
@@ -629,7 +646,6 @@ document.getElementById('bookBtn').addEventListener('click', async () => {
     });
     
     window.AppState.activeRideReqId = rideReqRef.key;
-    localStorage.setItem('vynix_active_ride_id', rideReqRef.key); // Save to Local Storage
     window.AppState.hasNotifiedArrival = false;
     window.AppState.rideWasAccepted = false;
     document.getElementById('adPin').textContent = secPin;
@@ -649,7 +665,6 @@ let currentRideDataCache = null;
 function cleanupActiveRide() {
     window.AppState.activeRideReqId = null;
     window.AppState.rideWasAccepted = false;
-    localStorage.removeItem('vynix_active_ride_id'); // Clear Local Storage
     document.getElementById('activeRidePanel').classList.remove('show');
     setTimeout(() => { document.getElementById('bookPanel').style.display = 'flex'; if (window.AppState.mapFly) window.AppState.mapFly(); }, 400);
     if(driverLocUnsub) { driverLocUnsub(); driverLocUnsub = null; }
@@ -771,7 +786,6 @@ function cancelSearch(msg = 'Search cancelled.') {
   if(window.AppState.activeRideReqId) {
     update(ref(db,'ride_requests/'+window.AppState.activeRideReqId), {status: 'cancelled'});
     window.AppState.activeRideReqId=null;
-    localStorage.removeItem('vynix_active_ride_id');
   }
 }
 document.getElementById('btnCancelSearch').addEventListener('click', () => cancelSearch('Search cancelled by user'));
