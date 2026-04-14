@@ -7,10 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js" defer></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js" defer></script>
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js" defer></script>
 
 <style>
 :root{
@@ -58,7 +55,7 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
 .l-txt{ opacity:0;transition:opacity .18s .1s; font-size:19px;letter-spacing:-.4px;font-weight:800; }
 .sidebar:hover .l-txt{opacity:1;}
 
-.nl{ display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px; color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s; margin-bottom:4px;min-width:240px; min-height: 44px; /* UX Tap Target */ }
+.nl{ display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px; color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s; margin-bottom:4px;min-width:240px; min-height: 44px; }
 .nl svg{flex-shrink:0;width:22px;height:22px;}
 .nl:hover{background:rgba(26,59,255,.05);color:var(--blue);}
 .nl.act{background:rgba(26,59,255,.09);color:var(--blue);font-weight:600;}
@@ -101,7 +98,7 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
 
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
 .ptitle{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
-.top-cbtn { background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff; padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s; display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; min-height: 44px; align-items: center; justify-content: center; } /* UX Fix */
+.top-cbtn { background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff; padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s; display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; min-height: 44px; align-items: center; justify-content: center; }
 .top-cbtn:active { transform: scale(0.96); }
 
 /* geocoder */
@@ -844,186 +841,63 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
   </nav>
 </div>
 
-<script type="module">
-import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as fbOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getDatabase,ref,set,push,get,onValue,update}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut as fbOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getDatabase, ref, set, push, get, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getRemoteConfig, fetchAndActivate, getValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
+
+// ARCHITECTURE: Encapsulated State Management
+const BASE = [
+  {id:1,type:'VynixGo',     baseFare:20,perKm:5.5, capacity:4, driver:'Kabelo P.', specs:'Compact · Economy'},
+  {id:2,type:'VynixComfort',baseFare:30,perKm:8,   capacity:4, driver:'Thabo M.',  specs:'Newer cars · Legroom'},
+  {id:3,type:'VynixXL',     baseFare:45,perKm:12,  capacity:6, driver:'Lesego R.', specs:'SUVs & Vans · 6 seats'}
+];
+
+window.AppState = {
+  rides: BASE.map(r=>({...r,price:r.baseFare, time: '3 min'})),
+  selId: 1,
+  distKm: 0,
+  destName: '',
+  tripDurationMins: 0,
+  activeRideReqId: null,
+  _mapInstance: null,
+  mapFly: null
+};
+
+window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
+window.showToast = function(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+};
+
+// ── FIREBASE SETUP ──────────────────────────────────────────────────
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
-
 gp.setCustomParameters({ prompt: 'select_account' });
-
 let cu=null;
 window.db = db;
 
-// ARCHITECTURE & SECURITY: Ensure this Yoco Public Key is strictly restricted via the Yoco Dashboard to your production domains to prevent unauthorized API calls.
 const rc = getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis = 3600000;
 let yocoPublicKey = 'pk_test_ed3c54a6gOol69qa7f45';
-
 fetchAndActivate(rc).then(() => {
   const remoteKey = getValue(rc, 'yoco_public_key').asString();
   if(remoteKey) { yocoPublicKey = remoteKey; }
 }).catch(console.error);
 
-// ── GOOGLE SHEET HELPERS ──────────────────────────────────────────────
-function openGoogleSheet(mode) {
-  const bg = document.getElementById('googleSheetBg');
-  const headline = document.getElementById('gsHeadline');
-  const sub = document.getElementById('gsSub');
-  const btnLabel = document.getElementById('gsBtnLabel');
-  if (mode === 'create') {
-    headline.textContent = 'Create your account';
-    sub.textContent = 'Sign up with Google to start booking rides, track your trips, and manage your wallet.';
-    btnLabel.textContent = 'Sign up with Google';
-  } else {
-    headline.textContent = 'Welcome back';
-    sub.textContent = 'Sign in with your Google account to continue booking rides and managing your wallet.';
-    btnLabel.textContent = 'Continue with Google';
-  }
-  bg.classList.add('show');
-}
-function closeGoogleSheet() {
-  document.getElementById('googleSheetBg').classList.remove('show');
-}
-
-// ── EVENT BINDINGS (Replaces Inline Handlers) ─────────────────────────
-document.getElementById('btnLogin').addEventListener('click', () => openGoogleSheet('login'));
-document.getElementById('btnCreate').addEventListener('click', () => openGoogleSheet('create'));
-document.getElementById('skipAuth').addEventListener('click', () => {
-  document.getElementById('authOverlay').classList.remove('show');
-  window.showToast('Demo mode — rides won\'t be saved');
-});
-document.getElementById('gsClose').addEventListener('click', closeGoogleSheet);
-document.getElementById('googleSheetBg').addEventListener('click', e => {
-  if (e.target === document.getElementById('googleSheetBg')) closeGoogleSheet();
-});
-document.getElementById('gsGoogleBtn').addEventListener('click', () => {
-  closeGoogleSheet();
-  signInWithPopup(auth, gp).catch(() => window.showToast('Sign-in cancelled'));
-});
-
-// ── NOTIFICATIONS ─────────────────────────────────────────────────────
-const openNotifModal = function() {
-  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
-  ['ride','arriving','promo','weekly','wallet'].forEach(k => {
-    const el = document.getElementById(`notif-${k}`);
-    if(el && prefs[k] !== undefined) el.checked = prefs[k];
-  });
-  document.getElementById('notifModal').classList.add('show');
-};
-const closeNotifModal = function() {
-  document.getElementById('notifModal').classList.remove('show');
-};
-const saveNotifPrefs = function() {
-  const prefs = {};
-  ['ride','arriving','promo','weekly','wallet'].forEach(k => {
-    const el = document.getElementById(`notif-${k}`);
-    if(el) prefs[k] = el.checked;
-  });
-  localStorage.setItem('vx_notif_prefs', JSON.stringify(prefs));
-  updateNotifSummary(prefs);
-  closeNotifModal();
-  window.showToast('Notification preferences saved');
-};
-function updateNotifSummary(prefs) {
-  const labels = {ride:'Ride updates', arriving:'Driver alerts', promo:'Offers', weekly:'Weekly digest', wallet:'Wallet activity'};
-  const active = Object.entries(prefs).filter(([,v])=>v).map(([k])=>labels[k]||k);
-  const el = document.getElementById('notifSummary');
-  if(el) el.textContent = active.length ? active.join(' · ') : 'All notifications off';
-}
-(function(){
-  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{"ride":true,"arriving":true,"wallet":true}');
-  updateNotifSummary(prefs);
-})();
-
-// Bind Notification Events
-document.getElementById('notifRow').addEventListener('click', openNotifModal);
-document.getElementById('btnCloseNotif').addEventListener('click', closeNotifModal);
-document.getElementById('btnSaveNotif').addEventListener('click', saveNotifPrefs);
-
-// ── PAYMENT METHODS ───────────────────────────────────────────────────
-const openPayModal = function() {
-  const walBal = document.getElementById('walletBal');
-  const payBal = document.getElementById('payModalWalletBal');
-  const payStatus = document.getElementById('payModalWalletStatus');
-  if(walBal && payBal) {
-    payBal.textContent = 'Balance: ' + walBal.textContent;
-    const balNum = parseFloat((walBal.textContent||'0').replace('R','').trim());
-    if(payStatus) {
-      if(balNum > 0) { payStatus.textContent = 'Funded'; payStatus.className = 'pm-badge'; }
-      else { payStatus.textContent = 'Empty'; payStatus.style.background='rgba(229,53,53,.08)'; payStatus.style.color='var(--red)'; }
-    }
-  }
-  document.getElementById('payModal').classList.add('show');
-};
-const closePayModal = function() {
-  document.getElementById('payModal').classList.remove('show');
-};
-
-document.getElementById('payRow').addEventListener('click', openPayModal);
-document.getElementById('btnClosePay').addEventListener('click', closePayModal);
-document.getElementById('btnTopUpFromPay').addEventListener('click', () => { closePayModal(); document.getElementById('topUpModal').classList.add('show'); });
-
-// ── SAVED PLACES ──────────────────────────────────────────────────────
-const openPlacesModal = function() {
-  const load = (data) => {
-    document.getElementById('sp-home').value = data.home || '';
-    document.getElementById('sp-work').value = data.work || '';
-    document.getElementById('sp-fav').value  = data.fav  || '';
-  };
-  if(cu) {
-    get(ref(db, `users/${cu.uid}/savedPlaces`)).then(snap => {
-      load(snap.val() || {});
-    }).catch(()=>{ load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); });
-  } else {
-    load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}'));
-  }
-  document.getElementById('placesModal').classList.add('show');
-};
-const closePlacesModal = function() {
-  document.getElementById('placesModal').classList.remove('show');
-};
-const savePlaces = async function() {
-  const data = {
-    home: document.getElementById('sp-home').value.trim(),
-    work: document.getElementById('sp-work').value.trim(),
-    fav:  document.getElementById('sp-fav').value.trim(),
-  };
-  localStorage.setItem('vx_saved_places', JSON.stringify(data));
-  if(cu) {
-    try { await set(ref(db, `users/${cu.uid}/savedPlaces`), data); } catch(e){}
-  }
-  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
-  const sumEl = document.getElementById('savedPlacesSummary');
-  if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
-  closePlacesModal();
-  window.showToast('Saved places updated');
-};
-(function(){
-  const data = JSON.parse(localStorage.getItem('vx_saved_places')||'{}');
-  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
-  const sumEl = document.getElementById('savedPlacesSummary');
-  if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
-})();
-
-document.getElementById('placesRow').addEventListener('click', openPlacesModal);
-document.getElementById('btnClosePlaces').addEventListener('click', closePlacesModal);
-document.getElementById('btnSavePlaces').addEventListener('click', savePlaces);
-
-// ── YOCO ──────────────────────────────────────────────────────────────
+// ── YOCO GLOBALS ────────────────────────────────────────────────────
 window.triggerYocoPayment = function(amount, description, onSuccessCallback, restoreModalId) {
-  if (typeof window.YocoSDK === 'undefined') {
-    window.showToast("Payment system currently unavailable.");
-    return;
-  }
+  if (typeof window.YocoSDK === 'undefined') { window.showToast("Payment system currently unavailable."); return; }
   if (restoreModalId) document.getElementById(restoreModalId).classList.remove('show');
   document.body.classList.add('yoco-active');
   const isMobile = window.innerWidth < 900;
-  const bookPanel = document.getElementById('bookPanel');
-  const activePanel = document.getElementById('activeRidePanel');
+  const bookPanel = document.getElementById('bookPanel'), activePanel = document.getElementById('activeRidePanel');
   let bookPanelWasVisible = false, activePanelWasVisible = false;
   if (isMobile) {
     if (bookPanel && bookPanel.style.display !== 'none') {
@@ -1033,8 +907,7 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
       bookPanel.style.opacity = '0';
     }
     if (activePanel && activePanel.classList.contains('show')) {
-      activePanelWasVisible = true;
-      activePanel.classList.remove('show');
+      activePanelWasVisible = true; activePanel.classList.remove('show');
     }
   }
   const restoreSheets = () => {
@@ -1055,221 +928,9 @@ window.triggerYocoPayment = function(amount, description, onSuccessCallback, res
       } else { onSuccessCallback(result.id); }
     }
   });
-  if (window.innerWidth >= 900) {
-    setTimeout(() => {
-      const yocoContainers = document.querySelectorAll('div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"], body > div[style*="position: fixed"]');
-      yocoContainers.forEach(el => {
-        el.style.setProperty('z-index', '2147483647', 'important');
-        if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') {
-          el.style.setProperty('left', 'auto', 'important');
-          el.style.setProperty('right', '40px', 'important');
-          el.style.setProperty('transform', 'none', 'important');
-        }
-      });
-    }, 120);
-  }
 };
 
-function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
-function updateUI(u){
-  cu=u;
-  const n=u?(u.displayName||'Rider'):'Guest',e=u?u.email:'Not signed in',i=window.ini2(n);
-  ['sbAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=i;});
-  s('sbName',n);s('sbEmail',e);s('profName',n);s('profEmail',e);
-  const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
-  if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';}
-  else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
-}
-
-onAuthStateChanged(auth,async u=>{
-  document.getElementById('initLoader').classList.add('hide');
-  updateUI(u);
-  if(!u){
-    document.getElementById('authOverlay').classList.add('show');
-    return;
-  }
-  document.getElementById('authOverlay').classList.remove('show');
-  closeGoogleSheet();
-  const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
-  if(!ws.exists()) await set(ref(db,`users/${u.uid}/wallet/balance`), 0);
-  onValue(ref(db,`users/${u.uid}/trips`),snap=>{
-    renderTrips(Object.values(snap.val()||{}).reverse());
-  });
-  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{
-    const d=snap.val()||{balance:0};
-    document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;
-    renderTx(d.transactions||{});
-  });
-  get(ref(db,`users/${u.uid}/savedPlaces`)).then(snap=>{
-    const data = snap.val()||{};
-    const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
-    const sumEl = document.getElementById('savedPlacesSummary');
-    if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
-  }).catch(()=>{});
-});
-
-function renderTrips(list){
-  const el=document.getElementById('tripsList');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
-  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
-}
-function renderTx(obj){
-  const el=document.getElementById('txList'),list=Object.values(obj).reverse();
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
-  el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
-}
-
-const initiateRidePayment = async function(){
-  if(!cu) { window.showToast('Please sign in first'); return; }
-  const r = window.AppState.rides.find(x => x.id === window.AppState.selId);
-  window.triggerYocoPayment(
-    r.price, `Ride: ${r.type}`,
-    async (token) => {
-      try {
-        const dest = window.AppState.destName.split(',').slice(0,2).join(',');
-        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
-        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
-        
-        const secPin = Math.floor(1000 + Math.random() * 9000).toString();
-        const rideReqRef = await push(ref(db,'ride_requests'),{
-          status:'pending',
-          riderUid: cu.uid,
-          riderName: cu.displayName || 'Rider',
-          rideType: r.type,
-          fare: r.price,
-          pickup: document.getElementById('originLabel').textContent || 'Current Location',
-          destination: window.AppState.destName,
-          distKm: window.AppState.distKm || 0,
-          tripMins: window.AppState.tripDurationMins || 0,
-          capacity: r.capacity || 4,
-          securityPin: secPin,
-          createdAt: Date.now()
-        });
-        window.AppState.activeRideReqId = rideReqRef.key;
-        
-        document.getElementById('bookPanel').style.display = 'none';
-        if(window.AppState.mapFly) window.AppState.mapFly();
-        window.startSearchTimer();
-      } catch(e) { window.showToast('Database error after payment.'); }
-    },
-    'confirmModal'
-  );
-};
-document.getElementById('bookBtn').addEventListener('click', initiateRidePayment);
-
-const executeYocoTopUp = async function() {
-  if(!cu) { window.showToast("Sign in first."); return; }
-  const amt = parseFloat(document.getElementById('yocoAmount').value);
-  if(isNaN(amt) || amt < 10) { window.showToast("Enter a valid amount (Min R10)"); return; }
-  window.triggerYocoPayment(amt, 'Wallet Top-Up', async (token) => {
-    try {
-      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
-      const snap = await get(wRef);
-      const curr = snap.val() || 0;
-      await update(ref(db, `users/${cu.uid}/wallet`), { balance: curr + amt });
-      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
-      document.getElementById('yocoAmount').value = '';
-      window.showToast(`Successfully added R${amt.toFixed(2)}`);
-    } catch(e) { window.showToast("Database error saving top-up."); }
-  }, 'topUpModal');
-};
-document.getElementById('btnExecYoco').addEventListener('click', executeYocoTopUp);
-
-const executeVoucher = async function() {
-  if(!cu) { window.showToast("Sign in first."); return; }
-  const code = document.getElementById('voucherCode').value.trim().toUpperCase();
-  if(!code) { window.showToast("Please enter a code"); return; }
-  try {
-    const vRef = ref(db, `vouchers/${code}`);
-    const snap = await get(vRef);
-    if(snap.exists()) {
-      const data = snap.val();
-      if(data.used) { window.showToast("Voucher has already been used."); return; }
-      const amt = parseFloat(data.amount);
-      if(isNaN(amt)) { window.showToast("Invalid voucher data."); return; }
-      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
-      const wSnap = await get(wRef);
-      const curr = wSnap.val() || 0;
-      const updates = {};
-      updates[`users/${cu.uid}/wallet/balance`] = curr + amt;
-      updates[`vouchers/${code}/used`] = true;
-      updates[`vouchers/${code}/redeemedBy`] = cu.uid;
-      await update(ref(db), updates);
-      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Redeemed Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
-      document.getElementById('topUpModal').classList.remove('show');
-      window.showToast(`R${amt.toFixed(2)} added from voucher!`);
-      document.getElementById('voucherCode').value = '';
-    } else { window.showToast("Invalid voucher code."); }
-  } catch(e) { window.showToast("Error processing voucher."); }
-};
-document.getElementById('btnExecVoucher').addEventListener('click', executeVoucher);
-
-document.getElementById('authRow').addEventListener('click', () => { if(!cu) openGoogleSheet('login'); });
-document.getElementById('btnSignOutRow').addEventListener('click', async () => {
-  await fbOut(auth);
-  document.getElementById('tripsList').innerHTML='';
-  document.getElementById('txList').innerHTML='';
-  document.getElementById('walletBal').textContent='R 0.00';
-  window.showToast('Signed out');
-  document.getElementById('authOverlay').classList.add('show');
-});
-
-// PERFORMANCE: Native Firebase Realtime Reactive Driver Polling (Replaced setInterval)
-import { onValue as rtdbOnValue, ref as rtdbRef } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-let driverMarkersObj = {}, noDriverToastShown = false;
-setTimeout(() => {
-  if (window.db) {
-    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => { 
-      const drivers = snap.val() || {}; 
-      const driverIds = Object.keys(drivers);
-      
-      if (driverIds.length === 0) {
-        if (!noDriverToastShown) { window.showToast('No drivers currently available nearby.'); noDriverToastShown = true; }
-      } else { noDriverToastShown = false; }
-      
-      // Remove stale markers efficiently
-      Object.keys(driverMarkersObj).forEach(id => {
-        if(!drivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
-      });
-      
-      // Instantly update remaining/new markers
-      driverIds.forEach(id => {
-        const d = drivers[id];
-        if(d.lat && d.lng && window.mapboxgl && window.AppState && window.AppState._mapInstance) {
-          if(driverMarkersObj[id]) { 
-            driverMarkersObj[id].setLngLat([d.lng, d.lat]); 
-          } else {
-            const el = document.createElement('div'); el.className = 'car-marker'; el.innerHTML = '🚕';
-            driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window.AppState._mapInstance);
-          }
-        }
-      });
-    });
-  }
-}, 2000);
-</script>
-
-<script>
-// ARCHITECTURE: Encapsulated State Management to replace global window variables
-const BASE = [
-  {id:1,type:'VynixGo',     baseFare:20,perKm:5.5, capacity:4, driver:'Kabelo P.', specs:'Compact · Economy'},
-  {id:2,type:'VynixComfort',baseFare:30,perKm:8,   capacity:4, driver:'Thabo M.',  specs:'Newer cars · Legroom'},
-  {id:3,type:'VynixXL',     baseFare:45,perKm:12,  capacity:6, driver:'Lesego R.', specs:'SUVs & Vans · 6 seats'}
-];
-
-window.AppState = {
-  rides: BASE.map(r=>({...r,price:r.baseFare, time: '3 min'})),
-  selId: 1,
-  distKm: 0,
-  destName: '',
-  tripDurationMins: 0,
-  activeRideReqId: null,
-  _mapInstance: null,
-  mapFly: null
-};
-
-window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
-
+// ── MAPBOX INITIALIZATION ───────────────────────────────────────────
 const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
 mapboxgl.accessToken=TK;
 const DLNG=28.9934,DLAT=-24.1991;
@@ -1283,7 +944,6 @@ window.AppState._mapInstance = map;
 map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
 map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
 
-// UX: Remove Skeleton when MapBox finishes rendering
 map.on('load', () => {
   const skel = document.getElementById('mapSkeleton');
   if(skel) { skel.classList.add('hide'); setTimeout(() => skel.remove(), 400); }
@@ -1371,7 +1031,6 @@ geocoder.on('clear',()=>{
   map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}});
 });
 
-
 function haversine(la1,lo1,la2,lo2){
   const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;
   const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;
@@ -1387,12 +1046,11 @@ function updatePrices(){
   renderRides();
 }
 
-// PERFORMANCE: Replaced inline handlers with data-attributes for Event Delegation
 function renderRides(){
   document.getElementById('rideList').innerHTML=window.AppState.rides.map(r=>`
     <div class="rcard ${r.id===window.AppState.selId?'sel':''}" data-id="${r.id}" role="button" tabindex="0">
       <div class="rinfo">
-        <div class="rav">${ini2(r.driver)}</div>
+        <div class="rav">${window.ini2(r.driver)}</div>
         <div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">👤${r.capacity}</span></div>
         <div class="rmeta">${r.specs}</div></div>
       </div>
@@ -1402,8 +1060,6 @@ function renderRides(){
       </div>
     </div>`).join('');
 }
-
-// Event Delegation for Ride Selection
 document.getElementById('rideList').addEventListener('click', e => {
   const card = e.target.closest('.rcard');
   if(card) {
@@ -1415,6 +1071,71 @@ document.getElementById('rideList').addEventListener('click', e => {
   }
 });
 
+
+// ── AUTH & GOOGLE SHEETS ────────────────────────────────────────────
+function openGoogleSheet(mode) {
+  const bg = document.getElementById('googleSheetBg'), headline = document.getElementById('gsHeadline'), sub = document.getElementById('gsSub'), btnLabel = document.getElementById('gsBtnLabel');
+  if (mode === 'create') {
+    headline.textContent = 'Create your account'; sub.textContent = 'Sign up with Google to start booking rides, track your trips, and manage your wallet.'; btnLabel.textContent = 'Sign up with Google';
+  } else {
+    headline.textContent = 'Welcome back'; sub.textContent = 'Sign in with your Google account to continue booking rides and managing your wallet.'; btnLabel.textContent = 'Continue with Google';
+  }
+  bg.classList.add('show');
+}
+function closeGoogleSheet() { document.getElementById('googleSheetBg').classList.remove('show'); }
+
+document.getElementById('btnLogin').addEventListener('click', () => openGoogleSheet('login'));
+document.getElementById('btnCreate').addEventListener('click', () => openGoogleSheet('create'));
+document.getElementById('skipAuth').addEventListener('click', () => { document.getElementById('authOverlay').classList.remove('show'); window.showToast('Demo mode — rides won\'t be saved'); });
+document.getElementById('gsClose').addEventListener('click', closeGoogleSheet);
+document.getElementById('googleSheetBg').addEventListener('click', e => { if (e.target === document.getElementById('googleSheetBg')) closeGoogleSheet(); });
+document.getElementById('gsGoogleBtn').addEventListener('click', () => { closeGoogleSheet(); signInWithPopup(auth, gp).catch(() => window.showToast('Sign-in cancelled')); });
+
+function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
+function updateUI(u){
+  cu=u;
+  const n=u?(u.displayName||'Rider'):'Guest',e=u?u.email:'Not signed in',i=window.ini2(n);
+  ['sbAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=i;});
+  s('sbName',n);s('sbEmail',e);s('profName',n);s('profEmail',e);
+  const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
+  if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';}
+  else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
+}
+
+onAuthStateChanged(auth,async u=>{
+  document.getElementById('initLoader').classList.add('hide');
+  updateUI(u);
+  if(!u){ document.getElementById('authOverlay').classList.add('show'); return; }
+  document.getElementById('authOverlay').classList.remove('show');
+  closeGoogleSheet();
+  const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
+  if(!ws.exists()) await set(ref(db,`users/${u.uid}/wallet/balance`), 0);
+  onValue(ref(db,`users/${u.uid}/trips`),snap=>{ renderTrips(Object.values(snap.val()||{}).reverse()); });
+  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{
+    const d=snap.val()||{balance:0};
+    document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;
+    renderTx(d.transactions||{});
+  });
+  get(ref(db,`users/${u.uid}/savedPlaces`)).then(snap=>{
+    const data = snap.val()||{};
+    const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+    const sumEl = document.getElementById('savedPlacesSummary');
+    if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
+  }).catch(()=>{});
+});
+
+function renderTrips(list){
+  const el=document.getElementById('tripsList');
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
+  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
+}
+function renderTx(obj){
+  const el=document.getElementById('txList'),list=Object.values(obj).reverse();
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
+  el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
+}
+
+// ── RIDE BOOKING & PAYMENTS ─────────────────────────────────────────
 const openModal = function(){
   if(!window.AppState.destName){window.showToast('Search for a destination first');return;}
   const r=window.AppState.rides.find(x=>x.id===window.AppState.selId);
@@ -1428,19 +1149,98 @@ const openModal = function(){
 };
 document.getElementById('confirmBtn').addEventListener('click', openModal);
 document.getElementById('btnCloseConfirm').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('show'));
+
+const initiateRidePayment = async function(){
+  if(!cu) { window.showToast('Please sign in first'); return; }
+  const r = window.AppState.rides.find(x => x.id === window.AppState.selId);
+  window.triggerYocoPayment(
+    r.price, `Ride: ${r.type}`,
+    async (token) => {
+      try {
+        const dest = window.AppState.destName.split(',').slice(0,2).join(',');
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
+        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
+        
+        const secPin = Math.floor(1000 + Math.random() * 9000).toString();
+        const rideReqRef = await push(ref(db,'ride_requests'),{
+          status:'pending', riderUid: cu.uid, riderName: cu.displayName || 'Rider', rideType: r.type, fare: r.price,
+          pickup: document.getElementById('originLabel').textContent || 'Current Location', destination: window.AppState.destName,
+          distKm: window.AppState.distKm || 0, tripMins: window.AppState.tripDurationMins || 0, capacity: r.capacity || 4,
+          securityPin: secPin, createdAt: Date.now()
+        });
+        window.AppState.activeRideReqId = rideReqRef.key;
+        
+        document.getElementById('bookPanel').style.display = 'none';
+        if(window.AppState.mapFly) window.AppState.mapFly();
+        window.startSearchTimer();
+      } catch(e) { window.showToast('Database error after payment.'); }
+    },
+    'confirmModal'
+  );
+};
+document.getElementById('bookBtn').addEventListener('click', initiateRidePayment);
+
+// ── WALLET TOP UP ───────────────────────────────────────────────────
 document.getElementById('btnOpenTopUp').addEventListener('click', () => document.getElementById('topUpModal').classList.add('show'));
 document.getElementById('btnCloseTopUp').addEventListener('click', () => document.getElementById('topUpModal').classList.remove('show'));
 
+const executeYocoTopUp = async function() {
+  if(!cu) { window.showToast("Sign in first."); return; }
+  const amt = parseFloat(document.getElementById('yocoAmount').value);
+  if(isNaN(amt) || amt < 10) { window.showToast("Enter a valid amount (Min R10)"); return; }
+  window.triggerYocoPayment(amt, 'Wallet Top-Up', async (token) => {
+    try {
+      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
+      const snap = await get(wRef);
+      const curr = snap.val() || 0;
+      await update(ref(db, `users/${cu.uid}/wallet`), { balance: curr + amt });
+      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
+      document.getElementById('yocoAmount').value = '';
+      window.showToast(`Successfully added R${amt.toFixed(2)}`);
+    } catch(e) { window.showToast("Database error saving top-up."); }
+  }, 'topUpModal');
+};
+document.getElementById('btnExecYoco').addEventListener('click', executeYocoTopUp);
+
+const executeVoucher = async function() {
+  if(!cu) { window.showToast("Sign in first."); return; }
+  const code = document.getElementById('voucherCode').value.trim().toUpperCase();
+  if(!code) { window.showToast("Please enter a code"); return; }
+  try {
+    const vRef = ref(db, `vouchers/${code}`);
+    const snap = await get(vRef);
+    if(snap.exists()) {
+      const data = snap.val();
+      if(data.used) { window.showToast("Voucher has already been used."); return; }
+      const amt = parseFloat(data.amount);
+      if(isNaN(amt)) { window.showToast("Invalid voucher data."); return; }
+      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
+      const wSnap = await get(wRef);
+      const curr = wSnap.val() || 0;
+      const updates = {};
+      updates[`users/${cu.uid}/wallet/balance`] = curr + amt;
+      updates[`vouchers/${code}/used`] = true;
+      updates[`vouchers/${code}/redeemedBy`] = cu.uid;
+      await update(ref(db), updates);
+      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Redeemed Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
+      document.getElementById('topUpModal').classList.remove('show');
+      window.showToast(`R${amt.toFixed(2)} added from voucher!`);
+      document.getElementById('voucherCode').value = '';
+    } else { window.showToast("Invalid voucher code."); }
+  } catch(e) { window.showToast("Error processing voucher."); }
+};
+document.getElementById('btnExecVoucher').addEventListener('click', executeVoucher);
+
+// ── RIDE STATUS/SEARCH ──────────────────────────────────────────────
 window.cancelSearch = function(msg = 'Search cancelled.') {
   clearInterval(searchInterval); clearTimeout(searchTimeout);
   document.getElementById('searchOverlay').classList.remove('show');
   document.getElementById('bookPanel').style.display = 'flex';
   window.showToast(msg);
   if(window.AppState.activeRideReqId) {
-    import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js").then(({ref:fbRef,get:fbGet,remove:fbRemove})=>{
-      const reqRef = fbRef(window.db,'ride_requests/'+window.AppState.activeRideReqId);
-      fbGet(reqRef).then(snap=>{ if(snap.exists()&&snap.val().status==='pending') fbRemove(reqRef); });
-    }); window.AppState.activeRideReqId=null;
+    const reqRef = ref(db,'ride_requests/'+window.AppState.activeRideReqId);
+    get(reqRef).then(snap=>{ if(snap.exists()&&snap.val().status==='pending') { update(reqRef, {status: 'cancelled'}); } });
+    window.AppState.activeRideReqId=null;
   }
   if(dMk) {
     map.fitBounds([
@@ -1465,9 +1265,7 @@ window.startSearchTimer = function() {
     circle.style.strokeDashoffset = offset;
     if(timeLeft <= 0) clearInterval(searchInterval);
   }, 1000);
-  searchTimeout = setTimeout(() => {
-    window.cancelSearch('No drivers accepted. Payment will be refunded.');
-  }, 60000);
+  searchTimeout = setTimeout(() => { window.cancelSearch('No drivers accepted. Payment will be refunded.'); }, 60000);
 };
 
 const cancelActiveRide = function() {
@@ -1484,7 +1282,67 @@ const cancelActiveRide = function() {
 };
 document.getElementById('btnCancelActiveRide').addEventListener('click', cancelActiveRide);
 
-// Event delegation for Tabs Navigation
+// ── ACCOUNT PREFERENCES ─────────────────────────────────────────────
+document.getElementById('authRow').addEventListener('click', () => { if(!cu) openGoogleSheet('login'); });
+document.getElementById('btnSignOutRow').addEventListener('click', async () => {
+  await fbOut(auth);
+  document.getElementById('tripsList').innerHTML=''; document.getElementById('txList').innerHTML=''; document.getElementById('walletBal').textContent='R 0.00';
+  window.showToast('Signed out'); document.getElementById('authOverlay').classList.add('show');
+});
+
+const openNotifModal = function() {
+  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
+  ['ride','arriving','promo','weekly','wallet'].forEach(k => { const el = document.getElementById(`notif-${k}`); if(el && prefs[k] !== undefined) el.checked = prefs[k]; });
+  document.getElementById('notifModal').classList.add('show');
+};
+const closeNotifModal = function() { document.getElementById('notifModal').classList.remove('show'); };
+const saveNotifPrefs = function() {
+  const prefs = {}; ['ride','arriving','promo','weekly','wallet'].forEach(k => { const el = document.getElementById(`notif-${k}`); if(el) prefs[k] = el.checked; });
+  localStorage.setItem('vx_notif_prefs', JSON.stringify(prefs));
+  const labels = {ride:'Ride updates', arriving:'Driver alerts', promo:'Offers', weekly:'Weekly digest', wallet:'Wallet activity'};
+  const active = Object.entries(prefs).filter(([,v])=>v).map(([k])=>labels[k]||k);
+  const sumEl = document.getElementById('notifSummary'); if(sumEl) sumEl.textContent = active.length ? active.join(' · ') : 'All notifications off';
+  closeNotifModal(); window.showToast('Notification preferences saved');
+};
+document.getElementById('notifRow').addEventListener('click', openNotifModal);
+document.getElementById('btnCloseNotif').addEventListener('click', closeNotifModal);
+document.getElementById('btnSaveNotif').addEventListener('click', saveNotifPrefs);
+
+const openPayModal = function() {
+  const walBal = document.getElementById('walletBal'), payBal = document.getElementById('payModalWalletBal'), payStatus = document.getElementById('payModalWalletStatus');
+  if(walBal && payBal) {
+    payBal.textContent = 'Balance: ' + walBal.textContent;
+    const balNum = parseFloat((walBal.textContent||'0').replace('R','').trim());
+    if(payStatus) {
+      if(balNum > 0) { payStatus.textContent = 'Funded'; payStatus.className = 'pm-badge'; }
+      else { payStatus.textContent = 'Empty'; payStatus.style.background='rgba(229,53,53,.08)'; payStatus.style.color='var(--red)'; }
+    }
+  }
+  document.getElementById('payModal').classList.add('show');
+};
+document.getElementById('payRow').addEventListener('click', openPayModal);
+document.getElementById('btnClosePay').addEventListener('click', () => document.getElementById('payModal').classList.remove('show'));
+document.getElementById('btnTopUpFromPay').addEventListener('click', () => { document.getElementById('payModal').classList.remove('show'); document.getElementById('topUpModal').classList.add('show'); });
+
+const openPlacesModal = function() {
+  const load = (data) => { document.getElementById('sp-home').value = data.home || ''; document.getElementById('sp-work').value = data.work || ''; document.getElementById('sp-fav').value  = data.fav  || ''; };
+  if(cu) { get(ref(db, `users/${cu.uid}/savedPlaces`)).then(snap => { load(snap.val() || {}); }).catch(()=>{ load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); });
+  } else { load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); }
+  document.getElementById('placesModal').classList.add('show');
+};
+const savePlaces = async function() {
+  const data = { home: document.getElementById('sp-home').value.trim(), work: document.getElementById('sp-work').value.trim(), fav:  document.getElementById('sp-fav').value.trim() };
+  localStorage.setItem('vx_saved_places', JSON.stringify(data));
+  if(cu) { try { await set(ref(db, `users/${cu.uid}/savedPlaces`), data); } catch(e){} }
+  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
+  const sumEl = document.getElementById('savedPlacesSummary'); if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
+  document.getElementById('placesModal').classList.remove('show'); window.showToast('Saved places updated');
+};
+document.getElementById('placesRow').addEventListener('click', openPlacesModal);
+document.getElementById('btnClosePlaces').addEventListener('click', () => document.getElementById('placesModal').classList.remove('show'));
+document.getElementById('btnSavePlaces').addEventListener('click', savePlaces);
+
+// ── TABS NAVIGATION ─────────────────────────────────────────────────
 const TABS=['ride','trips','wallet','account'];
 const switchTab=function(name){
   TABS.forEach(t=>{
@@ -1496,22 +1354,46 @@ const switchTab=function(name){
   document.querySelectorAll('.nl[data-tab]').forEach(el=>el.classList.toggle('act',el.dataset.tab===name));
   if(name==='ride') setTimeout(()=>map.resize(),40);
 };
-
 document.querySelectorAll('[data-tab]').forEach(tabEl => {
   tabEl.addEventListener('click', () => switchTab(tabEl.dataset.tab));
   tabEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') switchTab(tabEl.dataset.tab); });
 });
 
-window.showToast=function(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
-};
-
+// ── INITIALIZATION CALLS ────────────────────────────────────────────
 const mapWrap = document.getElementById('tab-ride');
 if(window.ResizeObserver) { new ResizeObserver(() => { if(map) map.resize(); }).observe(mapWrap); }
 renderRides();
 document.getElementById('tab-ride').style.display='block';
+
+// PERFORMANCE: Native Firebase Realtime Reactive Driver Polling
+let driverMarkersObj = {}, noDriverToastShown = false;
+setTimeout(() => {
+  if (window.db) {
+    onValue(ref(window.db, 'active_drivers'), snap => { 
+      const drivers = snap.val() || {}; 
+      const driverIds = Object.keys(drivers);
+      
+      if (driverIds.length === 0) {
+        if (!noDriverToastShown) { window.showToast('No drivers currently available nearby.'); noDriverToastShown = true; }
+      } else { noDriverToastShown = false; }
+      
+      Object.keys(driverMarkersObj).forEach(id => {
+        if(!drivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
+      });
+      
+      driverIds.forEach(id => {
+        const d = drivers[id];
+        if(d.lat && d.lng && window.mapboxgl && window.AppState._mapInstance) {
+          if(driverMarkersObj[id]) { driverMarkersObj[id].setLngLat([d.lng, d.lat]); } 
+          else {
+            const el = document.createElement('div'); el.className = 'car-marker'; el.innerHTML = '🚕';
+            driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window.AppState._mapInstance);
+          }
+        }
+      });
+    });
+  }
+}, 2000);
 </script>
 </body>
 </html>
