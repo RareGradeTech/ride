@@ -698,9 +698,15 @@ window.listenToActiveRide = function(reqId) {
     // 4. CANCELLED BY DRIVER
     if (data.status === 'pending' && data.cancelReason) {
        window.showToast("Driver cancelled: " + data.cancelReason);
+       
+       // Completely cancel the ride on the rider side instead of searching again
+       if(window.AppState.activeRideReqId) {
+         update(ref(db,'ride_requests/'+window.AppState.activeRideReqId), {status: 'cancelled'});
+       }
+       
+       clearInterval(searchInterval); clearTimeout(searchTimeout);
+       document.getElementById('searchOverlay').classList.remove('show');
        cleanupActiveRide();
-       startSearchTimer(); // Restart search loop
-       update(reqRef, {cancelReason: null}); // clear reason so it doesn't trigger again
     }
   });
 };
