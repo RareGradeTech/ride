@@ -107,23 +107,40 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 .locate-btn:active { transform: scale(0.92); }
 @media(min-width: 900px) { .locate-btn { bottom: 24px; right: 24px; } }
 
-/* Mobile Fluid Panel */
+/* Modern Mobile Fluid Panel */
 .panel, .active-panel {
     position: absolute;
     backdrop-filter: blur(24px) saturate(1.8);
     -webkit-backdrop-filter: blur(24px) saturate(1.8);
     display: flex; flex-direction: column; z-index: 30;
     border: 1px solid rgba(255,255,255,0.08);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1), opacity 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1), opacity 0.4s ease, visibility 0.4s;
 }
+.active-panel {
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(150%);
+    z-index: 200;
+}
+.active-panel.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
 @media(max-width:899px){ 
-    .panel, .active-panel { 
+    .panel { 
         bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left: 0; width: 100%; 
         border-radius: 32px 32px 0 0; padding: 16px 20px 20px; 
         box-shadow: 0 -12px 40px rgba(0,0,0,0.08); 
+        height: auto; max-height: calc(100vh - var(--nav-h) - 80px);
     }
-    .panel { height: auto; max-height: calc(100vh - var(--nav-h) - 80px); }
-    .active-panel { gap: 18px; transform: translateY(120%); z-index: 35; }
+    .active-panel { 
+        bottom: 0; left: 0; width: 100%; 
+        border-radius: 32px 32px 0 0; padding: 24px 24px calc(24px + env(safe-area-inset-bottom, 0px)); 
+        box-shadow: 0 -12px 40px rgba(0,0,0,0.15); 
+        gap: 18px; 
+    }
 }
 @media(min-width:900px){ 
     .panel, .active-panel { 
@@ -131,9 +148,9 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
         box-shadow: 0 20px 50px rgba(0,0,0,0.1); background: var(--card); 
     }
     .panel { height: calc(100vh - 44px); max-height: 860px; }
-    .active-panel { bottom: auto; transform: translateY(120%); z-index: 35; gap: 18px; }
+    .active-panel { bottom: auto; gap: 18px; z-index: 200;}
 }
-.active-panel.show { transform: translateY(0); }
+
 .drag-handle{width:36px;height:5px;background:var(--border);border-radius:5px;margin:0 auto 16px;flex-shrink:0;}
 @media(min-width:900px){.drag-handle{display:none;}}
 
@@ -168,26 +185,8 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 .rprice{font-size:16px;font-weight:800;}
 .rtbadge{font-size:10px;font-weight:600;color:var(--blue); background:rgba(26,59,255,.09);padding:3px 8px;border-radius:20px; margin-top:4px;display:inline-block;}
 
-/* Search Overlay Embedded inside the Panel */
-.search-overlay { 
-    position: absolute; 
-    inset: 0; 
-    z-index: 150; 
-    background: rgba(255, 255, 255, 0.95); 
-    backdrop-filter: blur(12px); 
-    -webkit-backdrop-filter: blur(12px); 
-    border-radius: inherit; 
-    padding: 24px; 
-    display: none; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center; 
-    transition: opacity 0.3s ease; 
-    opacity: 0; 
-    border: none; 
-    box-shadow: none; 
-    transform: none; 
-}
+/* Modernized Search Overlay (Floating Card) */
+.search-overlay { position: absolute; inset: 0; z-index: 150; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-radius: inherit; padding: 24px; display: none; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.3s ease; opacity: 0; border: none; box-shadow: none; transform: none; }
 .search-overlay.show { display: flex; opacity: 1; }
 .radar-spinner { width: 64px; height: 64px; border-radius: 50%; background: rgba(26,59,255,0.1); border: 2px solid rgba(26,59,255,0.3); position: relative; display: flex; align-items: center; justify-content: center; animation: radarPulse 1.5s infinite ease-out; margin-bottom: 24px; flex-shrink: 0; }
 .radar-spinner::after { content: '🚕'; font-size: 24px; }
@@ -237,9 +236,9 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 .qr-btn:active { transform:scale(.96); }
 
 .chat-input-row { display:flex; gap:10px; padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--border); flex-shrink:0; align-items:flex-end; }
-.chat-text-input { flex:1; border:1.5px solid var(--border); border-radius:24px; padding:12px 16px; font-family:'Outfit',sans-serif; font-size:14px; color:var(--ink); background:var(--bg); outline:none; resize:none; max-height:100px; line-height:1.4; transition:.18s; }
+.chat-text-input { flex:1; border:1.5px solid var(--border); border-radius:24px; padding:10px 16px; font-family:'Outfit',sans-serif; font-size:14px; color:var(--ink); background:var(--bg); outline:none; resize:none; max-height:100px; line-height:1.4; transition:.18s; }
 .chat-text-input:focus { border-color:var(--blue2); background:var(--card); }
-.chat-send-btn { width:44px; height:44px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .14s; box-shadow:0 4px 12px var(--glow); flex-shrink:0; }
+.chat-send-btn { width:42px; height:42px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.14s; box-shadow:0 3px 10px var(--glow); flex-shrink:0; }
 .chat-send-btn:active { transform:scale(.92); }
 .chat-unread-badge { position:absolute; top:-5px; right:-5px; width:18px; height:18px; background:var(--red); border-radius:50%; border:2px solid var(--card); font-size:10px; font-weight:800; color:#fff; display:none; align-items:center; justify-content:center; }
 .chat-unread-badge.show { display:flex; }
@@ -824,6 +823,7 @@ window.cleanupActiveRide = function() {
     window.AppState.activeRideReqId = null;
     window.AppState.rideWasAccepted = false;
     document.getElementById('activeRidePanel').classList.remove('show');
+    setTimeout(() => { document.getElementById('bookPanel').style.display = 'flex'; if (window.AppState.mapFly) window.AppState.mapFly(); }, 400);
     if(driverLocUnsub) { driverLocUnsub(); driverLocUnsub = null; }
     if(liveDriverMarker) { liveDriverMarker.remove(); liveDriverMarker = null; }
     document.getElementById('adPin').style.color = "var(--ink)";
@@ -873,6 +873,7 @@ window.listenToActiveRide = function(reqId) {
     if (data.status === 'accepted') {
       window.AppState.rideWasAccepted = true;
       document.getElementById('searchOverlay').classList.remove('show');
+      document.getElementById('bookPanel').style.display = 'none';
       
       if (!document.getElementById('activeRidePanel').classList.contains('show')) {
           document.getElementById('activeRidePanel').classList.add('show');
