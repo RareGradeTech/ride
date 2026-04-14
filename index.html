@@ -32,11 +32,12 @@
     --border: #2A2A3A;
     --glow: rgba(74, 108, 255, 0.25);
   }
-  .panel, .active-panel, .bnav { background: rgba(21, 21, 32, .85); border-color: rgba(255, 255, 255, 0.08); }
+  .panel, .active-panel { background: rgba(21, 21, 32, 0.85); border-color: rgba(255, 255, 255, 0.08); }
+  .bnav { background: rgba(21, 21, 32, 0.85); border-top: 1px solid rgba(255,255,255,0.05); }
   .geo-wrap .mapboxgl-ctrl-geocoder, .geo-wrap .mapboxgl-ctrl-geocoder--suggestions { background: var(--card) !important; border-color: var(--border) !important; }
   .mapboxgl-ctrl-geocoder--input { color: var(--ink) !important; }
   .rcard, .origin-row, .modal { background: var(--card); }
-  .search-overlay { background: rgba(12, 12, 20, 0.92); }
+  .search-overlay { background: rgba(12, 12, 20, 0.85); }
   .t-input, .sp-field { background: var(--bg); color: var(--ink); }
   .t-input:focus, .sp-field:focus { background: var(--card); }
   .pm-icon { background: var(--bg); border-color: var(--border); }
@@ -67,7 +68,7 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 @media(min-width:900px){.sidebar{display:flex;}}
 .sidebar:hover{ width:270px; padding:26px 20px; box-shadow:4px 0 28px rgba(0,0,0,.06); }
 .logo{ font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:var(--blue); display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px; min-width:240px; }
-.logo-mark{ width:38px;height:38px;background:var(--blue);border-radius:10px; display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px; font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow); }
+.logo-mark{ width:38px;height:38px;background:var(--blue);border-radius:12px; display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px; font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow); }
 .l-txt{ opacity:0;transition:opacity .18s .1s; font-size:19px;letter-spacing:-.4px;font-weight:800; }
 .sidebar:hover .l-txt{opacity:1;}
 .nl{ display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px; color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s; margin-bottom:4px;min-width:240px; min-height: 44px; }
@@ -93,30 +94,53 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 .cmarker{width:18px;height:18px;background:var(--blue);border:3px solid var(--card); border-radius:50%;box-shadow:0 2px 12px var(--glow);}
 .dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid var(--card); border-radius:50%;box-shadow:0 2px 10px var(--glow);}
 .car-marker { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.25); transition: transform 0.3s; border: 2.5px solid var(--blue); background: var(--card); z-index: 10;}
-.locate-btn { position: absolute; right: 20px; bottom: calc(100% + 16px); width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.12); cursor: pointer; z-index: 40; color: var(--blue); transition: 0.2s; border: 1px solid var(--border); background:var(--card); }
+.locate-btn { position: absolute; right: 20px; bottom: calc(100% + 16px); width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.12); cursor: pointer; z-index: 40; color: var(--blue); transition: 0.2s; border: 1px solid var(--border); background:var(--card); }
 .locate-btn:active { transform: scale(0.92); }
 @media(min-width: 900px) { .locate-btn { bottom: 24px; right: 24px; } }
 
-/* Mobile Fluid Panel */
-.panel{position:absolute;backdrop-filter:blur(22px) saturate(1.8); -webkit-backdrop-filter:blur(22px) saturate(1.8); display:flex;flex-direction:column;z-index:30; border:1px solid rgba(255,255,255,.08);}
-@media(max-width:899px){ .panel{ bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;height:auto;max-height:calc(100vh - var(--nav-h) - 80px); border-radius:28px 28px 0 0; padding:16px 20px 20px; box-shadow:0 -12px 40px rgba(0,0,0,.1); } }
-@media(min-width:900px){ .panel{top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px; border-radius:22px;padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12); background:var(--card);} }
-.drag-handle{width:34px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 14px;flex-shrink:0;}
+/* Modern Mobile Fluid Panel */
+.panel, .active-panel {
+    position: absolute;
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    display: flex; flex-direction: column; z-index: 30;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1), opacity 0.4s ease;
+}
+@media(max-width:899px){ 
+    .panel, .active-panel { 
+        bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left: 0; width: 100%; 
+        border-radius: 32px 32px 0 0; padding: 16px 20px 20px; 
+        box-shadow: 0 -12px 40px rgba(0,0,0,0.08); 
+    }
+    .panel { height: auto; max-height: calc(100vh - var(--nav-h) - 80px); }
+    .active-panel { gap: 18px; transform: translateY(120%); z-index: 35; }
+}
+@media(min-width:900px){ 
+    .panel, .active-panel { 
+        top: 22px; left: 22px; width: 385px; border-radius: 24px; padding: 26px 24px; 
+        box-shadow: 0 20px 50px rgba(0,0,0,0.1); background: var(--card); 
+    }
+    .panel { height: calc(100vh - 44px); max-height: 860px; }
+    .active-panel { bottom: auto; transform: translateY(120%); z-index: 35; gap: 18px; }
+}
+.active-panel.show { transform: translateY(0); }
+.drag-handle{width:36px;height:5px;background:var(--border);border-radius:5px;margin:0 auto 16px;flex-shrink:0;}
 @media(min-width:900px){.drag-handle{display:none;}}
 
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
-.ptitle{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
-.top-cbtn { background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff; padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s; display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; min-height: 44px; align-items: center; justify-content: center; }
-.top-cbtn:active { transform: scale(0.96); }
+.ptitle{font-family:'Outfit',sans-serif;font-size:22px;font-weight:800; letter-spacing:-.35px; margin: 0;}
+.top-cbtn { background: linear-gradient(135deg,var(--blue2),var(--blue)); color: #fff; padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 14px var(--glow); transition: transform 0.15s, opacity 0.2s; display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; min-height: 44px; align-items: center; justify-content: center; }
+.top-cbtn:active { transform: scale(0.94); }
 
 /* Geocoder */
 .geo-wrap{margin-bottom:12px;flex-shrink:0;}
-.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important; border-radius:13px!important; box-shadow:none!important; font-family:'Outfit',sans-serif!important;}
-.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important; font-family:'Outfit',sans-serif!important; padding:11px 40px 11px 40px!important;height:46px!important;}
+.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important; border-radius:14px!important; box-shadow:none!important; font-family:'Outfit',sans-serif!important;}
+.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important; font-family:'Outfit',sans-serif!important; padding:11px 40px 11px 40px!important;height:48px!important;}
 .mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important;}
-.mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important; box-shadow:0 8px 24px rgba(0,0,0,.1)!important;}
+.mapboxgl-ctrl-geocoder--suggestions{border-radius:14px!important; box-shadow:0 10px 30px rgba(0,0,0,.08)!important;}
 .mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important; color:var(--ink)!important;}
-.origin-row{display:flex;align-items:center;gap:10px; padding:11px 14px;border-radius:13px;border:1.5px solid var(--border); margin-bottom:12px;flex-shrink:0;}
+.origin-row{display:flex;align-items:center;gap:10px; padding:12px 16px;border-radius:14px;border:1.5px solid var(--border); margin-bottom:12px;flex-shrink:0;}
 .o-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;}
 .o-main{font-size:13px;font-weight:600;}
 .o-sub{font-size:11px;color:var(--muted);}
@@ -125,38 +149,32 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 .ride-list{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:2px; padding-bottom: 24px; -webkit-overflow-scrolling: touch; }
 @media(max-width:899px){ .ride-list{max-height: 48vh; padding-bottom: 40px;} } 
 .ride-list::-webkit-scrollbar{display:none;}
-.rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px; border-radius:15px;border:2px solid var(--border);cursor:pointer; transition:all .17s; position:relative; min-height: 44px;}
-.rcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06);}
-.rcard.sel{border-color:var(--blue);background:rgba(26,59,255,.04);box-shadow:0 4px 16px var(--glow);}
-.rinfo{display:flex;align-items:center;gap:11px;}
+.rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 14px; border-radius:16px;border:2px solid var(--border);cursor:pointer; transition:all .2s; position:relative; min-height: 44px;}
+.rcard:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.05);}
+.rcard.sel{border-color:var(--blue);background:rgba(26,59,255,.04);box-shadow:0 6px 20px var(--glow);}
+.rinfo{display:flex;align-items:center;gap:12px;}
 .rav{width:42px;height:42px;border-radius:50%; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff;display:flex;align-items:center;justify-content:center; font-weight:700;font-size:12px;flex-shrink:0;}
 .rname{font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;margin-bottom:1px;}
 .rmeta{font-size:11px;color:var(--muted);}
-.rprice{font-size:15px;font-weight:700;}
-.rtbadge{font-size:10px;font-weight:600;color:var(--blue); background:rgba(26,59,255,.09);padding:2px 8px;border-radius:20px; margin-top:4px;display:inline-block;}
+.rprice{font-size:16px;font-weight:800;}
+.rtbadge{font-size:10px;font-weight:600;color:var(--blue); background:rgba(26,59,255,.09);padding:3px 8px;border-radius:20px; margin-top:4px;display:inline-block;}
 
-/* Overlays */
-.search-overlay { position: fixed; inset: 0; z-index: 100; backdrop-filter: blur(14px); display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+/* Modern Search Overlay */
+.search-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(238, 240, 250, 0.85); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+@media (prefers-color-scheme: dark) { .search-overlay { background: rgba(12, 12, 20, 0.85); } }
 .search-overlay.show { display: flex; opacity: 1; }
-.circular-progress { width: 140px; height: 140px; position: relative; display: flex; align-items: center; justify-content: center; }
-.circular-progress svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.circular-progress circle { fill: none; stroke-width: 8; stroke-linecap: round; }
-.circ-bg { stroke: var(--border); }
-.circ-fill { stroke: var(--blue); stroke-dasharray: 283; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
-.time-left { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
-.search-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
-.search-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 500; text-align: center; max-width: 250px; }
-.cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px; background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s; min-height: 44px; }
-.cancel-search-btn:active { background: rgba(229,53,53,0.2); }
+.radar-spinner { width: 120px; height: 120px; border-radius: 50%; background: rgba(26,59,255,0.1); border: 2px solid rgba(26,59,255,0.4); position: relative; display: flex; align-items: center; justify-content: center; animation: radarPulse 2s infinite ease-out; margin-bottom: 20px; }
+.radar-spinner::after { content: '🚗'; font-size: 40px; }
+@keyframes radarPulse { 0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(26,59,255,0.4); } 100% { transform: scale(1.2); box-shadow: 0 0 0 30px rgba(26,59,255,0); } }
+.search-title { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 800; margin-top: 10px; color: var(--ink); }
+.search-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 500; text-align: center; max-width: 280px; line-height: 1.5; }
+.cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px; background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; min-height: 44px; }
+.cancel-search-btn:active { background: rgba(229,53,53,0.2); transform: scale(0.96); }
 
-/* Active Ride Panel */
-.active-panel{ position:absolute;backdrop-filter:blur(22px); display:none;flex-direction:column;z-index:35;gap:18px; transform:translateY(120%);transition:transform .45s cubic-bezier(.4,0,.2,1); }
-.active-panel.show{transform:translateY(0);}
-@media(max-width:899px){ .active-panel{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;border-radius:28px 28px 0 0; padding:20px 24px 24px; box-shadow:0 -12px 40px rgba(0,0,0,.1);} }
-@media(min-width:900px){ .active-panel{top:22px;left:22px;bottom:auto;width:385px;border-radius:22px; padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12); background:var(--card);} }
+/* Active Ride Panel Internals */
 .ad-header{display:flex;justify-content:space-between;align-items:center;}
 .ad-info{display:flex;align-items:center;gap:14px;}
-.ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0); display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue); border:2px solid var(--card);box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.ad-av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0); display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue); border:2px solid var(--card);box-shadow:0 4px 12px rgba(0,0,0,.08);}
 .ad-car-info{text-align:right;}
 .ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px; font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px; padding-top:18px;border-top:1px solid var(--border);}
@@ -167,34 +185,35 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 /* Rider Chat UI */
 .chat-sheet-bg { position:fixed; inset:0; z-index:700; background:rgba(0,0,0,.55); backdrop-filter:blur(6px); display:none; align-items:flex-end; justify-content:center; }
 .chat-sheet-bg.show { display:flex; }
-.chat-sheet { background:var(--card); border-radius:22px 22px 0 0; width:100%; max-width:520px; max-height:80vh; display:flex; flex-direction:column; animation:sheetUp .3s cubic-bezier(.4,0,.2,1); box-shadow:0 -4px 30px rgba(0,0,0,.15); }
-@media(min-width:900px){ .chat-sheet-bg { align-items:center; } .chat-sheet { border-radius:18px; max-height:68vh; } }
+.chat-sheet { background:var(--card); border-radius:26px 26px 0 0; width:100%; max-width:520px; max-height:80vh; display:flex; flex-direction:column; animation:sheetUp .3s cubic-bezier(.4,0,.2,1); box-shadow:0 -4px 30px rgba(0,0,0,.15); }
+@media(min-width:900px){ .chat-sheet-bg { align-items:center; } .chat-sheet { border-radius:24px; max-height:68vh; } }
 @keyframes sheetUp { from{transform:translateY(60px);opacity:0} to{transform:translateY(0);opacity:1} }
 .chat-header { display:flex; align-items:center; gap:12px; padding:16px 18px 14px; border-bottom:1px solid var(--border); flex-shrink:0; }
-.chat-av { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0; }
-.chat-driver-name { font-size:15px; font-weight:800; color:var(--ink); }
+.chat-av { width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; }
+.chat-driver-name { font-size:16px; font-weight:800; color:var(--ink); }
 .chat-status { font-size:12px; color:var(--green); font-weight:700; margin-top:2px; }
-.chat-close { margin-left:auto; width:34px; height:34px; border-radius:50%; background:var(--bg); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); }
+.chat-close { margin-left:auto; width:36px; height:36px; border-radius:50%; background:var(--bg); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted); transition:background .15s;}
+.chat-close:hover { background:var(--border); }
 .chat-messages { flex:1; overflow-y:auto; padding:14px 18px; display:flex; flex-direction:column; gap:10px; -webkit-overflow-scrolling:touch; }
 .chat-messages::-webkit-scrollbar { width:4px; }
 .chat-messages::-webkit-scrollbar-thumb { background:var(--border); border-radius: 4px; }
-.chat-msg { display:flex; flex-direction:column; gap:3px; max-width:80%; }
+.chat-msg { display:flex; flex-direction:column; gap:4px; max-width:80%; }
 .chat-msg.mine { align-self:flex-end; align-items:flex-end; }
 .chat-msg.theirs { align-self:flex-start; align-items:flex-start; }
 .chat-bubble { padding:10px 14px; border-radius:18px; font-size:14px; font-weight:500; line-height:1.4; word-break:break-word; }
-.chat-msg.mine .chat-bubble { background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; border-bottom-right-radius:4px; }
-.chat-msg.theirs .chat-bubble { background:var(--bg); border:1px solid var(--border); color:var(--ink); border-bottom-left-radius:4px; }
+.chat-msg.mine .chat-bubble { background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; border-bottom-right-radius:6px; }
+.chat-msg.theirs .chat-bubble { background:var(--bg); border:1px solid var(--border); color:var(--ink); border-bottom-left-radius:6px; }
 .chat-meta { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--muted); font-weight:600; }
-.chat-input-row { display:flex; gap:10px; padding:12px 16px calc(16px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--border); flex-shrink:0; align-items:flex-end; }
-.chat-text-input { flex:1; border:1.5px solid var(--border); border-radius:24px; padding:10px 16px; font-family:'Outfit',sans-serif; font-size:14px; color:var(--ink); background:var(--bg); outline:none; resize:none; max-height:100px; line-height:1.4; transition:.18s; }
+.chat-input-row { display:flex; gap:10px; padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--border); flex-shrink:0; align-items:flex-end; }
+.chat-text-input { flex:1; border:1.5px solid var(--border); border-radius:24px; padding:12px 16px; font-family:'Outfit',sans-serif; font-size:14px; color:var(--ink); background:var(--bg); outline:none; resize:none; max-height:100px; line-height:1.4; transition:.18s; }
 .chat-text-input:focus { border-color:var(--blue2); background:var(--card); }
-.chat-send-btn { width:42px; height:42px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:.14s; box-shadow:0 3px 10px var(--glow); flex-shrink:0; }
+.chat-send-btn { width:44px; height:44px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .14s; box-shadow:0 4px 12px var(--glow); flex-shrink:0; }
 .chat-send-btn:active { transform:scale(.92); }
 .chat-unread-badge { position:absolute; top:-5px; right:-5px; width:18px; height:18px; background:var(--red); border-radius:50%; border:2px solid var(--card); font-size:10px; font-weight:800; color:#fff; display:none; align-items:center; justify-content:center; }
 .chat-unread-badge.show { display:flex; }
 
 /* Bottom Nav */
-.bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); backdrop-filter:blur(16px); display:flex;justify-content:space-around; align-items:flex-start;padding-top:10px;z-index:50;}
+.bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); background: rgba(255, 255, 255, 0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid rgba(0,0,0,0.05); display:flex;justify-content:space-around; align-items:flex-start;padding-top:10px;z-index:50;}
 @media(min-width:900px){.bnav{display:none;}}
 .bni{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px; color:var(--muted);font-size:11px;font-weight:600;cursor:pointer; transition:.17s;padding:4px 16px; min-height: 44px;}
 .bni.act{color:var(--blue);}
@@ -204,66 +223,68 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 .fpage{flex:1;height:100vh;height:100dvh;position:relative;z-index:20;background:var(--bg); display:none;flex-direction:column;overflow-y:auto; padding:28px 20px calc(var(--nav-h) + env(safe-area-inset-bottom, 20px));}
 @media(min-width:900px){.fpage{padding:32px 36px 32px;}}
 .fpage.show{display:flex;}
-.ph{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
+.ph{font-family:'Outfit',sans-serif;font-size:26px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
 
 /* Trips & Wallet */
-.tc{background:var(--card);border-radius:16px;padding:16px 18px; margin-bottom:11px;border:1px solid var(--border);transition:.17s;}
-.tc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);}
+.tc{background:var(--card);border-radius:20px;padding:16px 20px; margin-bottom:12px;border:1px solid var(--border);transition:transform .17s, box-shadow .17s;}
+.tc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.06);}
 .tc-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.tc-type{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;}
-.tc-fare{font-size:15px;font-weight:700;color:var(--blue);}
+.tc-type{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;}
+.tc-fare{font-size:16px;font-weight:800;color:var(--blue);}
 .tc-meta{font-size:12px;color:var(--muted);margin-top:4px;}
-.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px; font-size:11px;font-weight:600;padding:3px 10px; border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue);}
+.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:10px; font-size:11px;font-weight:700;padding:4px 10px; border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue);}
 
 /* Account Page */
 #tab-account { font-family: 'Outfit', sans-serif; }
-#tab-account .ph { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 20px; }
-.prof-banner{ background: linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff); border-radius: 20px; padding: 22px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; color: #fff; position: relative; overflow: hidden; }
+#tab-account .ph { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 24px; }
+.prof-banner{ background: linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff); border-radius: 24px; padding: 24px 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; color: #fff; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(26,59,255,.15);}
 .prof-banner::after { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,.06); pointer-events: none; }
-.prof-av-lg{ width: 58px; height: 58px; border-radius: 16px; background: rgba(255,255,255,.22); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; flex-shrink: 0; border: 2px solid rgba(255,255,255,.35); box-shadow: 0 4px 16px rgba(0,0,0,.12); }
-.prof-name { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -.2px; }
+.prof-av-lg{ width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.22); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; flex-shrink: 0; border: 2px solid rgba(255,255,255,.35); box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+.prof-name { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -.2px; }
 .prof-email { font-size: 13px; opacity: .72; margin-top: 3px; font-weight: 400; }
 .acc-section-title { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin: 18px 0 8px 4px; }
-.ss{ background: var(--card); border-radius: 18px; margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,.04); }
-.sr{ display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; user-select: none; min-height:44px;}
+.ss{ background: var(--card); border-radius: 20px; margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 14px rgba(0,0,0,.04); }
+.sr{ display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; user-select: none; min-height:48px;}
 .sr:last-child{border:none;}
 .sr:hover{background: rgba(26,59,255,.03);}
-.srl{display:flex;align-items:center;gap:12px;}
-.sri{ width: 34px; height: 34px; border-radius: 10px; background: rgba(26,59,255,.07); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.srl{display:flex;align-items:center;gap:14px;}
+.sri{ width: 36px; height: 36px; border-radius: 12px; background: rgba(26,59,255,.07); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .srt{ font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; color: var(--ink); }
 .sra{ color: var(--muted); font-size: 16px; font-weight: 400; }
 
 /* Modals & Overlays */
-.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500; display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500; display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
 @media(min-width:900px){.mbg{align-items:center;}}
 .mbg.show{display:flex;}
-.modal{background:var(--card); border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px)); width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
-@media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
+.modal{background:var(--card); border-radius:32px 32px 0 0;padding:28px 24px calc(38px + env(safe-area-inset-bottom, 0px)); width:100%;max-width:440px;animation:su .3s cubic-bezier(.175, .885, .32, 1); text-align:center; box-shadow: 0 -10px 40px rgba(0,0,0,0.1);}
+@media(min-width:900px){.modal{border-radius:24px; padding-bottom:34px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);}}
 @keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mh{font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
-.mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
+.mh{font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;margin-bottom:18px; text-align:left;}
+.mr{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);}
 .mr:last-of-type{border:none;}
-.mrl{font-size:13px;color:var(--muted);}
-.mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
-.mbtns{display:flex;gap:11px;margin-top:20px;}
-.mcancel{flex:1;padding:14px;border:2px solid var(--border); background:var(--card); color:var(--ink); border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'Outfit',sans-serif; transition:.1s; min-height:44px;}
-.mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff; border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Outfit',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px; min-height:44px;}
+.mrl{font-size:14px;color:var(--muted);}
+.mrv{font-size:14px;font-weight:600;text-align:right;max-width:210px;}
+.mbtns{display:flex;gap:12px;margin-top:24px;}
+.mcancel{flex:1;padding:14px;border:2px solid var(--border); background:var(--card); color:var(--ink); border-radius:16px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Outfit',sans-serif; transition:transform .1s, background .15s; min-height:48px;}
+.mcancel:active { transform: scale(0.96); }
+.mok{flex:2;padding:14px;border:none; background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff; border-radius:16px;font-size:14px;font-weight:800;cursor:pointer; font-family:'Outfit',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px; min-height:48px; box-shadow:0 6px 20px var(--glow); transition:transform .1s;}
+.mok:active { transform: scale(0.96); }
 
 /* Toast */
-.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%; transform:translateX(-50%) translateY(10px); background:var(--blue);color:#fff;padding:11px 20px;border-radius:30px; font-size:13px;font-weight:600;opacity:0;pointer-events:none; transition:.22s;z-index:600;white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,.25);}
+.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 16px);left:50%; transform:translateX(-50%) translateY(10px); background:var(--ink);color:#fff;padding:12px 24px;border-radius:30px; font-size:13px;font-weight:700;opacity:0;pointer-events:none; transition:.3s cubic-bezier(.175, .885, .32, 1);z-index:600;white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,.15);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-@media(min-width:900px){.toast{bottom:26px;}}
-.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;display:none;}
+@media(min-width:900px){.toast{bottom:30px;}}
+.spin{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;display:none;}
 .spin.on{display:inline-block;}
 
 /* Auth UI */
 .auth-overlay { position: fixed; inset: 0; z-index: 998; display: none; flex-direction: column; opacity: 0; transition: opacity .4s; font-family: 'Outfit', sans-serif; overflow: hidden; background:var(--bg); }
 .auth-overlay.show { display: flex; opacity: 1; }
-.google-sheet-bg { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.5); display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(6px); }
+.google-sheet-bg { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.5); display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .google-sheet-bg.show { display: flex; }
-.google-sheet { background: var(--card); border-radius: 28px 28px 0 0; padding: 10px 28px calc(40px + env(safe-area-inset-bottom, 0px)); width: 100%; max-width: 480px; animation: sheetUp .32s cubic-bezier(.4,0,.2,1); }
-@media(min-width:900px){ .google-sheet-bg { align-items: center; } .google-sheet { border-radius: 22px; padding-bottom: 36px; max-width: 420px; } }
-.gs-google-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px 24px; border-radius: 14px; font-size: 15px; font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; transition: background .18s, border-color .18s, transform .1s; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 12px; min-height: 44px; }
+.google-sheet { background: var(--card); border-radius: 32px 32px 0 0; padding: 12px 28px calc(44px + env(safe-area-inset-bottom, 0px)); width: 100%; max-width: 480px; animation: sheetUp .32s cubic-bezier(.4,0,.2,1); }
+@media(min-width:900px){ .google-sheet-bg { align-items: center; } .google-sheet { border-radius: 24px; padding-bottom: 36px; max-width: 420px; } }
+.gs-google-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px 24px; border-radius: 16px; font-size: 15px; font-weight: 700; font-family: 'Outfit', sans-serif; cursor: pointer; transition: background .18s, border-color .18s, transform .1s; box-shadow: 0 4px 14px rgba(0,0,0,0.06); margin-bottom: 12px; min-height: 48px; }
 .gs-close { position: absolute; top: 16px; right: 20px; width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); background:transparent; transition: background .15s; }
 </style>
 </head>
@@ -276,19 +297,19 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 
 <div class="auth-overlay" id="authOverlay">
   <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:40px;">
-    <h1 style="font-size:36px; font-weight:800; margin-bottom:10px;">VynixRide</h1>
-    <p style="color:var(--muted); margin-bottom: 30px;">Your city, your ride.</p>
+    <h1 style="font-size:40px; font-weight:800; margin-bottom:8px; letter-spacing:-1px;">VynixRide</h1>
+    <p style="color:var(--muted); margin-bottom: 36px; font-size:16px;">Your city, your ride.</p>
     <button class="gs-google-btn" id="btnLogin" style="background:#fff; color:#000; border:1px solid #ccc;">Log In</button>
-    <button class="gs-google-btn" id="btnCreate" style="background:var(--blue); color:#fff;">Create Account</button>
-    <button style="background:none;border:none;margin-top:10px;color:var(--muted);cursor:pointer;font-weight:600;" id="skipAuth">Continue as Guest</button>
+    <button class="gs-google-btn" id="btnCreate" style="background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; border:none; box-shadow:0 6px 20px var(--glow);">Create Account</button>
+    <button style="background:none;border:none;margin-top:14px;color:var(--muted);cursor:pointer;font-weight:600;font-size:14px;" id="skipAuth">Continue as Guest</button>
   </div>
 </div>
 
 <div class="google-sheet-bg" id="googleSheetBg">
   <div class="google-sheet">
     <button class="gs-close" id="gsClose">✕</button>
-    <h2 style="font-size:22px; font-weight:800; margin: 20px 0 10px;">Welcome</h2>
-    <p style="color:var(--muted); margin-bottom: 20px;">Sign in with Google to continue.</p>
+    <h2 style="font-size:24px; font-weight:800; margin: 24px 0 10px;">Welcome</h2>
+    <p style="color:var(--muted); margin-bottom: 24px;">Sign in with Google to continue.</p>
     <button class="gs-google-btn" id="gsGoogleBtn">Continue with Google</button>
   </div>
 </div>
@@ -296,10 +317,10 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="mh">Enable Location</div>
-    <p style="font-size:14px; color:var(--muted); margin-bottom: 24px; text-align:left;">
-      VynixRide needs your location to find nearby drivers and set your pickup point.
+    <p style="font-size:14px; color:var(--muted); margin-bottom: 24px; text-align:left; line-height:1.5;">
+      VynixRide needs your location to accurately find nearby drivers and set your pickup point.
     </p>
-    <div class="mbtns"><button class="mok" id="btnGrantLoc">Grant Access</button></div>
+    <div class="mbtns"><button class="mok" id="btnGrantLoc" style="width:100%">Grant Access</button></div>
   </div>
 </div>
 
@@ -311,7 +332,7 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
     <div class="mr"><span class="mrl">Trip Duration</span><b class="mrv" id="m-trip-time">—</b></div>
     <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
-    <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare">—</b></div>
+    <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare" style="color:var(--blue); font-size:15px;">—</b></div>
     <div class="mbtns">
       <button class="mcancel" id="btnCloseConfirm">Cancel</button>
       <button class="mok" id="bookBtn">Pay & Book <span class="spin" id="bspin"></span></button>
@@ -342,12 +363,9 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 </div>
 
 <div class="search-overlay" id="searchOverlay">
-  <div class="circular-progress">
-    <svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="45"></circle><circle class="circ-fill" id="searchProgress" cx="50" cy="50" r="45"></circle></svg>
-    <div class="time-left" id="searchTimerTxt">60s</div>
-  </div>
+  <div class="radar-spinner"></div>
   <div class="search-title">Finding a driver...</div>
-  <div class="search-sub">Pinging nearby drivers. If no one accepts within 1 minute, the request will automatically cancel.</div>
+  <div class="search-sub">Pinging nearby drivers. Please wait while we connect you with the best match.</div>
   <button class="cancel-search-btn" id="btnCancelSearch">Cancel Request</button>
 </div>
 
@@ -401,12 +419,12 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
         <div class="ad-info">
           <div class="ad-av" id="adAv">?</div>
           <div>
-            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;margin-bottom:2px;" id="adName">Finding Driver...</div>
-            <div style="font-size:13px;color:var(--muted);font-weight:500;" id="adRating">⭐ 4.9</div>
+            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:18px;margin-bottom:2px;" id="adName">Finding Driver...</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:600;" id="adRating">⭐ 4.9</div>
           </div>
         </div>
         <div class="ad-car-info">
-          <div style="font-size:14px;font-weight:600;" id="adCar">VynixRide</div>
+          <div style="font-size:14px;font-weight:700;" id="adCar">VynixRide</div>
           <div class="ad-plate" id="adPlate">On the way</div>
         </div>
       </div>
@@ -415,12 +433,12 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
         <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">--</span></div>
         <div class="ad-m-item" style="align-items:flex-end;"><span class="ad-m-lbl">Security PIN</span><span class="ad-m-val" id="adPin" style="color:var(--ink);">----</span></div>
       </div>
-      <div style="display:flex; gap:10px; width:100%; margin-top: 10px; position:relative;">
-        <button onclick="openRiderChat()" style="flex:1; padding:14px; border-radius:12px; background:rgba(26,59,255,.08); color:var(--blue); border:1.5px solid rgba(26,59,255,.15); font-weight:800; font-family:'Outfit',sans-serif; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; gap:6px;">
+      <div style="display:flex; gap:12px; width:100%; margin-top: 12px; position:relative;">
+        <button onclick="openRiderChat()" style="flex:1; padding:14px; border-radius:16px; background:rgba(26,59,255,.08); color:var(--blue); border:1.5px solid rgba(26,59,255,.15); font-weight:800; font-family:'Outfit',sans-serif; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px; transition:transform .1s;">
            💬 Chat
            <span class="chat-unread-badge" id="chatBadgeRider">0</span>
         </button>
-        <button class="mcancel" style="flex:1; color:var(--red);border-color:rgba(229,53,53,.2);" id="btnCancelActiveRide">Cancel Ride</button>
+        <button class="mcancel" style="flex:1; color:var(--red);border-color:rgba(229,53,53,.25); background:rgba(229,53,53,.05);" id="btnCancelActiveRide">Cancel Ride</button>
       </div>
     </div>
   </div>
@@ -473,7 +491,7 @@ const BASE = [
 window.AppState = { rides: BASE.map(r=>({...r,price:0, time: '--'})), selId: 1, distKm: 0, destName: '', tripDurationMins: 0, activeRideReqId: null, rideWasAccepted: false, hasNotifiedArrival: false, _mapInstance: null, mapFly: null };
 
 window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
-window.showToast = function(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); };
+window.showToast = function(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200); };
 
 // FIREBASE SETUP
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878"});
@@ -488,7 +506,7 @@ window.AppState._mapInstance = map;
 
 map.on('style.load', () => { 
   const skel = document.getElementById('mapSkeleton'); if(skel) { skel.classList.add('hide'); setTimeout(() => skel.remove(), 400); } 
-  // Add 3D Buildings Layer
+  // Add 3D Buildings Layer natively
   const layers = map.getStyle().layers;
   const labelLayerId = layers.find(l => l.type === 'symbol' && l.layout['text-field'])?.id;
   map.addLayer({
@@ -509,7 +527,7 @@ map.on('style.load', () => {
 
 const oEl=document.createElement('div'); oEl.className='cmarker';
 const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
-let dMk=null,wULng=DLNG,wULat=DLAT, searchInterval=null, searchTimeout=null;
+let dMk=null,wULng=DLNG,wULat=DLAT;
 
 function getMobilePadding() { return window.innerWidth < 900 ? window.innerHeight * 0.40 : 55; }
 window.AppState.mapFly = () => map.flyTo({ center: [wULng, wULat], zoom: DEFAULT_ZOOM, padding: {bottom: 0} });
@@ -528,7 +546,8 @@ const requestLocation = function() {
     }, err => { document.getElementById('locModal').classList.add('show'); document.getElementById('originLabel').textContent='Pretoria, GP (Default)'; });
   }
 }
-document.getElementById('btnGrantLoc').addEventListener('click', requestLocation); requestLocation();
+document.getElementById('btnGrantLoc').addEventListener('click', requestLocation); 
+// Removed automatic requestLocation(); call here to prevent automatic ping.
 
 const geocoder=new MapboxGeocoder({ accessToken:TK,mapboxgl:mapboxgl, placeholder:'Search destination…', countries:'ZA', proximity:{longitude:DLNG,latitude:DLAT}, types:'poi,address,place,neighborhood,locality', flyTo:false,marker:false });
 document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
@@ -539,13 +558,13 @@ function haversine(la1,lo1,la2,lo2){
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 
-function drawRoute(o,d){
+window.drawRoute = function(o,d){
   fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${o[0]},${o[1]};${d[0]},${d[1]}?geometries=geojson&access_token=${TK}`).then(r=>r.json()).then(data=>{
       if(!data.routes?.length)return;
       window.AppState.distKm=data.routes[0].distance/1000; window.AppState.tripDurationMins=Math.ceil(data.routes[0].duration/60);
       if(map.getLayer('route'))map.removeLayer('route'); if(map.getSource('route'))map.removeSource('route');
       map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});
-      map.addLayer({id:'route',type:'line',source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#1A3BFF','line-width':4.5,'line-opacity':.72} });
+      map.addLayer({id:'route',type:'line',source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#1A3BFF','line-width':5,'line-opacity':.8} });
       updatePrices();
     });
 }
@@ -555,7 +574,7 @@ geocoder.on('result',e=>{
   if(dMk)dMk.remove(); const de=document.createElement('div'); de.className='dmarker';
   dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
   map.fitBounds([[Math.min(wULng,lng)-.008,Math.min(wULat,lat)-.008],[Math.max(wULng,lng)+.008,Math.max(wULat,lat)+.008]],{padding:{top:55,bottom:getMobilePadding(),left:55,right:55}});
-  drawRoute([wULng,wULat],[lng,lat]);
+  window.drawRoute([wULng,wULat],[lng,lat]);
   const btn = document.getElementById('confirmBtn'); btn.style.display = 'flex'; btn.textContent = `Book ${window.AppState.rides.find(x=>x.id===window.AppState.selId).type}`;
 });
 geocoder.on('clear',()=>{
@@ -613,9 +632,21 @@ onAuthStateChanged(auth,async u=>{
           const [reqId, data] = activeEntry;
           window.AppState.activeRideReqId = reqId;
           document.getElementById('bookPanel').style.display = 'none';
+          
+          // Restore map markers and route from saved DB coordinates perfectly
+          if (data.pickupCoords && data.destCoords) {
+              if(dMk) dMk.remove();
+              const de=document.createElement('div'); de.className='dmarker';
+              dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([data.destCoords.lng, data.destCoords.lat]).addTo(map);
+              window.drawRoute([data.pickupCoords.lng, data.pickupCoords.lat], [data.destCoords.lng, data.destCoords.lat]);
+              map.fitBounds([
+                 [Math.min(data.pickupCoords.lng, data.destCoords.lng)-.008, Math.min(data.pickupCoords.lat, data.destCoords.lat)-.008],
+                 [Math.max(data.pickupCoords.lng, data.destCoords.lng)+.008, Math.max(data.pickupCoords.lat, data.destCoords.lat)+.008]
+              ], {padding:{top:55,bottom:getMobilePadding(),left:55,right:55}});
+          }
+
           if (data.status === 'pending') {
-              document.getElementById('searchOverlay').classList.add('show');
-              document.getElementById('searchTimerTxt').textContent = "...";
+              window.startSearchTimer(); // Just resumes the radar indefinitely
           }
           window.listenToActiveRide(reqId);
       }
@@ -641,6 +672,8 @@ document.getElementById('bookBtn').addEventListener('click', async () => {
     const rideReqRef = await push(ref(db,'ride_requests'),{
       status:'pending', riderUid: cu?.uid||'demo', riderName: cu?.displayName||'Guest Rider', rideType: r.type, fare: r.price,
       pickup: document.getElementById('originLabel').textContent || 'Current Location', destination: window.AppState.destName,
+      pickupCoords: {lng: wULng, lat: wULat},
+      destCoords: dMk ? {lng: dMk.getLngLat().lng, lat: dMk.getLngLat().lat} : null,
       distKm: window.AppState.distKm||0, tripMins: window.AppState.tripDurationMins||0, capacity: r.capacity||4,
       securityPin: secPin, createdAt: Date.now()
     });
@@ -654,7 +687,7 @@ document.getElementById('bookBtn').addEventListener('click', async () => {
     
     document.getElementById('bookPanel').style.display = 'none';
     if(window.AppState.mapFly) window.AppState.mapFly();
-    startSearchTimer();
+    window.startSearchTimer();
   } catch(e) { window.showToast('Database error booking ride.'); }
 });
 
@@ -662,7 +695,7 @@ let liveDriverMarker = null;
 let driverLocUnsub = null;
 let currentRideDataCache = null;
 
-function cleanupActiveRide() {
+window.cleanupActiveRide = function() {
     window.AppState.activeRideReqId = null;
     window.AppState.rideWasAccepted = false;
     document.getElementById('activeRidePanel').classList.remove('show');
@@ -671,9 +704,18 @@ function cleanupActiveRide() {
     if(liveDriverMarker) { liveDriverMarker.remove(); liveDriverMarker = null; }
     document.getElementById('adPin').style.color = "var(--ink)";
     document.getElementById('adPin').style.fontSize = "17px";
+    
+    // Clear route and destination on cleanup natively
+    if(dMk){dMk.remove();dMk=null;}
+    if(map.getLayer('route'))map.removeLayer('route');
+    if(map.getSource('route'))map.removeSource('route');
+    window.AppState.destName='';
 }
 
 window.listenToActiveRide = function(reqId) {
+  // Initiate silent background chat listener safely
+  window.initChatListener(reqId);
+  
   const reqRef = ref(db, `ride_requests/${reqId}`);
   onValue(reqRef, async (snap) => {
     const data = snap.val();
@@ -701,7 +743,7 @@ window.listenToActiveRide = function(reqId) {
            } catch(e) {}
         }
         
-        cleanupActiveRide();
+        window.cleanupActiveRide();
       }
       return; 
     }
@@ -710,7 +752,6 @@ window.listenToActiveRide = function(reqId) {
     if (data.status === 'accepted') {
       window.AppState.rideWasAccepted = true;
       if(document.getElementById('searchOverlay').classList.contains('show')) {
-         clearInterval(searchInterval); clearTimeout(searchTimeout);
          document.getElementById('searchOverlay').classList.remove('show');
          document.getElementById('bookPanel').style.display = 'none';
          document.getElementById('activeRidePanel').classList.add('show');
@@ -755,32 +796,24 @@ window.listenToActiveRide = function(reqId) {
     if (data.status === 'pending' && data.cancelReason) {
        window.showToast("Driver cancelled: " + data.cancelReason);
        
-       // Completely cancel the ride on the rider side instead of searching again
+       // Completely cancel the ride on the rider side natively
        if(window.AppState.activeRideReqId) {
          update(ref(db,'ride_requests/'+window.AppState.activeRideReqId), {status: 'cancelled'});
        }
        
-       clearInterval(searchInterval); clearTimeout(searchTimeout);
        document.getElementById('searchOverlay').classList.remove('show');
-       cleanupActiveRide();
+       window.cleanupActiveRide();
     }
   });
 };
 
-function startSearchTimer() {
-  const overlay = document.getElementById('searchOverlay'); overlay.classList.add('show');
-  let timeLeft = 60; const circle = document.getElementById('searchProgress'), text = document.getElementById('searchTimerTxt');
-  circle.style.strokeDashoffset = "0"; text.textContent = "60s";
-  clearInterval(searchInterval); clearTimeout(searchTimeout);
-  searchInterval = setInterval(() => {
-    timeLeft--; text.textContent = timeLeft + "s"; circle.style.strokeDashoffset = 283 - (timeLeft / 60) * 283;
-    if(timeLeft <= 0) clearInterval(searchInterval);
-  }, 1000);
-  searchTimeout = setTimeout(() => { cancelSearch('No drivers accepted.'); }, 60000);
+window.startSearchTimer = function() {
+  const overlay = document.getElementById('searchOverlay'); 
+  overlay.classList.add('show');
+  // Auto-cancellation timeout removed as requested. Search continues indefinitely.
 }
 
-function cancelSearch(msg = 'Search cancelled.') {
-  clearInterval(searchInterval); clearTimeout(searchTimeout);
+window.cancelSearch = function(msg = 'Search cancelled.') {
   document.getElementById('searchOverlay').classList.remove('show');
   document.getElementById('bookPanel').style.display = 'flex'; window.showToast(msg);
   if(window.AppState.activeRideReqId) {
@@ -788,50 +821,44 @@ function cancelSearch(msg = 'Search cancelled.') {
     window.AppState.activeRideReqId=null;
   }
 }
-document.getElementById('btnCancelSearch').addEventListener('click', () => cancelSearch('Search cancelled by user'));
-document.getElementById('btnCancelActiveRide').addEventListener('click', () => { cleanupActiveRide(); cancelSearch('Ride cancelled'); });
+document.getElementById('btnCancelSearch').addEventListener('click', () => window.cancelSearch('Search cancelled by user'));
+document.getElementById('btnCancelActiveRide').addEventListener('click', () => { window.cleanupActiveRide(); window.cancelSearch('Ride cancelled'); });
 
-// RIDER CHAT SYSTEM
+// RIDER CHAT SYSTEM (Optimized and Realtime)
 let riderChatUnsub = null;
 let riderChatMessages = [];
-let riderUnread = 0;
+
+window.initChatListener = function(reqId) {
+  if (riderChatUnsub) riderChatUnsub();
+  riderChatUnsub = onValue(ref(db, `ride_requests/${reqId}/chat`), snap => {
+    const msgs = snap.val() || {};
+    riderChatMessages = Object.values(msgs).sort((a,b) => a.ts - b.ts);
+    
+    if (document.getElementById('riderChatSheet').classList.contains('show')) {
+        renderRiderChatMessages();
+        setTimeout(() => { const el = document.getElementById('riderChatMessages'); if (el) el.scrollTop = el.scrollHeight; }, 50);
+        document.getElementById('chatBadgeRider').style.display = 'none';
+    } else {
+        const unread = riderChatMessages.filter(m => m.sender === 'driver' && !m.readByRider).length;
+        const badge = document.getElementById('chatBadgeRider');
+        if(unread > 0) { badge.textContent = unread; badge.style.display = 'flex'; }
+    }
+  });
+};
 
 window.openRiderChat = function() {
   if (!window.AppState.activeRideReqId) return;
   document.getElementById('chatDriverName').textContent = document.getElementById('adName').textContent;
   document.getElementById('chatDriverAv').textContent = document.getElementById('adAv').textContent;
   document.getElementById('riderChatSheet').classList.add('show');
-  riderUnread = 0; document.getElementById('chatBadgeRider').style.display = 'none';
-  listenRiderChat();
+  document.getElementById('chatBadgeRider').style.display = 'none';
+  renderRiderChatMessages();
+  setTimeout(() => { const el = document.getElementById('riderChatMessages'); if (el) el.scrollTop = el.scrollHeight; }, 50);
 };
 
 window.closeRiderChat = function() {
   document.getElementById('riderChatSheet').classList.remove('show');
-  if (riderChatUnsub) { riderChatUnsub(); riderChatUnsub = null; }
 };
-
-function listenRiderChat() {
-  if (!window.AppState.activeRideReqId) return;
-  if (riderChatUnsub) riderChatUnsub();
-  riderChatUnsub = onValue(ref(db, `ride_requests/${window.AppState.activeRideReqId}/chat`), snap => {
-    const msgs = snap.val() || {};
-    riderChatMessages = Object.values(msgs).sort((a,b) => a.ts - b.ts);
-    renderRiderChatMessages();
-    setTimeout(() => { const el = document.getElementById('riderChatMessages'); if (el) el.scrollTop = el.scrollHeight; }, 50);
-  });
-}
-
-// Background Listener for Chat Badges
-setInterval(() => {
-   if(window.AppState.activeRideReqId && !document.getElementById('riderChatSheet').classList.contains('show')) {
-      get(ref(db, `ride_requests/${window.AppState.activeRideReqId}/chat`)).then(snap => {
-         const msgs = Object.values(snap.val() || {});
-         const unread = msgs.filter(m => m.sender === 'driver' && !m.readByRider).length;
-         const badge = document.getElementById('chatBadgeRider');
-         if(unread > 0) { badge.textContent = unread; badge.style.display = 'flex'; }
-      });
-   }
-}, 3000);
 
 function renderRiderChatMessages() {
   const el = document.getElementById('riderChatMessages');
@@ -842,8 +869,6 @@ function renderRiderChatMessages() {
   el.innerHTML = riderChatMessages.map(m => {
     const mine = m.sender === 'rider';
     const time = m.ts ? new Date(m.ts).toLocaleTimeString('en-ZA', {hour:'2-digit', minute:'2-digit'}) : '';
-    // Mark as read if we are looking at it
-    if(!mine && !m.readByRider) { /* Mark read logic here */ }
     return `<div class="chat-msg ${mine ? 'mine' : 'theirs'}">
       <div class="chat-bubble">${(m.text||'').replace(/</g,'&lt;')}</div>
       <div class="chat-meta">${time}</div>
