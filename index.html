@@ -355,14 +355,29 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
 
 <div class="shell">
   <aside class="sidebar" id="mainSidebar">
-    <div class="logo"><div class="logo-mark">VX</div><span class="l-txt">VynixRide</span></div>
-    <div class="nl act" data-tab="ride">Ride</div>
-    <div class="nl" data-tab="trips">Trips</div>
-    <div class="nl" data-tab="account">Account</div>
+    <div class="logo">
+      <div class="logo-mark">VX</div>
+      <span class="l-txt">VynixRide</span>
+    </div>
+    <div class="nl act" data-tab="ride" role="button" tabindex="0">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <span class="n-txt">Ride</span>
+    </div>
+    <div class="nl" data-tab="trips" role="button" tabindex="0">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span class="n-txt">Trips</span>
+    </div>
+    <div class="nl" data-tab="account" role="button" tabindex="0">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="n-txt">Account</span>
+    </div>
     <div class="nav-spacer"></div>
-    <div class="user-mini" data-tab="account">
+    <div class="user-mini" data-tab="account" role="button" tabindex="0">
       <div class="av" id="sbAv">?</div>
-      <div class="user-txt"><div class="u-name" id="sbName">Guest</div><div class="u-email" id="sbEmail">Not signed in</div></div>
+      <div class="user-txt">
+        <div class="u-name" id="sbName">Guest</div>
+        <div class="u-email" id="sbEmail">Not signed in</div>
+      </div>
     </div>
   </aside>
 
@@ -426,9 +441,18 @@ html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-s
   </div>
 
   <nav class="bnav">
-    <div class="bni act" data-tab="ride">Ride</div>
-    <div class="bni" data-tab="trips">Trips</div>
-    <div class="bni" data-tab="account">Account</div>
+    <div class="bni act" data-tab="ride">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      Ride
+    </div>
+    <div class="bni" data-tab="trips">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Trips
+    </div>
+    <div class="bni" data-tab="account">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Account
+    </div>
   </nav>
 </div>
 
@@ -757,7 +781,7 @@ function renderRiderChatMessages() {
     const mine = m.sender === 'rider';
     const time = m.ts ? new Date(m.ts).toLocaleTimeString('en-ZA', {hour:'2-digit', minute:'2-digit'}) : '';
     // Mark as read if we are looking at it
-    if(!mine && !m.readByRider) { /* Need key to update realistically, but UI assumes read if panel open */ }
+    if(!mine && !m.readByRider) { /* Mark read logic here */ }
     return `<div class="chat-msg ${mine ? 'mine' : 'theirs'}">
       <div class="chat-bubble">${(m.text||'').replace(/</g,'&lt;')}</div>
       <div class="chat-meta">${time}</div>
