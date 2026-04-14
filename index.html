@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VynixRide</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js" defer></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js" defer></script>
+<script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js" defer></script>
 
 <style>
 :root{
@@ -18,86 +19,46 @@
   --border:#E2E4F0;--green:#17A85A;--red:#E53535;--nav-h:72px;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg);}
+
+/* UX: 100dvh prevents layout shifts on mobile when the address bar hides/shows */
+html,body{height:100vh;height:100dvh;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg);}
+
+/* UX: Focus states for keyboard accessibility */
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; border-radius: inherit; }
 
 /* ── YOCO — always on top, right-aligned on desktop ─────────────────── */
-iframe[src*="yoco"],
-div[class*="yoco"],
-div[id*="yoco"],
-.yoco-popup,
-.yoco-modal,
-.yoco-overlay {
+iframe[src*="yoco"], div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, .yoco-overlay {
   z-index: 2147483647 !important;
 }
 @media(min-width:900px){
-  .yoco-popup,
-  .yoco-modal,
-  div[class*="yoco-popup"],
-  div[id*="yoco-popup"] {
-    left: auto !important;
-    right: 40px !important;
-    transform: none !important;
-  }
+  .yoco-popup, .yoco-modal, div[class*="yoco-popup"], div[id*="yoco-popup"] { left: auto !important; right: 40px !important; transform: none !important; }
 }
 
-body.yoco-active .panel,
-body.yoco-active .active-panel,
-body.yoco-active .mbg,
-body.yoco-active .bnav {
-  z-index: 0 !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, body.yoco-active .bnav {
+  z-index: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
 }
 
-.shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative;}
+.shell{display:flex;height:100vh;height:100dvh;width:100vw;overflow:hidden;position:relative;}
 
 /* Initial Auth Loader */
-.init-loader {
-  position: fixed; inset: 0; background: var(--bg); z-index: 9999;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.4s;
-}
+.init-loader { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s; }
 .init-loader.hide { opacity: 0; pointer-events: none; }
-.loader-spinner {
-  width: 40px; height: 40px; border: 4px solid var(--border);
-  border-top-color: var(--blue); border-radius: 50%;
-  animation: sp 0.8s linear infinite; margin-bottom: 16px;
-}
+.loader-spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: sp 0.8s linear infinite; margin-bottom: 16px; }
+
+/* Map Loading Skeleton */
+.map-skeleton { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5; transition: opacity 0.4s ease; }
+.map-skeleton.hide { opacity: 0; pointer-events: none; }
 
 /* ── SIDEBAR ───────────────────────────────────────────────────────── */
-.sidebar{
-  display:none; width:80px; background:var(--card); border-right:1px solid var(--border);
-  flex-direction:column; padding:26px 14px; z-index:60; flex-shrink:0;
-  transition:width .32s cubic-bezier(.4,0,.2,1), padding .32s cubic-bezier(.4,0,.2,1);
-  overflow:hidden; white-space:nowrap;
-}
+.sidebar{ display:none; width:80px; background:var(--card); border-right:1px solid var(--border); flex-direction:column; padding:26px 14px; z-index:60; flex-shrink:0; transition:width .32s cubic-bezier(.4,0,.2,1), padding .32s cubic-bezier(.4,0,.2,1); overflow:hidden; white-space:nowrap; }
 @media(min-width:900px){.sidebar{display:flex;}}
-.sidebar:hover{
-  width:270px;
-  padding:26px 20px;
-  box-shadow:4px 0 28px rgba(0,0,0,.06);
-}
-.logo{
-  font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:var(--blue);
-  display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px;
-  min-width:240px;
-}
-.logo-mark{
-  width:38px;height:38px;background:var(--blue);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;
-  font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow);
-}
-.l-txt{
-  opacity:0;transition:opacity .18s .1s;
-  font-size:19px;letter-spacing:-.4px;font-weight:800;
-}
+.sidebar:hover{ width:270px; padding:26px 20px; box-shadow:4px 0 28px rgba(0,0,0,.06); }
+.logo{ font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:var(--blue); display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px; min-width:240px; }
+.logo-mark{ width:38px;height:38px;background:var(--blue);border-radius:10px; display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px; font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow); }
+.l-txt{ opacity:0;transition:opacity .18s .1s; font-size:19px;letter-spacing:-.4px;font-weight:800; }
 .sidebar:hover .l-txt{opacity:1;}
 
-.nl{
-  display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px;
-  color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s;
-  margin-bottom:4px;min-width:240px;
-}
+.nl{ display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px; color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s; margin-bottom:4px;min-width:240px; min-height: 44px; /* UX Tap Target */ }
 .nl svg{flex-shrink:0;width:22px;height:22px;}
 .nl:hover{background:rgba(26,59,255,.05);color:var(--blue);}
 .nl.act{background:rgba(26,59,255,.09);color:var(--blue);font-weight:600;}
@@ -106,126 +67,72 @@ body.yoco-active .bnav {
 
 .nav-spacer{flex:1;}
 
-.user-mini{
-  display:flex;align-items:center;gap:14px;padding:11px 11px;
-  background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer;
-  transition:.17s;min-width:240px;
-}
+.user-mini{ display:flex;align-items:center;gap:14px;padding:11px 11px; background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer; transition:.17s;min-width:240px; min-height: 44px; }
 .user-mini:hover{background:rgba(26,59,255,.07);}
-.av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;
-  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
-.user-txt{
-  opacity:0;transition:opacity .18s .1s;
-  display:flex;flex-direction:column;overflow:hidden;
-}
+.av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff; display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.user-txt{ opacity:0;transition:opacity .18s .1s; display:flex;flex-direction:column;overflow:hidden; }
 .sidebar:hover .user-txt{opacity:1;}
 .user-txt .u-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
 .user-txt .u-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
 
 /* map */
-.map-wrap{flex:1;position:relative;height:100vh;}
+.map-wrap{flex:1;position:relative;height:100vh;height:100dvh;}
 #map{position:absolute;inset:0;width:100%;height:100%;}
 .mapboxgl-ctrl-bottom-right{bottom:10px;right:10px;}
 @media(max-width:899px){.mapboxgl-ctrl-bottom-right{display: none;}}
-.cmarker{width:18px;height:18px;background:var(--blue);border:3px solid #fff;
-  border-radius:50%;box-shadow:0 2px 12px var(--glow);}
-.dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid #fff;
-  border-radius:50%;box-shadow:0 2px 10px var(--glow);}
-.car-marker {
-  width: 28px; height: 28px; background: #fff; border: 2px solid var(--ink);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.3s;
-}
+.cmarker{width:18px;height:18px;background:var(--blue);border:3px solid #fff; border-radius:50%;box-shadow:0 2px 12px var(--glow);}
+.dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid #fff; border-radius:50%;box-shadow:0 2px 10px var(--glow);}
+.car-marker { width: 28px; height: 28px; background: #fff; border: 2px solid var(--ink); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.3s; }
 
-.locate-btn {
-  position: absolute; right: 20px; bottom: calc(100% + 16px);
-  width: 46px; height: 46px; background: #fff; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12); cursor: pointer; z-index: 40;
-  color: var(--blue); transition: 0.2s; border: 1px solid var(--border);
-}
+.locate-btn { position: absolute; right: 20px; bottom: calc(100% + 16px); width: 46px; height: 46px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.12); cursor: pointer; z-index: 40; color: var(--blue); transition: 0.2s; border: 1px solid var(--border); }
 .locate-btn:active { transform: scale(0.92); }
 @media(min-width: 900px) { .locate-btn { bottom: 24px; right: 24px; } }
 
 /* Mobile Fluid Panel */
-.panel{position:absolute;background:rgba(255,255,255,.95);backdrop-filter:blur(22px) saturate(1.8);
-  -webkit-backdrop-filter:blur(22px) saturate(1.8); display:flex;flex-direction:column;z-index:30;
-  border:1px solid rgba(255,255,255,.8);}
+.panel{position:absolute;background:rgba(255,255,255,.95);backdrop-filter:blur(22px) saturate(1.8); -webkit-backdrop-filter:blur(22px) saturate(1.8); display:flex;flex-direction:column;z-index:30; border:1px solid rgba(255,255,255,.8);}
 @media(max-width:899px){
-  .panel{
-    bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
-    left:0;width:100%;height:auto;max-height:calc(100vh - var(--nav-h) - 80px);
-    border-radius:28px 28px 0 0; padding:16px 20px 20px;
-    box-shadow:0 -12px 40px rgba(0,0,0,.1);
-  }
+  .panel{ bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;height:auto;max-height:calc(100vh - var(--nav-h) - 80px); border-radius:28px 28px 0 0; padding:16px 20px 20px; box-shadow:0 -12px 40px rgba(0,0,0,.1); }
 }
 @media(min-width:900px){
-  .panel{top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px;
-    border-radius:22px;padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);}
+  .panel{top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px; border-radius:22px;padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);}
 }
 .drag-handle{width:34px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 14px;flex-shrink:0;}
 @media(min-width:900px){.drag-handle{display:none;}}
 
 .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
 .ptitle{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
-.top-cbtn {
-  background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff;
-  padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700;
-  cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s;
-  display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em;
-}
+.top-cbtn { background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff; padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s; display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; min-height: 44px; align-items: center; justify-content: center; } /* UX Fix */
 .top-cbtn:active { transform: scale(0.96); }
 
 /* geocoder */
 .geo-wrap{margin-bottom:12px;flex-shrink:0;}
-.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;
-  border-radius:13px!important;border:1.5px solid var(--border)!important;
-  box-shadow:none!important;background:#fff!important; font-family:'Outfit',sans-serif!important;}
-.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;
-  color:var(--ink)!important;font-family:'Outfit',sans-serif!important;
-  padding:11px 40px 11px 40px!important;height:46px!important;}
+.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important; border-radius:13px!important;border:1.5px solid var(--border)!important; box-shadow:none!important;background:#fff!important; font-family:'Outfit',sans-serif!important;}
+.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important; color:var(--ink)!important;font-family:'Outfit',sans-serif!important; padding:11px 40px 11px 40px!important;height:46px!important;}
 .mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important;}
-.mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important;
-  box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important;}
+.mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important; box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important;}
 .mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important;}
 
-.origin-row{display:flex;align-items:center;gap:10px;background:#fff;
-  padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);
-  margin-bottom:12px;flex-shrink:0;}
+.origin-row{display:flex;align-items:center;gap:10px;background:#fff; padding:11px 14px;border-radius:13px;border:1.5px solid var(--border); margin-bottom:12px;flex-shrink:0;}
 .o-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;}
 .o-main{font-size:13px;font-weight:600;}
 .o-sub{font-size:11px;color:var(--muted);}
-.slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;
-  text-transform:uppercase;margin-bottom:10px;flex-shrink:0;}
+.slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em; text-transform:uppercase;margin-bottom:10px;flex-shrink:0;}
 
-.ride-list{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;
-  padding-right:2px; padding-bottom: 24px; -webkit-overflow-scrolling: touch; }
+.ride-list{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:2px; padding-bottom: 24px; -webkit-overflow-scrolling: touch; }
 @media(max-width:899px){ .ride-list{max-height: 48vh; padding-bottom: 40px;} } 
 .ride-list::-webkit-scrollbar{display:none;}
-.rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;
-  border-radius:15px;border:2px solid var(--border);cursor:pointer;
-  transition:all .17s;background:#fff;position:relative;}
+.rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px; border-radius:15px;border:2px solid var(--border);cursor:pointer; transition:all .17s;background:#fff;position:relative; min-height: 44px;}
 .rcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06);}
 .rcard.sel{border-color:var(--blue);background:rgba(26,59,255,.04);box-shadow:0 4px 16px var(--glow);}
 .rinfo{display:flex;align-items:center;gap:11px;}
-.rav{width:42px;height:42px;border-radius:50%;
-  background:linear-gradient(135deg,var(--blue2),var(--blue));
-  color:#fff;display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:12px;flex-shrink:0;}
+.rav{width:42px;height:42px;border-radius:50%; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff;display:flex;align-items:center;justify-content:center; font-weight:700;font-size:12px;flex-shrink:0;}
 .rname{font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;margin-bottom:1px;}
 .rmeta{font-size:11px;color:var(--muted);}
 .rprice{font-size:15px;font-weight:700;}
-.rtbadge{font-size:10px;font-weight:600;color:var(--blue);
-  background:rgba(26,59,255,.09);padding:2px 8px;border-radius:20px;
-  margin-top:4px;display:inline-block;}
+.rtbadge{font-size:10px;font-weight:600;color:var(--blue); background:rgba(26,59,255,.09);padding:2px 8px;border-radius:20px; margin-top:4px;display:inline-block;}
 
 /* overlays */
-.search-overlay {
-  position: fixed; inset: 0; z-index: 100;
-  background: rgba(255,255,255,0.92); backdrop-filter: blur(14px);
-  display: none; flex-direction: column; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity 0.3s ease;
-}
+.search-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
 .search-overlay.show { display: flex; opacity: 1; }
 .circular-progress { width: 140px; height: 140px; position: relative; display: flex; align-items: center; justify-content: center; }
 .circular-progress svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -235,49 +142,36 @@ body.yoco-active .bnav {
 .time-left { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
 .search-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
 .search-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 500; text-align: center; max-width: 250px; }
-.cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px;
-  background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s;}
+.cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px; background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s; min-height: 44px; }
 .cancel-search-btn:active { background: rgba(229,53,53,0.2); }
 
-.active-panel{
-  position:absolute;background:rgba(255,255,255,.96);backdrop-filter:blur(22px);
-  display:none;flex-direction:column;z-index:35;gap:18px; border:1px solid rgba(255,255,255,.8);
-  transform:translateY(120%);transition:transform .45s cubic-bezier(.4,0,.2,1);
-}
+.active-panel{ position:absolute;background:rgba(255,255,255,.96);backdrop-filter:blur(22px); display:none;flex-direction:column;z-index:35;gap:18px; border:1px solid rgba(255,255,255,.8); transform:translateY(120%);transition:transform .45s cubic-bezier(.4,0,.2,1); }
 .active-panel.show{transform:translateY(0);}
 @media(max-width:899px){
-  .active-panel{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;border-radius:28px 28px 0 0;
-    padding:20px 24px 24px; box-shadow:0 -12px 40px rgba(0,0,0,.1);}
+  .active-panel{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;border-radius:28px 28px 0 0; padding:20px 24px 24px; box-shadow:0 -12px 40px rgba(0,0,0,.1);}
 }
 @media(min-width:900px){
   .active-panel{top:22px;left:22px;bottom:auto;width:385px;border-radius:22px; padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);}
 }
 .ad-header{display:flex;justify-content:space-between;align-items:center;}
 .ad-info{display:flex;align-items:center;gap:14px;}
-.ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0);
-  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue);
-  border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08);}
+.ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0); display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue); border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08);}
 .ad-car-info{text-align:right;}
-.ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px;
-  font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
+.ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px; font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px; padding-top:18px;border-top:1px solid var(--border);}
 .ad-m-item{display:flex;flex-direction:column;}
 .ad-m-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
 .ad-m-val{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:var(--blue);}
 
 /* bottom nav */
-.bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
-  background:rgba(255,255,255,.96);backdrop-filter:blur(16px);
-  border-top:1px solid var(--border);display:flex;justify-content:space-around;
-  align-items:flex-start;padding-top:10px;z-index:50;}
+.bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); background:rgba(255,255,255,.96);backdrop-filter:blur(16px); border-top:1px solid var(--border);display:flex;justify-content:space-around; align-items:flex-start;padding-top:10px;z-index:50;}
 @media(min-width:900px){.bnav{display:none;}}
-.bni{display:flex;flex-direction:column;align-items:center;gap:4px; color:var(--muted);font-size:11px;font-weight:600;cursor:pointer; transition:.17s;padding:4px 16px;}
+.bni{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px; color:var(--muted);font-size:11px;font-weight:600;cursor:pointer; transition:.17s;padding:4px 16px; min-height: 44px;}
 .bni.act{color:var(--blue);}
 .bni.act svg path,.bni.act svg circle,.bni.act svg rect,.bni.act svg polyline,.bni.act svg line{stroke:var(--blue);}
 
 /* full pages */
-.fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg); display:none;flex-direction:column;overflow-y:auto;
-  padding:28px 20px calc(var(--nav-h) + env(safe-area-inset-bottom, 20px));}
+.fpage{flex:1;height:100vh;height:100dvh;position:relative;z-index:20;background:var(--bg); display:none;flex-direction:column;overflow-y:auto; padding:28px 20px calc(var(--nav-h) + env(safe-area-inset-bottom, 20px));}
 @media(min-width:900px){.fpage{padding:32px 36px 32px;}}
 .fpage.show{display:flex;}
 .ph{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
@@ -289,8 +183,7 @@ body.yoco-active .bnav {
 .tc-type{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;}
 .tc-fare{font-size:15px;font-weight:700;color:var(--blue);}
 .tc-meta{font-size:12px;color:var(--muted);margin-top:4px;}
-.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px; font-size:11px;font-weight:600;padding:3px 10px;
-  border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue);}
+.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px; font-size:11px;font-weight:600;padding:3px 10px; border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue);}
 
 /* wallet */
 .w-hero{background:linear-gradient(135deg,#1E40FF,var(--blue)); border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff; position:relative;overflow:hidden;}
@@ -299,7 +192,7 @@ body.yoco-active .bnav {
 .wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500;}
 .wbal{font-family:'Outfit',sans-serif;font-size:36px;font-weight:800; margin-bottom:16px;letter-spacing:-.5px;}
 .wbtns{display:flex;gap:10px;position:relative;z-index:1;}
-.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'Outfit',sans-serif; transition:.2s;}
+.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'Outfit',sans-serif; transition:.2s; min-height:44px;}
 .wbtn:hover{background:rgba(255,255,255,.3);}
 .txi{display:flex;justify-content:space-between;align-items:center; padding:13px 0;border-bottom:1px solid var(--border);}
 .txi:last-child{border:none;}
@@ -317,150 +210,60 @@ body.yoco-active .bnav {
    ACCOUNT PAGE
    ═══════════════════════════════════════════════ */
 #tab-account { font-family: 'Outfit', sans-serif; }
-#tab-account .ph {
-  font-family: 'Outfit', sans-serif;
-  font-size: 26px; font-weight: 800;
-  letter-spacing: -.6px; margin-bottom: 20px;
-}
-.prof-banner{
-  background: linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff);
-  border-radius: 20px; padding: 22px 20px; margin-bottom: 20px;
-  display: flex; align-items: center; gap: 14px; color: #fff;
-  position: relative; overflow: hidden;
-}
-.prof-banner::after {
-  content: ''; position: absolute; top: -40px; right: -40px;
-  width: 160px; height: 160px; border-radius: 50%;
-  background: rgba(255,255,255,.06); pointer-events: none;
-}
-.prof-av-lg{
-  width: 58px; height: 58px; border-radius: 16px;
-  background: rgba(255,255,255,.22); color: #fff;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 800;
-  font-family: 'Outfit', sans-serif;
-  flex-shrink: 0; border: 2px solid rgba(255,255,255,.35);
-  box-shadow: 0 4px 16px rgba(0,0,0,.12);
-}
-.prof-name {
-  font-family: 'Outfit', sans-serif;
-  font-size: 19px; font-weight: 700; letter-spacing: -.2px;
-}
+#tab-account .ph { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 20px; }
+.prof-banner{ background: linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff); border-radius: 20px; padding: 22px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; color: #fff; position: relative; overflow: hidden; }
+.prof-banner::after { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,.06); pointer-events: none; }
+.prof-av-lg{ width: 58px; height: 58px; border-radius: 16px; background: rgba(255,255,255,.22); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; flex-shrink: 0; border: 2px solid rgba(255,255,255,.35); box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+.prof-name { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -.2px; }
 .prof-email { font-size: 13px; opacity: .72; margin-top: 3px; font-weight: 400; }
 
 /* Account section group */
-.acc-section-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 11px; font-weight: 700;
-  color: var(--muted); letter-spacing: .1em;
-  text-transform: uppercase;
-  margin: 18px 0 8px 4px;
-}
-.ss{
-  background: var(--card); border-radius: 18px; margin-bottom: 12px;
-  overflow: hidden; border: 1px solid var(--border);
-  box-shadow: 0 2px 10px rgba(0,0,0,.04);
-}
-.sr{
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 15px 18px; border-bottom: 1px solid var(--border);
-  cursor: pointer; transition: background .15s; user-select: none;
-}
+.acc-section-title { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin: 18px 0 8px 4px; }
+.ss{ background: var(--card); border-radius: 18px; margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+.sr{ display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; user-select: none; min-height:44px;}
 .sr:last-child{border:none;}
 .sr:hover{background: rgba(26,59,255,.03);}
 .sr:active{background: rgba(26,59,255,.06);}
 .srl{display:flex;align-items:center;gap:12px;}
-.sri{
-  width: 34px; height: 34px; border-radius: 10px;
-  background: rgba(26,59,255,.07);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.srt{
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px; font-weight: 500; color: var(--ink);
-}
+.sri{ width: 34px; height: 34px; border-radius: 10px; background: rgba(26,59,255,.07); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.srt{ font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; color: var(--ink); }
 .sra{ color: var(--muted); font-size: 16px; font-weight: 400; }
 
 /* ── Toggle Switch ──────────────────────────────── */
 .ts { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
 .ts input { opacity: 0; width: 0; height: 0; position: absolute; }
-.ts-slider {
-  position: absolute; inset: 0; background: var(--border);
-  border-radius: 26px; cursor: pointer; transition: background .22s;
-}
-.ts-slider::before {
-  content: ''; position: absolute;
-  width: 20px; height: 20px; left: 3px; top: 3px;
-  background: #fff; border-radius: 50%; transition: transform .22s;
-  box-shadow: 0 1px 5px rgba(0,0,0,.22);
-}
+.ts-slider { position: absolute; inset: 0; background: var(--border); border-radius: 26px; cursor: pointer; transition: background .22s; }
+.ts-slider::before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .22s; box-shadow: 0 1px 5px rgba(0,0,0,.22); }
 .ts input:checked + .ts-slider { background: var(--blue); }
 .ts input:checked + .ts-slider::before { transform: translateX(18px); }
 
 /* ── Notification rows ─────────────────────────── */
-.notif-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 18px; border-bottom: 1px solid var(--border);
-}
+.notif-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
 .notif-row:last-child { border: none; }
 .notif-left { flex: 1; padding-right: 16px; }
-.notif-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px;
-}
+.notif-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
 .notif-sub { font-size: 12px; color: var(--muted); font-family: 'Outfit', sans-serif; }
 
 /* ── Payment method cards ──────────────────────── */
-.pm-card {
-  display: flex; align-items: center; gap: 14px;
-  padding: 15px 18px; border-bottom: 1px solid var(--border);
-  cursor: pointer; transition: background .15s;
-}
+.pm-card { display: flex; align-items: center; gap: 14px; padding: 15px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; min-height: 44px;}
 .pm-card:last-child { border: none; }
 .pm-card:hover { background: rgba(26,59,255,.03); }
-.pm-icon {
-  width: 40px; height: 28px; border-radius: 7px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0; border: 1.5px solid var(--border);
-  background: #fff;
-}
+.pm-icon { width: 40px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1.5px solid var(--border); background: #fff; }
 .pm-label { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; }
 .pm-sub { font-size: 12px; color: var(--muted); margin-top: 1px; font-family: 'Outfit', sans-serif; }
-.pm-badge {
-  margin-left: auto; font-size: 11px; font-weight: 700;
-  padding: 3px 10px; border-radius: 20px;
-  background: rgba(23,168,90,.1); color: var(--green);
-  font-family: 'Outfit', sans-serif;
-}
-.pm-default-badge {
-  background: rgba(26,59,255,.08); color: var(--blue);
-}
+.pm-badge { margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(23,168,90,.1); color: var(--green); font-family: 'Outfit', sans-serif; }
+.pm-default-badge { background: rgba(26,59,255,.08); color: var(--blue); }
 
 /* ── Saved Places ─────────────────────────────── */
-.sp-row {
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 18px; border-bottom: 1px solid var(--border);
-}
+.sp-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); min-height:44px;}
 .sp-row:last-child { border: none; }
-.sp-icon {
-  width: 36px; height: 36px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px; flex-shrink: 0;
-}
+.sp-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .sp-icon.home { background: rgba(255,174,0,.12); }
 .sp-icon.work { background: rgba(26,59,255,.09); }
 .sp-icon.fav  { background: rgba(229,53,53,.09); }
 .sp-field-wrap { flex: 1; }
-.sp-field-label {
-  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
-  color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px;
-}
-.sp-field {
-  width: 100%; padding: 10px 12px; border-radius: 10px;
-  border: 1.5px solid var(--border); font-family: 'Outfit', sans-serif;
-  font-size: 13px; font-weight: 500; outline: none;
-  color: var(--ink); transition: border-color .18s; background: var(--bg);
-}
+.sp-field-label { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+.sp-field { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; outline: none; color: var(--ink); transition: border-color .18s; background: var(--bg); }
 .sp-field:focus { border-color: var(--blue); background: #fff; }
 .sp-field::placeholder { color: #b0b3c6; }
 
@@ -471,18 +274,13 @@ body.yoco-active .bnav {
 .mbg-acc .mok { font-family: 'Outfit', sans-serif; }
 
 /* account */
-.account-version {
-  text-align: center; font-family: 'Outfit', sans-serif;
-  font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 4px;
-}
+.account-version { text-align: center; font-family: 'Outfit', sans-serif; font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 4px; }
 
 /* modal — z-index 500 so above panels but below Yoco */
-.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;
-  display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500; display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 @media(min-width:900px){.mbg{align-items:center;}}
 .mbg.show{display:flex;}
-.modal{background:#fff;border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px));
-  width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
+.modal{background:#fff;border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px)); width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
 @media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
 @keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mh{font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
@@ -491,15 +289,12 @@ body.yoco-active .bnav {
 .mrl{font-size:13px;color:var(--muted);}
 .mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
 .mbtns{display:flex;gap:11px;margin-top:20px;}
-.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'Outfit',sans-serif; transition:.1s;}
+.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'Outfit',sans-serif; transition:.1s; min-height:44px;}
 .mcancel:hover{background:var(--bg);}
-.mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;
-  border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Outfit',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
+.mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff; border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Outfit',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px; min-height:44px;}
 
 /* toast */
-.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%;
-  transform:translateX(-50%) translateY(10px); background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;
-  font-size:13px;font-weight:600;opacity:0;pointer-events:none; transition:.22s;z-index:600;white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,.25);}
+.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%; transform:translateX(-50%) translateY(10px); background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px; font-size:13px;font-weight:600;opacity:0;pointer-events:none; transition:.22s;z-index:600;white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,.25);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 @media(min-width:900px){.toast{bottom:26px;}}
 
@@ -513,243 +308,59 @@ body.yoco-active .bnav {
 /* ═══════════════════════════════════════════════════════════
    AUTH OVERLAY — Full-bleed photo background, Uber-style
    ═══════════════════════════════════════════════════════════ */
-.auth-overlay {
-  position: fixed; inset: 0; z-index: 998;
-  display: none; flex-direction: column;
-  opacity: 0; transition: opacity .4s;
-  font-family: 'Outfit', sans-serif;
-  overflow: hidden;
-}
+.auth-overlay { position: fixed; inset: 0; z-index: 998; display: none; flex-direction: column; opacity: 0; transition: opacity .4s; font-family: 'Outfit', sans-serif; overflow: hidden; }
 .auth-overlay.show { display: flex; opacity: 1; }
-
-.auth-bg {
-  position: absolute; inset: 0;
-  background: url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center / cover no-repeat;
-  transform: scale(1.04);
-  animation: auth-zoom 18s ease-in-out infinite alternate;
-}
-@keyframes auth-zoom {
-  from { transform: scale(1.04); }
-  to   { transform: scale(1.12); }
-}
-
-.auth-scrim {
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(to bottom,
-      rgba(0,0,0,0.18) 0%,
-      rgba(0,0,0,0.05) 30%,
-      rgba(0,0,0,0.45) 65%,
-      rgba(0,0,0,0.88) 100%);
-}
-
-.auth-topbar {
-  position: relative; z-index: 2;
-  display: flex; align-items: center; gap: 12px;
-  padding: 56px 28px 0;
-}
-.auth-logo-dot {
-  width: 44px; height: 44px; background: #fff; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Outfit', sans-serif; font-weight: 800;
-  font-size: 15px; color: var(--blue); flex-shrink: 0;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.28);
-}
-.auth-logo-name {
-  font-family: 'Outfit', sans-serif;
-  font-size: 22px; font-weight: 800; color: #fff;
-  letter-spacing: -.3px;
-  text-shadow: 0 2px 12px rgba(0,0,0,0.35);
-}
-
+.auth-bg { position: absolute; inset: 0; background: url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center / cover no-repeat; transform: scale(1.04); animation: auth-zoom 18s ease-in-out infinite alternate; }
+@keyframes auth-zoom { from { transform: scale(1.04); } to   { transform: scale(1.12); } }
+.auth-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.88) 100%); }
+.auth-topbar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 56px 28px 0; }
+.auth-logo-dot { width: 44px; height: 44px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 15px; color: var(--blue); flex-shrink: 0; box-shadow: 0 4px 18px rgba(0,0,0,0.28); }
+.auth-logo-name { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.3px; text-shadow: 0 2px 12px rgba(0,0,0,0.35); }
 .auth-spacer { flex: 1; position: relative; z-index: 2; }
-
-.auth-bottom {
-  position: relative; z-index: 2;
-  padding: 32px 28px calc(44px + env(safe-area-inset-bottom, 0px));
-}
-
-.auth-headline {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(32px, 8vw, 46px);
-  font-weight: 800; color: #fff; line-height: 1.12;
-  letter-spacing: -1px; margin-bottom: 12px;
-  text-shadow: 0 2px 16px rgba(0,0,0,0.3);
-}
-.auth-subline {
-  font-size: 15px; color: rgba(255,255,255,.68);
-  font-weight: 400; margin-bottom: 36px;
-  line-height: 1.55; max-width: 320px;
-}
-
-.auth-pills {
-  display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;
-}
-
-.pill-login {
-  width: 100%; padding: 18px 28px;
-  border-radius: 100px; border: none;
-  background: #fff; color: #0C0C14;
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px; font-weight: 800;
-  cursor: pointer; letter-spacing: -.1px;
-  box-shadow: 0 6px 28px rgba(0,0,0,0.32);
-  transition: transform .15s, box-shadow .15s, background .15s;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-}
+.auth-bottom { position: relative; z-index: 2; padding: 32px 28px calc(44px + env(safe-area-inset-bottom, 0px)); }
+.auth-headline { font-family: 'Outfit', sans-serif; font-size: clamp(32px, 8vw, 46px); font-weight: 800; color: #fff; line-height: 1.12; letter-spacing: -1px; margin-bottom: 12px; text-shadow: 0 2px 16px rgba(0,0,0,0.3); }
+.auth-subline { font-size: 15px; color: rgba(255,255,255,.68); font-weight: 400; margin-bottom: 36px; line-height: 1.55; max-width: 320px; }
+.auth-pills { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.pill-login { width: 100%; padding: 18px 28px; border-radius: 100px; border: none; background: #fff; color: #0C0C14; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800; cursor: pointer; letter-spacing: -.1px; box-shadow: 0 6px 28px rgba(0,0,0,0.32); transition: transform .15s, box-shadow .15s, background .15s; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; }
 .pill-login:active { transform: scale(0.97); box-shadow: 0 2px 12px rgba(0,0,0,0.22); }
 .pill-login:hover  { background: #f0f0f0; }
-
 .pill-g-icon { width: 20px; height: 20px; flex-shrink: 0; }
-
-.pill-create {
-  width: 100%; padding: 17px 28px;
-  border-radius: 100px;
-  border: 2px solid rgba(255,255,255,.55);
-  background: rgba(255,255,255,.08);
-  color: #fff;
-  font-family: 'Outfit', sans-serif;
-  font-size: 16px; font-weight: 700;
-  cursor: pointer; letter-spacing: -.1px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform .15s, background .15s, border-color .15s;
-}
+.pill-create { width: 100%; padding: 17px 28px; border-radius: 100px; border: 2px solid rgba(255,255,255,.55); background: rgba(255,255,255,.08); color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; letter-spacing: -.1px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: transform .15s, background .15s, border-color .15s; min-height: 44px; }
 .pill-create:active { transform: scale(0.97); }
 .pill-create:hover  { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.75); }
-
-.auth-demo-link {
-  display: block; width: 100%; text-align: center;
-  background: none; border: none; padding: 8px;
-  font-family: 'Outfit', sans-serif;
-  font-size: 13px; color: rgba(255,255,255,.42);
-  font-weight: 500; cursor: pointer;
-  letter-spacing: .01em; transition: color .2s;
-}
+.auth-demo-link { display: block; width: 100%; text-align: center; background: none; border: none; padding: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; color: rgba(255,255,255,.42); font-weight: 500; cursor: pointer; letter-spacing: .01em; transition: color .2s; min-height: 44px; }
 .auth-demo-link:hover { color: rgba(255,255,255,.65); }
-
-.auth-trust-bar {
-  display: flex; align-items: center; justify-content: center;
-  gap: 6px; margin-top: 14px;
-  font-size: 11.5px; color: rgba(255,255,255,.28);
-  font-family: 'Outfit', sans-serif;
-}
+.auth-trust-bar { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px; font-size: 11.5px; color: rgba(255,255,255,.28); font-family: 'Outfit', sans-serif; }
 .auth-trust-bar svg { opacity: .38; flex-shrink: 0; }
-
-.auth-feats {
-  display: flex; gap: 20px; margin-bottom: 30px;
-}
-.auth-feat-chip {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 12px; font-weight: 600;
-  color: rgba(255,255,255,.7);
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.18);
-  padding: 5px 12px; border-radius: 100px;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-.auth-feat-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: #4A9AFF; flex-shrink: 0;
-}
-
+.auth-feats { display: flex; gap: 20px; margin-bottom: 30px; }
+.auth-feat-chip { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,.7); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); padding: 5px 12px; border-radius: 100px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.auth-feat-dot { width: 5px; height: 5px; border-radius: 50%; background: #4A9AFF; flex-shrink: 0; }
 @media(min-width:900px){
   .auth-bottom { max-width: 460px; margin: 0 auto; padding-left: 40px; padding-right: 40px; }
   .auth-topbar { padding-left: 40px; }
 }
 
 /* ── GOOGLE SIGN-IN BOTTOM SHEET ────────────────────────────────────── */
-.google-sheet-bg {
-  position: fixed; inset: 0; z-index: 999;
-  background: rgba(0,0,0,0.5);
-  display: none; align-items: flex-end; justify-content: center;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
+.google-sheet-bg { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.5); display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .google-sheet-bg.show { display: flex; }
-
-.google-sheet {
-  background: #fff;
-  border-radius: 28px 28px 0 0;
-  padding: 10px 28px calc(40px + env(safe-area-inset-bottom, 0px));
-  width: 100%; max-width: 480px;
-  animation: sheetUp .32s cubic-bezier(.4,0,.2,1);
-  font-family: 'Outfit', sans-serif;
-}
-@media(min-width:900px){
-  .google-sheet-bg { align-items: center; }
-  .google-sheet { border-radius: 22px; padding-bottom: 36px; max-width: 420px; }
-}
-@keyframes sheetUp {
-  from { transform: translateY(80px); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-
-.gs-pill {
-  width: 36px; height: 4px; background: #E2E4F0;
-  border-radius: 4px; margin: 0 auto 22px;
-}
+.google-sheet { background: #fff; border-radius: 28px 28px 0 0; padding: 10px 28px calc(40px + env(safe-area-inset-bottom, 0px)); width: 100%; max-width: 480px; animation: sheetUp .32s cubic-bezier(.4,0,.2,1); font-family: 'Outfit', sans-serif; }
+@media(min-width:900px){ .google-sheet-bg { align-items: center; } .google-sheet { border-radius: 22px; padding-bottom: 36px; max-width: 420px; } }
+@keyframes sheetUp { from { transform: translateY(80px); opacity: 0; } to   { transform: translateY(0);    opacity: 1; } }
+.gs-pill { width: 36px; height: 4px; background: #E2E4F0; border-radius: 4px; margin: 0 auto 22px; }
 @media(min-width:900px){ .gs-pill { display: none; } }
-
-.gs-brand {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
-}
-.gs-brand-dot {
-  width: 36px; height: 36px; background: var(--blue); border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-weight: 800; font-size: 13px;
-  font-family: 'Outfit', sans-serif;
-  box-shadow: 0 4px 12px var(--glow); flex-shrink: 0;
-}
-.gs-brand-name {
-  font-size: 17px; font-weight: 800; color: var(--ink);
-  font-family: 'Outfit', sans-serif;
-}
-
-.gs-headline {
-  font-size: 22px; font-weight: 800; color: var(--ink);
-  letter-spacing: -.4px; margin-bottom: 6px; margin-top: 18px;
-  font-family: 'Outfit', sans-serif;
-}
-.gs-sub {
-  font-size: 14px; color: var(--muted); margin-bottom: 28px;
-  line-height: 1.55; font-weight: 400;
-  font-family: 'Outfit', sans-serif;
-}
-
-.gs-google-btn {
-  width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
-  padding: 16px 24px; border-radius: 14px;
-  background: #fff; border: 2px solid #E2E4F0;
-  font-size: 15px; font-weight: 700; color: var(--ink);
-  font-family: 'Outfit', sans-serif;
-  cursor: pointer; transition: background .18s, border-color .18s, transform .1s;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-  margin-bottom: 12px;
-}
+.gs-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.gs-brand-dot { width: 36px; height: 36px; background: var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 12px var(--glow); flex-shrink: 0; }
+.gs-brand-name { font-size: 17px; font-weight: 800; color: var(--ink); font-family: 'Outfit', sans-serif; }
+.gs-headline { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -.4px; margin-bottom: 6px; margin-top: 18px; font-family: 'Outfit', sans-serif; }
+.gs-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.55; font-weight: 400; font-family: 'Outfit', sans-serif; }
+.gs-google-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px 24px; border-radius: 14px; background: #fff; border: 2px solid #E2E4F0; font-size: 15px; font-weight: 700; color: var(--ink); font-family: 'Outfit', sans-serif; cursor: pointer; transition: background .18s, border-color .18s, transform .1s; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 12px; min-height: 44px; }
 .gs-google-btn:hover { background: #F7F8FF; border-color: #c5caff; }
 .gs-google-btn:active { transform: scale(0.98); }
-
-.gs-divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 4px 0 16px; color: var(--muted); font-size: 12px;
-}
+.gs-divider { display: flex; align-items: center; gap: 12px; margin: 4px 0 16px; color: var(--muted); font-size: 12px; }
 .gs-divider-line { flex: 1; height: 1px; background: var(--border); }
-
-.gs-note {
-  font-size: 12px; color: var(--muted); text-align: center;
-  line-height: 1.6; font-family: 'Outfit', sans-serif;
-}
+.gs-note { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.6; font-family: 'Outfit', sans-serif; }
 .gs-note a { color: var(--blue); text-decoration: none; font-weight: 600; }
-
-.gs-close {
-  position: absolute; top: 16px; right: 20px;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--bg); border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); transition: background .15s;
-}
+.gs-close { position: absolute; top: 16px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: var(--bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: background .15s; }
 .gs-close:hover { background: var(--border); }
 .gs-close-wrap { position: relative; }
 </style>
@@ -761,28 +372,22 @@ body.yoco-active .bnav {
   <div style="font-family:'Outfit',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
 </div>
 
-<!-- AUTH OVERLAY -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-bg"></div>
   <div class="auth-scrim"></div>
-
   <div class="auth-topbar">
     <div class="auth-logo-dot">VX</div>
     <div class="auth-logo-name">VynixRide</div>
   </div>
-
   <div class="auth-spacer"></div>
-
   <div class="auth-bottom">
     <div class="auth-feats">
       <div class="auth-feat-chip"><div class="auth-feat-dot"></div>Fast booking</div>
       <div class="auth-feat-chip"><div class="auth-feat-dot"></div>Live tracking</div>
       <div class="auth-feat-chip"><div class="auth-feat-dot"></div>Secure pay</div>
     </div>
-
     <div class="auth-headline">Your city,<br>your ride.</div>
     <div class="auth-subline">Fast, safe, and affordable rides anywhere in South Africa.</div>
-
     <div class="auth-pills">
       <button class="pill-login" id="btnLogin">
         <svg class="pill-g-icon" viewBox="0 0 48 48">
@@ -795,9 +400,7 @@ body.yoco-active .bnav {
       </button>
       <button class="pill-create" id="btnCreate">Create an Account</button>
     </div>
-
     <button class="auth-demo-link" id="skipAuth">Continue without an account →</button>
-
     <div class="auth-trust-bar">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -807,7 +410,6 @@ body.yoco-active .bnav {
   </div>
 </div>
 
-<!-- GOOGLE SIGN-IN SHEET -->
 <div class="google-sheet-bg" id="googleSheetBg">
   <div class="google-sheet">
     <div class="gs-pill"></div>
@@ -845,7 +447,6 @@ body.yoco-active .bnav {
   </div>
 </div>
 
-<!-- LOC MODAL -->
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="mh">Enable Location</div>
@@ -853,12 +454,11 @@ body.yoco-active .bnav {
       VynixRide needs your location to find nearby drivers and accurately set your pickup point. Please turn on location services.
     </p>
     <div class="mbtns">
-      <button class="mok" onclick="requestLocation()">Grant Access</button>
+      <button class="mok" id="btnGrantLoc">Grant Access</button>
     </div>
   </div>
 </div>
 
-<!-- TOP UP MODAL -->
 <div class="mbg" id="topUpModal">
   <div class="modal">
     <div class="mh">Add Funds</div>
@@ -867,7 +467,7 @@ body.yoco-active .bnav {
       <input type="number" id="yocoAmount" class="t-input" placeholder="e.g. 150">
     </div>
     <div class="mbtns" style="margin-bottom: 24px;">
-      <button class="mok" onclick="executeYocoTopUp()" style="width:100%">Pay with Yoco</button>
+      <button class="mok" id="btnExecYoco" style="width:100%">Pay with Yoco</button>
     </div>
     <div style="text-align:center; font-size:12px; color:var(--muted); margin-bottom: 16px;">— OR —</div>
     <div class="input-wrap">
@@ -875,13 +475,12 @@ body.yoco-active .bnav {
       <input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform: uppercase;">
     </div>
     <div class="mbtns">
-      <button class="mcancel" onclick="closeTopUpModal()">Cancel</button>
-      <button class="mok" onclick="executeVoucher()">Redeem</button>
+      <button class="mcancel" id="btnCloseTopUp">Cancel</button>
+      <button class="mok" id="btnExecVoucher">Redeem</button>
     </div>
   </div>
 </div>
 
-<!-- CONFIRM MODAL -->
 <div class="mbg" id="confirmModal">
   <div class="modal">
     <div class="mh">Confirm Booking</div>
@@ -893,13 +492,12 @@ body.yoco-active .bnav {
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
     <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare">—</b></div>
     <div class="mbtns">
-      <button class="mcancel" onclick="closeModal()">Cancel</button>
-      <button class="mok" id="bookBtn" onclick="initiateRidePayment()">Pay & Book <span class="spin" id="bspin"></span></button>
+      <button class="mcancel" id="btnCloseConfirm">Cancel</button>
+      <button class="mok" id="bookBtn">Pay & Book <span class="spin" id="bspin"></span></button>
     </div>
   </div>
 </div>
 
-<!-- ── NOTIFICATIONS MODAL ─────────────────────────────── -->
 <div class="mbg mbg-acc" id="notifModal">
   <div class="modal" style="text-align:left;">
     <div class="mh" style="font-family:'Outfit',sans-serif;">Notifications</div>
@@ -941,18 +539,17 @@ body.yoco-active .bnav {
       </div>
     </div>
     <div class="mbtns" style="margin-top:20px;">
-      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closeNotifModal()">Close</button>
-      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="saveNotifPrefs()">Save Preferences</button>
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" id="btnCloseNotif">Close</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" id="btnSaveNotif">Save Preferences</button>
     </div>
   </div>
 </div>
 
-<!-- ── PAYMENT METHODS MODAL ───────────────────────────── -->
 <div class="mbg mbg-acc" id="payModal">
   <div class="modal" style="text-align:left;">
     <div class="mh" style="font-family:'Outfit',sans-serif;">Payment Methods</div>
     <div class="ss" style="margin-bottom:16px; border-radius:14px;">
-      <div class="pm-card">
+      <div class="pm-card" role="button" tabindex="0">
         <div class="pm-icon">💳</div>
         <div>
           <div class="pm-label">Pay by Card (Yoco)</div>
@@ -960,7 +557,7 @@ body.yoco-active .bnav {
         </div>
         <span class="pm-badge pm-default-badge">Default</span>
       </div>
-      <div class="pm-card">
+      <div class="pm-card" role="button" tabindex="0">
         <div class="pm-icon">👛</div>
         <div>
           <div class="pm-label">VynixRide Wallet</div>
@@ -976,13 +573,12 @@ body.yoco-active .bnav {
       </div>
     </div>
     <div class="mbtns">
-      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePayModal()">Close</button>
-      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="closePayModal(); openTopUpModal();">Top Up Wallet</button>
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" id="btnClosePay">Close</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" id="btnTopUpFromPay">Top Up Wallet</button>
     </div>
   </div>
 </div>
 
-<!-- ── SAVED PLACES MODAL ──────────────────────────────── -->
 <div class="mbg mbg-acc" id="placesModal">
   <div class="modal" style="text-align:left;">
     <div class="mh" style="font-family:'Outfit',sans-serif;">Saved Places</div>
@@ -1013,13 +609,12 @@ body.yoco-active .bnav {
       Saved places appear as quick-select options when booking a ride. They are stored to your account.
     </p>
     <div class="mbtns">
-      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePlacesModal()">Cancel</button>
-      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="savePlaces()">Save Places</button>
+      <button class="mcancel" style="font-family:'Outfit',sans-serif;" id="btnClosePlaces">Cancel</button>
+      <button class="mok" style="font-family:'Outfit',sans-serif;" id="btnSavePlaces">Save Places</button>
     </div>
   </div>
 </div>
 
-<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay">
   <div class="circular-progress">
     <svg viewBox="0 0 100 100">
@@ -1030,7 +625,7 @@ body.yoco-active .bnav {
   </div>
   <div class="search-title">Finding a driver...</div>
   <div class="search-sub">Pinging nearby drivers. If no one accepts within 1 minute, the request will automatically cancel.</div>
-  <button class="cancel-search-btn" onclick="cancelSearch('Search cancelled by user')">Cancel Request</button>
+  <button class="cancel-search-btn" id="btnCancelSearch">Cancel Request</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1041,24 +636,24 @@ body.yoco-active .bnav {
       <div class="logo-mark">VX</div>
       <span class="l-txt">VynixRide</span>
     </div>
-    <div class="nl act" data-tab="ride" onclick="switchTab('ride')">
+    <div class="nl act" data-tab="ride" role="button" tabindex="0" aria-label="Book a Ride">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
       <span class="n-txt">Book a Ride</span>
     </div>
-    <div class="nl" data-tab="trips" onclick="switchTab('trips')">
+    <div class="nl" data-tab="trips" role="button" tabindex="0" aria-label="My Trips">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       <span class="n-txt">My Trips</span>
     </div>
-    <div class="nl" data-tab="wallet" onclick="switchTab('wallet')">
+    <div class="nl" data-tab="wallet" role="button" tabindex="0" aria-label="Wallet">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>
       <span class="n-txt">Wallet</span>
     </div>
     <div class="nav-spacer"></div>
-    <div class="nl" data-tab="account" onclick="switchTab('account')">
+    <div class="nl" data-tab="account" role="button" tabindex="0" aria-label="Account">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="n-txt">Account</span>
     </div>
-    <div class="user-mini" onclick="switchTab('account')">
+    <div class="user-mini" data-tab="account" role="button" tabindex="0" aria-label="User Profile">
       <div class="av" id="sbAv">?</div>
       <div class="user-txt">
         <div class="u-name" id="sbName">Guest</div>
@@ -1068,18 +663,22 @@ body.yoco-active .bnav {
   </aside>
 
   <div class="map-wrap" id="tab-ride">
+    <div id="mapSkeleton" class="map-skeleton">
+      <div class="loader-spinner"></div>
+      <div style="font-family:'Outfit',sans-serif; font-weight:700; color:var(--blue);">Loading Map...</div>
+    </div>
     <div id="map"></div>
 
     <div class="panel" id="bookPanel">
       <div class="drag-handle"></div>
       
-      <div class="locate-btn" onclick="zoomToCurrent()">
+      <div class="locate-btn" id="btnLocate" role="button" tabindex="0" aria-label="Find my location">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       </div>
 
       <div class="panel-header">
         <div class="ptitle">Where to?</div>
-        <button class="top-cbtn" id="confirmBtn" onclick="openModal()">Book</button>
+        <button class="top-cbtn" id="confirmBtn">Book</button>
       </div>
 
       <div class="origin-row">
@@ -1123,7 +722,7 @@ body.yoco-active .bnav {
           <span class="ad-m-val" style="color:var(--ink);">8492</span>
         </div>
       </div>
-      <button class="mcancel" style="width:100%;color:var(--red);border-color:rgba(229,53,53,.2);" onclick="cancelActiveRide()">Cancel Ride</button>
+      <button class="mcancel" style="width:100%;color:var(--red);border-color:rgba(229,53,53,.2);" id="btnCancelActiveRide">Cancel Ride</button>
     </div>
   </div>
 
@@ -1138,16 +737,13 @@ body.yoco-active .bnav {
       <div class="wlabel">Available Balance</div>
       <div class="wbal" id="walletBal">R 0.00</div>
       <div class="wbtns">
-        <button class="wbtn" onclick="openTopUpModal()">+ Top Up (Yoco / Voucher)</button>
+        <button class="wbtn" id="btnOpenTopUp">+ Top Up (Yoco / Voucher)</button>
       </div>
     </div>
     <div class="slabel">Transactions</div>
     <div id="txList"></div>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       ACCOUNT PAGE
-       ══════════════════════════════════════════ -->
   <div class="fpage" id="tab-account">
     <div class="ph">Account</div>
 
@@ -1161,7 +757,7 @@ body.yoco-active .bnav {
 
     <div class="acc-section-title">My Account</div>
     <div class="ss">
-      <div class="sr" id="authRow" onclick="handleAuthAction()">
+      <div class="sr" id="authRow" role="button" tabindex="0">
         <div class="srl">
           <div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <span class="srt" id="authLabel">Sign in with Google</span>
@@ -1171,7 +767,7 @@ body.yoco-active .bnav {
 
     <div class="acc-section-title">Preferences</div>
     <div class="ss">
-      <div class="sr" onclick="openNotifModal()">
+      <div class="sr" id="notifRow" role="button" tabindex="0">
         <div class="srl">
           <div class="sri">
             <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
@@ -1184,7 +780,7 @@ body.yoco-active .bnav {
           </div>
         </div><span class="sra">›</span>
       </div>
-      <div class="sr" onclick="openPayModal()">
+      <div class="sr" id="payRow" role="button" tabindex="0">
         <div class="srl">
           <div class="sri">
             <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
@@ -1197,7 +793,7 @@ body.yoco-active .bnav {
           </div>
         </div><span class="sra">›</span>
       </div>
-      <div class="sr" onclick="openPlacesModal()">
+      <div class="sr" id="placesRow" role="button" tabindex="0">
         <div class="srl">
           <div class="sri">
             <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
@@ -1213,7 +809,7 @@ body.yoco-active .bnav {
     </div>
 
     <div class="ss" id="signOutSection" style="display:none">
-      <div class="sr" onclick="doSignOut()">
+      <div class="sr" id="btnSignOutRow" role="button" tabindex="0">
         <div class="srl">
           <div class="sri" style="background:rgba(229,53,53,.08)">
             <svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24">
@@ -1229,19 +825,19 @@ body.yoco-active .bnav {
   </div>
 
   <nav class="bnav">
-    <div class="bni act" id="bn-ride" onclick="switchTab('ride')">
+    <div class="bni act" data-tab="ride" id="bn-ride" role="button" tabindex="0" aria-label="Ride">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
       Ride
     </div>
-    <div class="bni" id="bn-trips" onclick="switchTab('trips')">
+    <div class="bni" data-tab="trips" id="bn-trips" role="button" tabindex="0" aria-label="Trips">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Trips
     </div>
-    <div class="bni" id="bn-wallet" onclick="switchTab('wallet')">
+    <div class="bni" data-tab="wallet" id="bn-wallet" role="button" tabindex="0" aria-label="Wallet">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>
       Wallet
     </div>
-    <div class="bni" id="bn-account" onclick="switchTab('account')">
+    <div class="bni" data-tab="account" id="bn-account" role="button" tabindex="0" aria-label="Account">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       Account
     </div>
@@ -1257,13 +853,12 @@ import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/fi
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
 
-// ── Force account chooser on every sign-in ──────────────────────────
 gp.setCustomParameters({ prompt: 'select_account' });
 
 let cu=null;
 window.db = db;
 
-// --- REMOTE CONFIG & YOCO ---
+// ARCHITECTURE & SECURITY: Ensure this Yoco Public Key is strictly restricted via the Yoco Dashboard to your production domains to prevent unauthorized API calls.
 const rc = getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis = 3600000;
 let yocoPublicKey = 'pk_test_ed3c54a6gOol69qa7f45';
@@ -1294,23 +889,24 @@ function closeGoogleSheet() {
   document.getElementById('googleSheetBg').classList.remove('show');
 }
 
-document.getElementById('btnLogin').onclick = () => openGoogleSheet('login');
-document.getElementById('btnCreate').onclick = () => openGoogleSheet('create');
-document.getElementById('skipAuth').onclick = () => {
+// ── EVENT BINDINGS (Replaces Inline Handlers) ─────────────────────────
+document.getElementById('btnLogin').addEventListener('click', () => openGoogleSheet('login'));
+document.getElementById('btnCreate').addEventListener('click', () => openGoogleSheet('create'));
+document.getElementById('skipAuth').addEventListener('click', () => {
   document.getElementById('authOverlay').classList.remove('show');
   window.showToast('Demo mode — rides won\'t be saved');
-};
-document.getElementById('gsClose').onclick = closeGoogleSheet;
+});
+document.getElementById('gsClose').addEventListener('click', closeGoogleSheet);
 document.getElementById('googleSheetBg').addEventListener('click', e => {
   if (e.target === document.getElementById('googleSheetBg')) closeGoogleSheet();
 });
-document.getElementById('gsGoogleBtn').onclick = () => {
+document.getElementById('gsGoogleBtn').addEventListener('click', () => {
   closeGoogleSheet();
   signInWithPopup(auth, gp).catch(() => window.showToast('Sign-in cancelled'));
-};
+});
 
 // ── NOTIFICATIONS ─────────────────────────────────────────────────────
-window.openNotifModal = function() {
+const openNotifModal = function() {
   const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
   ['ride','arriving','promo','weekly','wallet'].forEach(k => {
     const el = document.getElementById(`notif-${k}`);
@@ -1318,10 +914,10 @@ window.openNotifModal = function() {
   });
   document.getElementById('notifModal').classList.add('show');
 };
-window.closeNotifModal = function() {
+const closeNotifModal = function() {
   document.getElementById('notifModal').classList.remove('show');
 };
-window.saveNotifPrefs = function() {
+const saveNotifPrefs = function() {
   const prefs = {};
   ['ride','arriving','promo','weekly','wallet'].forEach(k => {
     const el = document.getElementById(`notif-${k}`);
@@ -1329,7 +925,7 @@ window.saveNotifPrefs = function() {
   });
   localStorage.setItem('vx_notif_prefs', JSON.stringify(prefs));
   updateNotifSummary(prefs);
-  window.closeNotifModal();
+  closeNotifModal();
   window.showToast('Notification preferences saved');
 };
 function updateNotifSummary(prefs) {
@@ -1343,8 +939,13 @@ function updateNotifSummary(prefs) {
   updateNotifSummary(prefs);
 })();
 
+// Bind Notification Events
+document.getElementById('notifRow').addEventListener('click', openNotifModal);
+document.getElementById('btnCloseNotif').addEventListener('click', closeNotifModal);
+document.getElementById('btnSaveNotif').addEventListener('click', saveNotifPrefs);
+
 // ── PAYMENT METHODS ───────────────────────────────────────────────────
-window.openPayModal = function() {
+const openPayModal = function() {
   const walBal = document.getElementById('walletBal');
   const payBal = document.getElementById('payModalWalletBal');
   const payStatus = document.getElementById('payModalWalletStatus');
@@ -1358,12 +959,16 @@ window.openPayModal = function() {
   }
   document.getElementById('payModal').classList.add('show');
 };
-window.closePayModal = function() {
+const closePayModal = function() {
   document.getElementById('payModal').classList.remove('show');
 };
 
+document.getElementById('payRow').addEventListener('click', openPayModal);
+document.getElementById('btnClosePay').addEventListener('click', closePayModal);
+document.getElementById('btnTopUpFromPay').addEventListener('click', () => { closePayModal(); document.getElementById('topUpModal').classList.add('show'); });
+
 // ── SAVED PLACES ──────────────────────────────────────────────────────
-window.openPlacesModal = function() {
+const openPlacesModal = function() {
   const load = (data) => {
     document.getElementById('sp-home').value = data.home || '';
     document.getElementById('sp-work').value = data.work || '';
@@ -1378,10 +983,10 @@ window.openPlacesModal = function() {
   }
   document.getElementById('placesModal').classList.add('show');
 };
-window.closePlacesModal = function() {
+const closePlacesModal = function() {
   document.getElementById('placesModal').classList.remove('show');
 };
-window.savePlaces = async function() {
+const savePlaces = async function() {
   const data = {
     home: document.getElementById('sp-home').value.trim(),
     work: document.getElementById('sp-work').value.trim(),
@@ -1394,7 +999,7 @@ window.savePlaces = async function() {
   const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
   const sumEl = document.getElementById('savedPlacesSummary');
   if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
-  window.closePlacesModal();
+  closePlacesModal();
   window.showToast('Saved places updated');
 };
 (function(){
@@ -1403,6 +1008,10 @@ window.savePlaces = async function() {
   const sumEl = document.getElementById('savedPlacesSummary');
   if(sumEl && filled.length) sumEl.textContent = filled.join(' · ');
 })();
+
+document.getElementById('placesRow').addEventListener('click', openPlacesModal);
+document.getElementById('btnClosePlaces').addEventListener('click', closePlacesModal);
+document.getElementById('btnSavePlaces').addEventListener('click', savePlaces);
 
 // ── YOCO ──────────────────────────────────────────────────────────────
 window.triggerYocoPayment = function(amount, description, onSuccessCallback, restoreModalId) {
@@ -1510,17 +1119,17 @@ function renderTx(obj){
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
 
-window.initiateRidePayment = async function(){
+const initiateRidePayment = async function(){
   if(!cu) { window.showToast('Please sign in first'); return; }
-  const r = window._rides.find(x => x.id === window._selId);
+  const r = window.AppState.rides.find(x => x.id === window.AppState.selId);
   window.triggerYocoPayment(
     r.price, `Ride: ${r.type}`,
     async (token) => {
       try {
-        const dest = window._destName.split(',').slice(0,2).join(',');
+        const dest = window.AppState.destName.split(',').slice(0,2).join(',');
         await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
         await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
-        // ── Write ride request so drivers can see & accept it ──────────
+        
         const secPin = Math.floor(1000 + Math.random() * 9000).toString();
         const rideReqRef = await push(ref(db,'ride_requests'),{
           status:'pending',
@@ -1529,25 +1138,26 @@ window.initiateRidePayment = async function(){
           rideType: r.type,
           fare: r.price,
           pickup: document.getElementById('originLabel').textContent || 'Current Location',
-          destination: window._destName,
-          distKm: window._distKm || 0,
-          tripMins: window._tripDurationMins || 0,
+          destination: window.AppState.destName,
+          distKm: window.AppState.distKm || 0,
+          tripMins: window.AppState.tripDurationMins || 0,
           capacity: r.capacity || 4,
           securityPin: secPin,
           createdAt: Date.now()
         });
-        window._activeRideReqId = rideReqRef.key;
-        // ───────────────────────────────────────────────────────────────
+        window.AppState.activeRideReqId = rideReqRef.key;
+        
         document.getElementById('bookPanel').style.display = 'none';
-        if(window._mapFly) window._mapFly();
+        if(window.AppState.mapFly) window.AppState.mapFly();
         window.startSearchTimer();
       } catch(e) { window.showToast('Database error after payment.'); }
     },
     'confirmModal'
   );
 };
+document.getElementById('bookBtn').addEventListener('click', initiateRidePayment);
 
-window.executeYocoTopUp = async function() {
+const executeYocoTopUp = async function() {
   if(!cu) { window.showToast("Sign in first."); return; }
   const amt = parseFloat(document.getElementById('yocoAmount').value);
   if(isNaN(amt) || amt < 10) { window.showToast("Enter a valid amount (Min R10)"); return; }
@@ -1563,8 +1173,9 @@ window.executeYocoTopUp = async function() {
     } catch(e) { window.showToast("Database error saving top-up."); }
   }, 'topUpModal');
 };
+document.getElementById('btnExecYoco').addEventListener('click', executeYocoTopUp);
 
-window.executeVoucher = async function() {
+const executeVoucher = async function() {
   if(!cu) { window.showToast("Sign in first."); return; }
   const code = document.getElementById('voucherCode').value.trim().toUpperCase();
   if(!code) { window.showToast("Please enter a code"); return; }
@@ -1585,53 +1196,78 @@ window.executeVoucher = async function() {
       updates[`vouchers/${code}/redeemedBy`] = cu.uid;
       await update(ref(db), updates);
       await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Redeemed Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
-      window.closeTopUpModal();
+      document.getElementById('topUpModal').classList.remove('show');
       window.showToast(`R${amt.toFixed(2)} added from voucher!`);
       document.getElementById('voucherCode').value = '';
     } else { window.showToast("Invalid voucher code."); }
   } catch(e) { window.showToast("Error processing voucher."); }
 };
+document.getElementById('btnExecVoucher').addEventListener('click', executeVoucher);
 
-window.handleAuthAction=()=>{ if(cu)return; openGoogleSheet('login'); };
-window.doSignOut=async()=>{
+document.getElementById('authRow').addEventListener('click', () => { if(!cu) openGoogleSheet('login'); });
+document.getElementById('btnSignOutRow').addEventListener('click', async () => {
   await fbOut(auth);
   document.getElementById('tripsList').innerHTML='';
   document.getElementById('txList').innerHTML='';
   document.getElementById('walletBal').textContent='R 0.00';
   window.showToast('Signed out');
   document.getElementById('authOverlay').classList.add('show');
-};
+});
 
-// Active Driver Polling
-let realDrivers = {}, driverMarkersObj = {}, noDriverToastShown = false;
+// PERFORMANCE: Native Firebase Realtime Reactive Driver Polling (Replaced setInterval)
 import { onValue as rtdbOnValue, ref as rtdbRef } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+let driverMarkersObj = {}, noDriverToastShown = false;
 setTimeout(() => {
   if (window.db) {
-    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => { realDrivers = snap.val() || {}; });
-    setInterval(() => {
-      const driverIds = Object.keys(realDrivers);
+    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => { 
+      const drivers = snap.val() || {}; 
+      const driverIds = Object.keys(drivers);
+      
       if (driverIds.length === 0) {
         if (!noDriverToastShown) { window.showToast('No drivers currently available nearby.'); noDriverToastShown = true; }
       } else { noDriverToastShown = false; }
+      
+      // Remove stale markers efficiently
       Object.keys(driverMarkersObj).forEach(id => {
-        if(!realDrivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
+        if(!drivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
       });
+      
+      // Instantly update remaining/new markers
       driverIds.forEach(id => {
-        const d = realDrivers[id];
-        if(d.lat && d.lng && window.mapboxgl) {
-          if(driverMarkersObj[id]) { driverMarkersObj[id].setLngLat([d.lng, d.lat]); }
-          else {
+        const d = drivers[id];
+        if(d.lat && d.lng && window.mapboxgl && window.AppState && window.AppState._mapInstance) {
+          if(driverMarkersObj[id]) { 
+            driverMarkersObj[id].setLngLat([d.lng, d.lat]); 
+          } else {
             const el = document.createElement('div'); el.className = 'car-marker'; el.innerHTML = '🚕';
-            driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window._mapInstance);
+            driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window.AppState._mapInstance);
           }
         }
       });
-    }, 5000);
+    });
   }
 }, 2000);
 </script>
 
 <script>
+// ARCHITECTURE: Encapsulated State Management to replace global window variables
+const BASE = [
+  {id:1,type:'VynixGo',     baseFare:20,perKm:5.5, capacity:4, driver:'Kabelo P.', specs:'Compact · Economy'},
+  {id:2,type:'VynixComfort',baseFare:30,perKm:8,   capacity:4, driver:'Thabo M.',  specs:'Newer cars · Legroom'},
+  {id:3,type:'VynixXL',     baseFare:45,perKm:12,  capacity:6, driver:'Lesego R.', specs:'SUVs & Vans · 6 seats'}
+];
+
+window.AppState = {
+  rides: BASE.map(r=>({...r,price:r.baseFare, time: '3 min'})),
+  selId: 1,
+  distKm: 0,
+  destName: '',
+  tripDurationMins: 0,
+  activeRideReqId: null,
+  _mapInstance: null,
+  mapFly: null
+};
+
 window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 
 const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
@@ -1643,23 +1279,30 @@ const map=new mapboxgl.Map({
   container:'map', style:'mapbox://styles/mapbox/light-v11',
   center:[DLNG,DLAT],zoom:DEFAULT_ZOOM, attributionControl:false, logoPosition:'bottom-right'
 });
-window._mapInstance = map;
+window.AppState._mapInstance = map;
 map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
 map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
 
+// UX: Remove Skeleton when MapBox finishes rendering
+map.on('load', () => {
+  const skel = document.getElementById('mapSkeleton');
+  if(skel) { skel.classList.add('hide'); setTimeout(() => skel.remove(), 400); }
+});
+
 const oEl=document.createElement('div'); oEl.className='cmarker';
 const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
-let dMk=null,wULng=DLNG,wULat=DLAT,destName='';
+let dMk=null,wULng=DLNG,wULat=DLAT;
 let searchInterval = null, searchTimeout = null;
 
 function getMobilePadding() { return window.innerWidth < 900 ? window.innerHeight * 0.40 : 55; }
-window._mapFly = () => map.flyTo({ center: [wULng, wULat], zoom: DEFAULT_ZOOM, padding: {bottom: 0} });
+window.AppState.mapFly = () => map.flyTo({ center: [wULng, wULat], zoom: DEFAULT_ZOOM, padding: {bottom: 0} });
 
-window.zoomToCurrent = function() {
+const zoomToCurrent = function() {
   if(wULng && wULat) { map.flyTo({center: [wULng, wULat], zoom: DEFAULT_ZOOM, speed: 1.2, padding: {bottom: getMobilePadding()}}); }
 }
+document.getElementById('btnLocate').addEventListener('click', zoomToCurrent);
 
-window.requestLocation = function() {
+const requestLocation = function() {
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
       document.getElementById('locModal').classList.remove('show');
@@ -1680,7 +1323,8 @@ window.requestLocation = function() {
     document.getElementById('originLabel').textContent='Mokopane, Limpopo';
   }
 }
-window.requestLocation();
+document.getElementById('btnGrantLoc').addEventListener('click', requestLocation);
+requestLocation();
 
 const geocoder=new MapboxGeocoder({
   accessToken:TK,mapboxgl:mapboxgl, placeholder:'Search destination…', countries:'ZA',
@@ -1697,44 +1341,36 @@ function drawRoute(o,d){
     .then(r=>r.json()).then(data=>{
       if(!data.routes?.length)return;
       const geom=data.routes[0].geometry;
-      window._distKm=data.routes[0].distance/1000;
-      window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
+      window.AppState.distKm=data.routes[0].distance/1000;
+      window.AppState.tripDurationMins=Math.ceil(data.routes[0].duration/60);
       clearRoute();
       map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:geom}});
       map.addLayer({id:'route',type:'line',source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#1A3BFF','line-width':4.5,'line-opacity':.72} });
       updatePrices();
-    }).catch(()=>{ window._distKm=haversine(wULat,wULng,d[1],d[0]); window._tripDurationMins=0; updatePrices(); });
+    }).catch(()=>{ window.AppState.distKm=haversine(wULat,wULng,d[1],d[0]); window.AppState.tripDurationMins=0; updatePrices(); });
 }
 
 geocoder.on('result',e=>{
   const[lng,lat]=e.result.geometry.coordinates;
-  destName=e.result.place_name||e.result.text;
-  window._destName=destName;
+  window.AppState.destName=e.result.place_name||e.result.text;
   if(dMk)dMk.remove();
   const de=document.createElement('div'); de.className='dmarker';
   dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
   map.fitBounds([[Math.min(wULng,lng)-.008,Math.min(wULat,lat)-.008],[Math.max(wULng,lng)+.008,Math.max(wULat,lat)+.008]],
     {padding:{top:55,bottom:getMobilePadding(),left:55,right:55},duration:850,essential:true});
   drawRoute([wULng,wULat],[lng,lat]);
-  const r=window._rides.find(x=>x.id===window._selId);
+  const r=window.AppState.rides.find(x=>x.id===window.AppState.selId);
   const btn = document.getElementById('confirmBtn');
-  btn.style.display = 'block'; btn.textContent = `Book ${r.type}`;
+  btn.style.display = 'flex'; btn.textContent = `Book ${r.type}`;
 });
 geocoder.on('clear',()=>{
   if(dMk){dMk.remove();dMk=null;}
-  clearRoute(); destName=''; window._destName='';
+  clearRoute(); window.AppState.destName='';
   document.getElementById('confirmBtn').style.display = 'none';
-  window._distKm=0; window._tripDurationMins=0; renderRides();
+  window.AppState.distKm=0; window.AppState.tripDurationMins=0; renderRides();
   map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}});
 });
 
-const BASE=[
-  {id:1,type:'VynixGo',     baseFare:20,perKm:5.5, capacity:4, driver:'Kabelo P.', specs:'Compact · Economy'},
-  {id:2,type:'VynixComfort',baseFare:30,perKm:8,   capacity:4, driver:'Thabo M.',  specs:'Newer cars · Legroom'},
-  {id:3,type:'VynixXL',     baseFare:45,perKm:12,  capacity:6, driver:'Lesego R.', specs:'SUVs & Vans · 6 seats'}
-];
-window._rides=BASE.map(r=>({...r,price:r.baseFare, time: '3 min'}));
-window._selId=1; window._distKm=0; window._destName=''; window._tripDurationMins=0;
 
 function haversine(la1,lo1,la2,lo2){
   const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;
@@ -1743,16 +1379,18 @@ function haversine(la1,lo1,la2,lo2){
 }
 
 function updatePrices(){
-  const km=window._distKm||0;
-  window._rides=BASE.map(r=>({
+  const km=window.AppState.distKm||0;
+  window.AppState.rides=BASE.map(r=>({
     ...r, price:Math.round((r.baseFare+r.perKm*km)*10)/10, time: `${3 + (r.id - 1)} min`,
-    tripTime: window._tripDurationMins ? `${window._tripDurationMins} min` : 'N/A'
+    tripTime: window.AppState.tripDurationMins ? `${window.AppState.tripDurationMins} min` : 'N/A'
   }));
   renderRides();
 }
+
+// PERFORMANCE: Replaced inline handlers with data-attributes for Event Delegation
 function renderRides(){
-  document.getElementById('rideList').innerHTML=window._rides.map(r=>`
-    <div class="rcard ${r.id===window._selId?'sel':''}" onclick="selRide(${r.id})">
+  document.getElementById('rideList').innerHTML=window.AppState.rides.map(r=>`
+    <div class="rcard ${r.id===window.AppState.selId?'sel':''}" data-id="${r.id}" role="button" tabindex="0">
       <div class="rinfo">
         <div class="rav">${ini2(r.driver)}</div>
         <div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">👤${r.capacity}</span></div>
@@ -1765,39 +1403,44 @@ function renderRides(){
     </div>`).join('');
 }
 
-window.selRide=function(id){
-  window._selId=id; renderRides();
-  const r=window._rides.find(x=>x.id===id);
-  if(window._destName) { document.getElementById('confirmBtn').textContent=`Book ${r.type}`; }
-};
+// Event Delegation for Ride Selection
+document.getElementById('rideList').addEventListener('click', e => {
+  const card = e.target.closest('.rcard');
+  if(card) {
+    const id = parseInt(card.dataset.id);
+    window.AppState.selId = id; 
+    renderRides();
+    const r=window.AppState.rides.find(x=>x.id===id);
+    if(window.AppState.destName) { document.getElementById('confirmBtn').textContent=`Book ${r.type}`; }
+  }
+});
 
-window.openModal=function(){
-  if(!window._destName){window.showToast('Search for a destination first');return;}
-  const r=window._rides.find(x=>x.id===window._selId);
+const openModal = function(){
+  if(!window.AppState.destName){window.showToast('Search for a destination first');return;}
+  const r=window.AppState.rides.find(x=>x.id===window.AppState.selId);
   document.getElementById('m-type').textContent=r.type;
   document.getElementById('m-driver').textContent=r.driver;
   document.getElementById('m-eta').textContent=r.time;
   document.getElementById('m-trip-time').textContent=r.tripTime || 'N/A';
-  document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
+  document.getElementById('m-dest').textContent=window.AppState.destName.split(',').slice(0,3).join(',');
   document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
   document.getElementById('confirmModal').classList.add('show');
 };
-window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
-
-window.openTopUpModal = () => document.getElementById('topUpModal').classList.add('show');
-window.closeTopUpModal = () => document.getElementById('topUpModal').classList.remove('show');
+document.getElementById('confirmBtn').addEventListener('click', openModal);
+document.getElementById('btnCloseConfirm').addEventListener('click', () => document.getElementById('confirmModal').classList.remove('show'));
+document.getElementById('btnOpenTopUp').addEventListener('click', () => document.getElementById('topUpModal').classList.add('show'));
+document.getElementById('btnCloseTopUp').addEventListener('click', () => document.getElementById('topUpModal').classList.remove('show'));
 
 window.cancelSearch = function(msg = 'Search cancelled.') {
   clearInterval(searchInterval); clearTimeout(searchTimeout);
   document.getElementById('searchOverlay').classList.remove('show');
   document.getElementById('bookPanel').style.display = 'flex';
   window.showToast(msg);
-  // Remove the pending ride request from Firebase if not yet accepted
-  if(window._activeRideReqId) {
+  if(window.AppState.activeRideReqId) {
     import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js").then(({ref:fbRef,get:fbGet,remove:fbRemove})=>{
-      const reqRef = fbRef(window.db,'ride_requests/'+window._activeRideReqId);
+      const reqRef = fbRef(window.db,'ride_requests/'+window.AppState.activeRideReqId);
       fbGet(reqRef).then(snap=>{ if(snap.exists()&&snap.val().status==='pending') fbRemove(reqRef); });
-    }); window._activeRideReqId=null;
+    }); window.AppState.activeRideReqId=null;
   }
   if(dMk) {
     map.fitBounds([
@@ -1806,6 +1449,7 @@ window.cancelSearch = function(msg = 'Search cancelled.') {
     ], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}});
   }
 };
+document.getElementById('btnCancelSearch').addEventListener('click', () => cancelSearch('Search cancelled by user'));
 
 window.startSearchTimer = function() {
   const overlay = document.getElementById('searchOverlay');
@@ -1826,7 +1470,7 @@ window.startSearchTimer = function() {
   }, 60000);
 };
 
-window.cancelActiveRide = function() {
+const cancelActiveRide = function() {
   const ap = document.getElementById('activeRidePanel');
   ap.classList.remove('show');
   setTimeout(() => {
@@ -1838,9 +1482,11 @@ window.cancelActiveRide = function() {
   }, 400);
   window.showToast('Ride cancelled');
 };
+document.getElementById('btnCancelActiveRide').addEventListener('click', cancelActiveRide);
 
+// Event delegation for Tabs Navigation
 const TABS=['ride','trips','wallet','account'];
-window.switchTab=function(name){
+const switchTab=function(name){
   TABS.forEach(t=>{
     const p=document.getElementById(`tab-${t}`);if(!p)return;
     if(t==='ride') p.style.display=t===name?'block':'none';
@@ -1850,6 +1496,11 @@ window.switchTab=function(name){
   document.querySelectorAll('.nl[data-tab]').forEach(el=>el.classList.toggle('act',el.dataset.tab===name));
   if(name==='ride') setTimeout(()=>map.resize(),40);
 };
+
+document.querySelectorAll('[data-tab]').forEach(tabEl => {
+  tabEl.addEventListener('click', () => switchTab(tabEl.dataset.tab));
+  tabEl.addEventListener('keydown', (e) => { if (e.key === 'Enter') switchTab(tabEl.dataset.tab); });
+});
 
 window.showToast=function(msg){
   const t=document.getElementById('toast');
