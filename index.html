@@ -470,7 +470,7 @@ const BASE = [
   {id:3,type:'VynixXL',     baseFare:45,perKm:12,  capacity:6, specs:'SUVs & Vans · 6 seats'}
 ];
 
-window.AppState = { rides: BASE.map(r=>({...r,price:r.baseFare, time: '3 min'})), selId: 1, distKm: 0, destName: '', tripDurationMins: 0, activeRideReqId: null, rideWasAccepted: false, hasNotifiedArrival: false, _mapInstance: null, mapFly: null };
+window.AppState = { rides: BASE.map(r=>({...r,price:0, time: '--'})), selId: 1, distKm: 0, destName: '', tripDurationMins: 0, activeRideReqId: null, rideWasAccepted: false, hasNotifiedArrival: false, _mapInstance: null, mapFly: null };
 
 window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 window.showToast = function(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); };
@@ -548,7 +548,7 @@ geocoder.on('clear',()=>{
 
 function updatePrices(){
   const km=window.AppState.distKm||0;
-  window.AppState.rides=BASE.map(r=>({ ...r, price:Math.round((r.baseFare+r.perKm*km)*10)/10, time: `${3 + (r.id - 1)} min`, tripTime: window.AppState.tripDurationMins ? `${window.AppState.tripDurationMins} min` : 'N/A' }));
+  window.AppState.rides=BASE.map(r=>({ ...r, price: km > 0 ? Math.round((r.baseFare+r.perKm*km)*10)/10 : 0, time: km > 0 ? `${3 + (r.id - 1)} min` : '--', tripTime: window.AppState.tripDurationMins ? `${window.AppState.tripDurationMins} min` : 'N/A' }));
   renderRides();
 }
 
