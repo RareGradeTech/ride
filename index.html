@@ -624,6 +624,7 @@ document.getElementById('bookBtn').addEventListener('click', async () => {
 
 let liveDriverMarker = null;
 let driverLocUnsub = null;
+let currentRideDataCache = null;
 
 function cleanupActiveRide() {
     window.AppState.activeRideReqId = null;
@@ -638,13 +639,32 @@ function cleanupActiveRide() {
 
 window.listenToActiveRide = function(reqId) {
   const reqRef = ref(db, `ride_requests/${reqId}`);
-  onValue(reqRef, (snap) => {
+  onValue(reqRef, async (snap) => {
     const data = snap.val();
     
+    if (data) {
+       currentRideDataCache = data;
+    }
+
     // 1. RIDE COMPLETED (Or unexpectedly deleted)
     if (!data) {
       if (window.AppState.activeRideReqId && window.AppState.rideWasAccepted) {
         window.showToast("Ride completed! Thanks for using VynixRide.");
+        
+        // Save the trip to the Realtime Database so it shows in the rider's Trips tab
+        if (cu && currentRideDataCache) {
+           try {
+             await push(ref(db, `users/${cu.uid}/trips`), {
+               type: currentRideDataCache.rideType || 'VynixGo',
+               driver: currentRideDataCache.driverName || 'Driver',
+               fare: currentRideDataCache.fare || 0,
+               destination: currentRideDataCache.destination || '',
+               status: 'Completed',
+               date: Date.now()
+             });
+           } catch(e) {}
+        }
+        
         cleanupActiveRide();
       }
       return; 
