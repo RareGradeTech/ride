@@ -76,7 +76,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .map-click-zone{position:absolute;inset:0;z-index:2;pointer-events:none}
 .map-click-zone.active{pointer-events:all}
 
-/* BOTTOM PANEL */
+/* BOTTOM PANEL (BOOKING) */
 .panel{
   position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px) saturate(1.9);
   -webkit-backdrop-filter:blur(24px) saturate(1.9);
@@ -92,7 +92,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     border-radius:28px 28px 0 0;
     padding:0 20px 20px;
     box-shadow:0 -12px 40px rgba(0,0,0,.1);
-    height: var(--panel-full); /* Locked height for internal scrolling */
+    height: var(--panel-full);
   }
   .panel.collapsed{transform:translateY(calc(100% - 110px))}
   .panel.mid{transform:translateY(calc(100% - 50vh))}
@@ -147,32 +147,58 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .cancel-search-btn:active{background:rgba(229,53,53,.2)}
 
 /* ACTIVE RIDE PANEL */
-.active-panel{position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);display:none;flex-direction:column;z-index:35;gap:0;border:1px solid rgba(255,255,255,.9);transform:translateY(120%);transition:transform .45s var(--ease-spring);will-change:transform}
-.active-panel.show{display:flex;transform:translateY(0)}
-@media(max-width:899px){.active-panel{bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;border-radius:28px 28px 0 0;padding:0 20px 20px;box-shadow:0 -12px 40px rgba(0,0,0,.1)}}
-@media(min-width:900px){.active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12)}}
-.active-drag-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 10px;flex-shrink:0;cursor:pointer}
+.active-panel{
+  position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);
+  display:none;flex-direction:column;z-index:35;gap:0;border:1px solid rgba(255,255,255,.9);
+  will-change:transform; transition:transform .45s var(--ease-spring);
+  transform:translateY(120%);
+}
+.active-panel.show{display:flex;transform:translateY(0)} /* Desktop show */
+@media(max-width:899px){
+  .active-panel{
+    bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;
+    border-radius:28px 28px 0 0;padding:0;
+    box-shadow:0 -12px 40px rgba(0,0,0,.1);
+    height: var(--panel-full);
+  }
+  .active-panel.collapsed{transform:translateY(calc(100% - 130px))}
+  .active-panel.mid{transform:translateY(calc(100% - 40vh))}
+  .active-panel.expanded{transform:translateY(0)}
+}
+@media(min-width:900px){
+  .active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12)}
+  .active-panel-inner{padding-top:24px;}
+}
+.active-drag-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 10px;flex-shrink:0;cursor:pointer;touch-action:none;}
 @media(min-width:900px){.active-drag-wrap{display:none}}
-.active-drag{width:38px;height:4px;background:var(--border);border-radius:4px}
-.ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.active-drag{width:38px;height:4px;background:var(--border);border-radius:4px;transition:width .2s var(--ease-spring),background .2s}
+.active-panel:not(.collapsed) .active-drag{width:52px;background:var(--blue2)}
+
+.active-panel-inner{
+  flex: 1; overflow-y: auto; padding: 0 20px 20px;
+  -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
+}
+.active-panel-inner::-webkit-scrollbar{display:none}
+
+.ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0}
 .ad-info{display:flex;align-items:center;gap:14px}
 .ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue);border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .ad-car-info{text-align:right}
 .ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block}
-.ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px}
+.ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
 .ad-m-item{display:flex;flex-direction:column}
 .ad-m-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
 .ad-m-val{font-size:17px;font-weight:800;color:var(--blue)}
-.ad-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.ad-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;flex-shrink:0}
 .ad-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 8px;border-radius:13px;border:1.5px solid var(--border);cursor:pointer;transition:all .18s var(--ease-smooth);background:#fff;font-size:10px;font-weight:700;color:var(--muted)}
 .ad-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,59,255,.04)}
 .ad-btn:active{transform:scale(.94)}
 .ad-btn svg{width:20px;height:20px}
 .ad-btn.chat-btn.has-unread{border-color:var(--blue);color:var(--blue);position:relative}
 .ad-btn.chat-btn.has-unread::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
-.cancel-ride-btn{width:100%;padding:13px;border:1.5px solid rgba(229,53,53,.25);background:rgba(229,53,53,.06);border-radius:13px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
+.cancel-ride-btn{width:100%;padding:13px;border:1.5px solid rgba(229,53,53,.25);background:rgba(229,53,53,.06);border-radius:13px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;flex-shrink:0}
 .cancel-ride-btn:active{background:rgba(229,53,53,.14)}
-.ride-status-bar{background:linear-gradient(130deg,rgba(26,59,255,.08),rgba(74,108,255,.12));border:1px solid rgba(26,59,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.ride-status-bar{background:linear-gradient(130deg,rgba(26,59,255,.08),rgba(74,108,255,.12));border:1px solid rgba(26,59,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .rsb-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulseDot 1.8s infinite;flex-shrink:0}
 @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(26,59,255,.4)}50%{box-shadow:0 0 0 6px rgba(26,59,255,0)}}
 .rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
@@ -699,44 +725,46 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     </div>
 
     <div class="active-panel" id="activeRidePanel">
-      <div class="active-drag-wrap"><div class="active-drag"></div></div>
-      <div class="ride-status-bar" id="rideStatusBar">
-        <div class="rsb-dot"></div>
-        <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
-      </div>
-      <div class="ad-header">
-        <div class="ad-info">
-          <div class="ad-av" id="adAv">K</div>
-          <div>
-            <div style="font-weight:800;font-size:17px;margin-bottom:2px" id="adName">Driver</div>
-            <div style="font-size:13px;color:var(--muted);font-weight:500">⭐ 4.9 · 1,240 rides</div>
+      <div class="active-drag-wrap" id="activeDragHandle"><div class="active-drag"></div></div>
+      <div class="active-panel-inner">
+        <div class="ride-status-bar" id="rideStatusBar">
+          <div class="rsb-dot"></div>
+          <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
+        </div>
+        <div class="ad-header">
+          <div class="ad-info">
+            <div class="ad-av" id="adAv">K</div>
+            <div>
+              <div style="font-weight:800;font-size:17px;margin-bottom:2px" id="adName">Driver</div>
+              <div style="font-size:13px;color:var(--muted);font-weight:500">⭐ 4.9 · 1,240 rides</div>
+            </div>
+          </div>
+          <div class="ad-car-info">
+            <div style="font-size:14px;font-weight:600" id="adCar">—</div>
+            <div class="ad-plate" id="adPlate">— — —</div>
           </div>
         </div>
-        <div class="ad-car-info">
-          <div style="font-size:14px;font-weight:600" id="adCar">—</div>
-          <div class="ad-plate" id="adPlate">— — —</div>
+        <div class="ad-meta-grid">
+          <div class="ad-m-item"><span class="ad-m-lbl">Arriving in</span><span class="ad-m-val" id="adTime">-- min</span></div>
+          <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
+          <div class="ad-m-item" style="align-items:flex-end"><span class="ad-m-lbl">PIN</span><span class="ad-m-val" id="adPin" style="color:var(--ink);font-size:20px;letter-spacing:2px">----</span></div>
         </div>
+        <div class="ad-actions">
+          <div class="ad-btn chat-btn" onclick="openChat()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Chat
+          </div>
+          <div class="ad-btn" onclick="callDriver()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.87-1.67a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call
+          </div>
+          <div class="ad-btn" onclick="showPinOverlay()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            PIN
+          </div>
+        </div>
+        <button class="cancel-ride-btn" id="cancelRideBtn" onclick="cancelActiveRide()">✕ Cancel Ride</button>
       </div>
-      <div class="ad-meta-grid">
-        <div class="ad-m-item"><span class="ad-m-lbl">Arriving in</span><span class="ad-m-val" id="adTime">-- min</span></div>
-        <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
-        <div class="ad-m-item" style="align-items:flex-end"><span class="ad-m-lbl">PIN</span><span class="ad-m-val" id="adPin" style="color:var(--ink);font-size:20px;letter-spacing:2px">----</span></div>
-      </div>
-      <div class="ad-actions">
-        <div class="ad-btn chat-btn" onclick="openChat()">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Chat
-        </div>
-        <div class="ad-btn" onclick="callDriver()">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.87-1.67a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call
-        </div>
-        <div class="ad-btn" onclick="showPinOverlay()">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          PIN
-        </div>
-      </div>
-      <button class="cancel-ride-btn" id="cancelRideBtn" onclick="cancelActiveRide()">✕ Cancel Ride</button>
     </div>
   </div>
 
@@ -887,14 +915,14 @@ function listenToActiveRide(rideId){
   rideReqUnsub=onValue(ref(db,`ride_requests/${rideId}`),snap=>{
     const data=snap.val();
     if(!data){
-      // Ride was deleted — check if driver canceled
-      if(activeRideReqId){
-        handleRideCanceled('driver');
-      }
+      if(activeRideReqId){handleRideCanceled('driver');}
       return;
     }
-    if(data.status==='accepted'&&!document.getElementById('activeRidePanel').classList.contains('show')){
-      // Driver just accepted
+    const isShowing = window.innerWidth >= 900 
+      ? document.getElementById('activeRidePanel').classList.contains('show')
+      : activePanelState !== 'collapsed'; // Check mobile state
+
+    if(data.status==='accepted' && !isShowing){
       showDriverAccepted(data);
       document.getElementById('searchOverlay').classList.remove('show');
       document.getElementById('bookPanel').style.display='none';
@@ -902,7 +930,6 @@ function listenToActiveRide(rideId){
       clearTimeout(window._searchTimeout);
     }
     if(data.status==='accepted'){
-      // Update driver info live
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
       if(data.driverAv)document.getElementById('adAv').textContent=ini2(data.driverName||'D');
       if(data.driverCar)document.getElementById('adCar').textContent=data.driverCar;
@@ -910,7 +937,7 @@ function listenToActiveRide(rideId){
       if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
       if(data.arrivedPin){window._driverPin=data.arrivedPin;}
       if(data.arrived){document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';}
-      // Track driver location
+      
       if(data.driverId){
         get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{
           const dd=dSnap.val();
@@ -921,7 +948,6 @@ function listenToActiveRide(rideId){
             document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
           }
         });
-        // Realtime driver location
         onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{
           const dd=dSnap.val();
           if(dd&&dd.lat&&dd.lng&&window._mapInstance){
@@ -941,7 +967,6 @@ function listenToActiveRide(rideId){
       window.showToast('🎉 Ride completed! Thanks for riding with VynixRide.');
     }
   });
-  // Listen chat
   listenChat(rideId);
 }
 
@@ -952,10 +977,14 @@ function showDriverAccepted(data){
   document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
   document.getElementById('adPin').textContent=data.securityPin||'----';
   window._riderPin=data.securityPin;
+  
   document.getElementById('activeRidePanel').style.display='flex';
-  requestAnimationFrame(()=>document.getElementById('activeRidePanel').classList.add('show'));
+  requestAnimationFrame(()=>{
+    document.getElementById('activeRidePanel').classList.add('show');
+    if(window.setActivePanelState) window.setActivePanelState('mid'); 
+  });
+  
   document.getElementById('rideStatusText').textContent='Driver on the way to pickup…';
-  // Fit map to show driver
   if(window._mapInstance&&data.driverId){
     get(ref(db,`active_drivers/${data.driverId}`)).then(s=>{
       const d=s.val();
@@ -987,6 +1016,7 @@ function handleRideCanceled(by){
 
 function resetToBooking(){
   document.getElementById('activeRidePanel').classList.remove('show');
+  if(window.setActivePanelState) window.setActivePanelState('collapsed');
   setTimeout(()=>{document.getElementById('activeRidePanel').style.display='none';},450);
   document.getElementById('bookPanel').style.display='flex';
   if(window._carMarkerEl){window._carMarkerEl.remove();window._carMarkerEl=null;}
@@ -1006,7 +1036,6 @@ function listenChat(rideId){
     if(chatOpen){markRead(rideId);chatUnread=0;}
     else if(newDriverMsgs>0){chatUnread=newDriverMsgs;updateChatBadge();}
     if(chatOpen)scrollChatBottom();
-    // typing indicator
     if(msgs.length>prev&&msgs[msgs.length-1].sender==='driver'&&!chatOpen){
       showTyping();
     }
@@ -1146,7 +1175,6 @@ window.cancelActiveRide=async function(){
     const d=snap.val();
     if(d&&(d.status==='pending'||d.status==='accepted')){
       await update(ref(db,`ride_requests/${activeRideReqId}`),{status:'canceled_by_rider',canceledAt:Date.now()});
-      // Log canceled trip
       await push(ref(db,`users/${cu.uid}/trips`),{type:d.rideType||'—',driver:d.driverName||'—',fare:d.fare||0,destination:d.destination||'—',status:'Canceled',date:Date.now(),paymentMethod:d.paymentMethod||'—'});
     }
     if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
@@ -1273,12 +1301,9 @@ window._mapInstance=map;
 map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
 
 map.on('load',()=>{
-  // 3D terrain
   map.addSource('mapbox-dem',{type:'raster-dem',url:'mapbox://mapbox.mapbox-terrain-dem-v1',tileSize:512,maxzoom:14});
   map.setTerrain({source:'mapbox-dem',exaggeration:1.2});
-  // Sky layer for atmosphere
   map.addLayer({id:'sky',type:'sky',paint:{'sky-type':'atmosphere','sky-atmosphere-sun':[0,0],'sky-atmosphere-sun-intensity':15,'sky-atmosphere-color':'rgba(135, 206, 235, 1.0)','sky-atmosphere-halo-color':'rgba(255, 255, 255, 0.5)','sky-atmosphere-horizon-blend':0.1}});
-  // 3D buildings
   const layers=map.getStyle().layers;
   const labelLayerId=layers.find(l=>l.type==='symbol'&&l.layout['text-field'])?.id;
   map.addLayer({
@@ -1286,12 +1311,10 @@ map.on('load',()=>{
     filter:['==','extrude','true'],type:'fill-extrusion',minzoom:14,
     paint:{'fill-extrusion-color':['interpolate',['linear'],['get','height'],0,'#dde4f0',100,'#b8c4e0',300,'#8fa0c8'],'fill-extrusion-height':['interpolate',['linear'],['zoom'],14,0,14.05,['get','height']],'fill-extrusion-base':['interpolate',['linear'],['zoom'],14,0,14.05,['get','min_height']],'fill-extrusion-opacity':.75,'fill-extrusion-ambient-occlusion-intensity':0.7,'fill-extrusion-ambient-occlusion-radius':2}
   },labelLayerId);
-  // Subtle traffic layer feeling - road pulse
   map.setPaintProperty('road-primary','line-color','#1A3BFF');
   map.setPaintProperty('road-primary','line-opacity',0.15);
 });
 
-// Fog / atmosphere for cinematic effect
 map.on('style.load',()=>{
   map.setFog({'color':'rgba(220, 225, 245, 1)','high-color':'rgba(180, 195, 240, 1)','horizon-blend':0.06,'space-color':'rgba(100, 130, 200, 1)','star-intensity':0.06});
 });
@@ -1368,7 +1391,6 @@ geocoder.on('result',e=>{
   map.fitBounds([[Math.min(wULng,lng)-.01,Math.min(wULat,lat)-.01],[Math.max(wULng,lng)+.01,Math.max(wULat,lat)+.01]],{padding:{top:60,bottom:getMobilePad(),left:55,right:55},duration:900,pitch:50});
   drawRoute([wULng,wULat],[lng,lat]);
   
-  // Expand panel to show all results smoothly
   setPanelState('expanded');
   document.getElementById('ridesLabel').style.display='block';
   const r=window._rides.find(x=>x.id===window._selId);
@@ -1462,11 +1484,17 @@ window.cancelSearch=async function(msg='Search cancelled'){
   }
 };
 
-/* ── PANEL DRAG (mobile) ── */
+/* ── PANEL DRAG GLOBALS ── */
+function getPanelFullPx(){return window.innerHeight*.8;}
+function updateMapClickZone(){
+  const pOpen = panelState !== 'collapsed' && document.getElementById('bookPanel').style.display !== 'none';
+  const aOpen = activePanelState !== 'collapsed' && document.getElementById('activeRidePanel').style.display !== 'none';
+  document.getElementById('mapClickZone').classList.toggle('active', pOpen || aOpen);
+}
+
+/* ── BOOKING PANEL DRAG ── */
 let panelState='mid',isDragging=false,dragStartY=0,dragStartT=0,currentT=0;
 const panel=document.getElementById('bookPanel');
-
-function getPanelFullPx(){return window.innerHeight*.8;}
 
 function setPanelState(state,animate=true){
   if(window.innerWidth>=900)return;
@@ -1476,24 +1504,17 @@ function setPanelState(state,animate=true){
   panel.style.transition=animate?'transform .42s var(--ease-smooth)':'none';
   panel.classList.remove('collapsed','mid','expanded');
   panel.classList.add(state);
-  // Enable map click zone when collapsed
-  document.getElementById('mapClickZone').classList.toggle('active',state==='collapsed');
+  updateMapClickZone();
   setTimeout(()=>map.resize(),450);
 }
-window.collapsePanel=function(){if(panelState!=='collapsed')setPanelState('collapsed');};
-function expandPanel(){setPanelState('mid');}
 
-// Fluid native-feeling touch drag
 const dh=document.getElementById('panelDragHandle');
 dh.addEventListener('touchstart',e=>{
   if(window.innerWidth>=900)return;
   isDragging=true;dragStartY=e.touches[0].clientY;
-  
-  // Get current exact translateY from computed matrix
   const style = window.getComputedStyle(panel);
   const matrix = new DOMMatrixReadOnly(style.transform);
   dragStartT = matrix.m42 || 0;
-  
   panel.style.transition='none';
 },{passive:true});
 
@@ -1508,16 +1529,65 @@ document.addEventListener('touchmove',e=>{
 document.addEventListener('touchend',()=>{
   if(!isDragging)return;
   isDragging=false;
-  panel.style.transform=''; // Clear inline style to let CSS classes take over smoothly
-  
+  panel.style.transform=''; 
   const ratio=currentT/getPanelFullPx();
   if(ratio>0.55)setPanelState('collapsed');
   else if(ratio>0.15)setPanelState('mid');
   else setPanelState('expanded');
 });
-
-// Initial state
 setTimeout(()=>setPanelState('mid',false),100);
+
+/* ── ACTIVE RIDE PANEL DRAG ── */
+let activePanelState='mid',activeIsDragging=false,activeDragStartY=0,activeDragStartT=0,activeCurrentT=0;
+const activePanel=document.getElementById('activeRidePanel');
+
+window.setActivePanelState = function(state,animate=true){
+  if(window.innerWidth>=900)return;
+  activePanelState=state;
+  const h=document.getElementById('activeDragHandle');
+  if(h)h.querySelector('.active-drag').style.width=state==='expanded'?'52px':'38px';
+  activePanel.style.transition=animate?'transform .42s var(--ease-smooth)':'none';
+  activePanel.classList.remove('collapsed','mid','expanded');
+  activePanel.classList.add(state);
+  updateMapClickZone();
+  setTimeout(()=>map.resize(),450);
+};
+
+const adh=document.getElementById('activeDragHandle');
+if(adh){
+  adh.addEventListener('touchstart',e=>{
+    if(window.innerWidth>=900)return;
+    activeIsDragging=true;activeDragStartY=e.touches[0].clientY;
+    const style = window.getComputedStyle(activePanel);
+    const matrix = new DOMMatrixReadOnly(style.transform);
+    activeDragStartT = matrix.m42 || 0;
+    activePanel.style.transition='none';
+  },{passive:true});
+
+  document.addEventListener('touchmove',e=>{
+    if(!activeIsDragging)return;
+    const dy=e.touches[0].clientY-activeDragStartY;
+    const maxT = getPanelFullPx() - 130; 
+    activeCurrentT=Math.max(0,Math.min(maxT,activeDragStartT+dy));
+    activePanel.style.transform=`translateY(${activeCurrentT}px)`;
+  },{passive:true});
+
+  document.addEventListener('touchend',()=>{
+    if(!activeIsDragging)return;
+    activeIsDragging=false;
+    activePanel.style.transform=''; 
+    const ratio=activeCurrentT/getPanelFullPx();
+    if(ratio>0.6)setActivePanelState('collapsed');
+    else if(ratio>0.2)setActivePanelState('mid');
+    else setActivePanelState('expanded');
+  });
+}
+
+window.collapsePanel=function(){
+  if(panelState!=='collapsed')setPanelState('collapsed');
+  if(activePanelState!=='collapsed')setActivePanelState('collapsed');
+};
+function expandPanel(){setPanelState('mid');}
 
 /* ── TABS ── */
 const TABS=['ride','trips','wallet','account'];
