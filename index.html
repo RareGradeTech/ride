@@ -12,38 +12,30 @@
 <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <style>
 :root{
-  /* Updated Blue and White Theme */
-  --blue: #0052FF; 
-  --blue2: #3377FF; 
-  --glow: rgba(0, 82, 255, 0.25);
-  --ink: #001A4D; /* Dark navy for text */
-  --bg: #F4F7FF; /* Very light icy blue/white background */
-  --card: #FFFFFF;
-  --muted: #667A99; /* Blueish grey for muted text */
-  --border: #DDE5F5; /* Light blue-tinted border */
-  --green: #17A85A;
-  --red: #E53535;
-  --orange: #F59E0B;
-  
+  --blue:#0052FF;--blue2:#3377FF;--glow:rgba(0,82,255,.25);
+  --ink:#001A4D;--bg:#F4F7FF;--card:#FFFFFF;--muted:#667A99;
+  --border:#DDE5F5;--green:#17A85A;--red:#E53535;--orange:#F59E0B;
   --nav-h:72px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
+  /* Spring physics easing for ultra-smooth feel */
   --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
   --ease-smooth:cubic-bezier(0.4,0,0.2,1);
   --ease-out:cubic-bezier(0,0,0.2,1);
+  --ease-decel:cubic-bezier(0.05,0.7,0.1,1.0);
   --panel-full:80vh;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg)}
 
-/* INIT LOADER */
+/* ── INIT LOADER ── */
 .init-loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s var(--ease-smooth)}
 .init-loader.hide{opacity:0;pointer-events:none}
 .loader-ring{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* SHELL */
+/* ── SHELL ── */
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative}
 
-/* SIDEBAR - desktop */
+/* ── SIDEBAR ── */
 .sidebar{display:none;width:80px;background:var(--card);border-right:1px solid var(--border);flex-direction:column;padding:26px 14px;z-index:60;flex-shrink:0;transition:width .32s var(--ease-smooth),padding .32s var(--ease-smooth);overflow:hidden;white-space:nowrap}
 @media(min-width:900px){.sidebar{display:flex}}
 .sidebar:hover{width:270px;padding:26px 20px;box-shadow:4px 0 28px rgba(0,0,0,.06)}
@@ -66,34 +58,48 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .u-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
 .u-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
 
-/* MAP */
+/* ── MAP ── */
 .map-wrap{flex:1;position:relative;height:100vh}
 #map{position:absolute;inset:0;width:100%;height:100%}
 .mapboxgl-ctrl-bottom-right{bottom:10px;right:10px}
 @media(max-width:899px){.mapboxgl-ctrl-bottom-right{display:none}}
 .cmarker{width:18px;height:18px;background:var(--blue);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 12px var(--glow)}
 .dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 10px var(--glow)}
-.car-marker{width:34px;height:34px;background:#fff;border:2.5px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:transform .4s var(--ease-smooth)}
+.car-marker{width:34px;height:34px;background:#fff;border:2.5px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 .car-pulse{width:52px;height:52px;border-radius:50%;position:absolute;top:-9px;left:-9px;background:rgba(0,82,255,.15);animation:carPulse 2.2s infinite}
 @keyframes carPulse{0%,100%{transform:scale(.8);opacity:.8}50%{transform:scale(1.4);opacity:0}}
 
-/* LOCATE BTN */
+/* ── LOCATE BTN ── */
 .locate-btn{position:absolute;right:16px;bottom:20px;width:46px;height:46px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12);cursor:pointer;z-index:40;color:var(--blue);transition:.2s;border:1px solid var(--border)}
 .locate-btn:active{transform:scale(.92)}
 @media(min-width:900px){.locate-btn{bottom:24px;right:24px}}
 
-/* MAP CLICK OVERLAY */
+/* ── MAP CLICK OVERLAY ── */
 .map-click-zone{position:absolute;inset:0;z-index:2;pointer-events:none}
 .map-click-zone.active{pointer-events:all}
 
-/* BOTTOM PANEL (BOOKING) */
+/* ══════════════════════════════════════════════
+   ULTRA-SMOOTH PANEL — Core Architecture
+   Uses transform3d + will-change for GPU compositing.
+   Velocity-based snapping with momentum carry.
+══════════════════════════════════════════════ */
 .panel{
-  position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px) saturate(1.9);
-  -webkit-backdrop-filter:blur(24px) saturate(1.9);
+  position:absolute;background:rgba(255,255,255,.97);
+  backdrop-filter:blur(28px) saturate(2);-webkit-backdrop-filter:blur(28px) saturate(2);
   display:flex;flex-direction:column;z-index:30;
   border:1px solid rgba(255,255,255,.9);
-  transition:transform .42s var(--ease-smooth),background .3s;
   will-change:transform;
+  /* Default: no JS transition — JS controls it */
+}
+/* Desktop: static, no transform trickery */
+@media(min-width:900px){
+  .panel{
+    top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px;
+    border-radius:22px;padding:0 24px 24px;
+    box-shadow:0 20px 50px rgba(0,0,0,.12);
+    transform:none!important;
+    transition:none!important;
+  }
 }
 @media(max-width:899px){
   .panel{
@@ -101,29 +107,38 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     left:0;width:100%;
     border-radius:28px 28px 0 0;
     padding:0 20px 20px;
-    box-shadow:0 -12px 40px rgba(0,0,0,.1);
-    height: var(--panel-full);
+    box-shadow:0 -8px 40px rgba(0,0,0,.13),0 -1px 0 rgba(255,255,255,.6);
+    /* Height = full panel visible area */
+    height:var(--panel-full);
   }
-  .panel.collapsed{transform:translateY(calc(100% - 110px))}
-  .panel.mid{transform:translateY(calc(100% - 50vh))}
-  .panel.expanded{transform:translateY(0)}
+  /* Collapsed snap: only handle visible (88px above nav) */
+  .panel.snap-collapsed{ transform:translateY(calc(var(--panel-full) - 92px)) translateZ(0); }
+  /* Mid snap: half panel */
+  .panel.snap-mid{ transform:translateY(calc(var(--panel-full) - 54vh)) translateZ(0); }
+  /* Expanded snap: fully open */
+  .panel.snap-expanded{ transform:translateY(0) translateZ(0); }
+  /* Animated transitions use a smooth decel curve */
+  .panel.animating{ transition:transform .44s var(--ease-decel); }
 }
-@media(min-width:900px){
-  .panel{top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12)}
-}
-.drag-handle-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 8px;flex-shrink:0;cursor:pointer;touch-action:none}
+
+/* ── DRAG HANDLE ── */
+.drag-handle-wrap{display:flex;align-items:center;justify-content:center;padding:14px 16px 8px;flex-shrink:0;cursor:grab;touch-action:none;user-select:none}
+.drag-handle-wrap:active{cursor:grabbing}
 @media(min-width:900px){.drag-handle-wrap{display:none}}
-.drag-handle{width:38px;height:4px;background:var(--border);border-radius:4px;transition:width .2s var(--ease-spring),background .2s}
-.panel:not(.collapsed) .drag-handle{width:52px;background:var(--blue2)}
+.drag-handle{width:40px;height:5px;background:var(--border);border-radius:5px;transition:width .25s var(--ease-spring),background .25s,transform .2s var(--ease-spring)}
+.drag-handle.active{width:56px;background:var(--blue2);transform:scaleY(1.3)}
+.panel.snap-expanded .drag-handle,.panel.snap-mid .drag-handle{width:52px;background:var(--blue2)}
+
+/* ── PANEL CONTENT ── */
 .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;padding-top:4px}
 .ptitle{font-size:21px;font-weight:800;letter-spacing:-.35px}
 .top-cbtn{background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;padding:9px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px var(--glow);transition:transform .1s,opacity .2s;display:none;font-family:'Outfit',sans-serif;letter-spacing:.02em}
 .top-cbtn:active{transform:scale(.96)}
 .geo-wrap{margin-bottom:10px;flex-shrink:0}
-.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;border-radius:13px!important;border:1.5px solid var(--border)!important;box-shadow:none!important;background:#fff!important;font-family:'Outfit',sans-serif!important}
-.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;color:var(--ink)!important;font-family:'Outfit',sans-serif!important;padding:11px 40px 11px 40px!important;height:46px!important}
+.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;border-radius:14px!important;border:1.5px solid var(--border)!important;box-shadow:none!important;background:#fff!important;font-family:'Outfit',sans-serif!important}
+.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;color:var(--ink)!important;font-family:'Outfit',sans-serif!important;padding:11px 40px 11px 40px!important;height:48px!important}
 .mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important}
-.mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important;box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important}
+.mapboxgl-ctrl-geocoder--suggestions{border-radius:14px!important;box-shadow:0 8px 28px rgba(0,0,0,.12)!important;border:1px solid var(--border)!important;overflow:hidden!important}
 .mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important}
 .origin-row{display:flex;align-items:center;gap:10px;background:#fff;padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);margin-bottom:10px;flex-shrink:0}
 .o-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
@@ -132,6 +147,38 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;flex-shrink:0}
 .ride-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch;padding-bottom:4px}
 .ride-list::-webkit-scrollbar{display:none}
+
+/* ── RECENT SEARCHES SECTION ── */
+.recent-section{flex-shrink:0;margin-bottom:12px}
+.recent-section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.recent-clear-btn{font-size:11px;font-weight:700;color:var(--blue);background:none;border:none;cursor:pointer;padding:2px 0;font-family:'Outfit',sans-serif;opacity:.75;transition:opacity .15s}
+.recent-clear-btn:hover{opacity:1}
+.recent-list{display:flex;flex-direction:column;gap:6px}
+.recent-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:13px;border:1.5px solid var(--border);background:#fff;cursor:pointer;transition:border-color .18s,box-shadow .18s,transform .18s var(--ease-spring);position:relative;overflow:hidden}
+.recent-item::before{content:'';position:absolute;inset:0;background:linear-gradient(120deg,rgba(0,82,255,.04),transparent);opacity:0;transition:opacity .18s}
+.recent-item:hover{border-color:rgba(0,82,255,.35);box-shadow:0 4px 14px rgba(0,82,255,.1);transform:translateY(-1px)}
+.recent-item:hover::before{opacity:1}
+.recent-item:active{transform:scale(.97)}
+.recent-icon{width:34px;height:34px;border-radius:10px;background:rgba(0,82,255,.07);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;transition:background .18s}
+.recent-item:hover .recent-icon{background:rgba(0,82,255,.13)}
+.recent-text-wrap{flex:1;min-width:0}
+.recent-name{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.recent-arrow{color:var(--muted);opacity:.45;font-size:14px;flex-shrink:0;transition:opacity .18s,transform .18s}
+.recent-item:hover .recent-arrow{opacity:.8;transform:translateX(2px)}
+
+/* ── PROMO BANNER ── */
+.promo-banner{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:linear-gradient(120deg,rgba(0,82,255,.07),rgba(51,119,255,.12));border:1.5px solid rgba(0,82,255,.2);margin-bottom:12px;flex-shrink:0;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s var(--ease-spring)}
+.promo-banner::after{content:'';position:absolute;top:-30px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(0,82,255,.06);pointer-events:none}
+.promo-banner:hover{box-shadow:0 6px 20px rgba(0,82,255,.15);transform:translateY(-1px)}
+.promo-banner:active{transform:scale(.98)}
+.promo-badge{background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;font-size:14px;font-weight:900;padding:6px 11px;border-radius:10px;letter-spacing:-.3px;flex-shrink:0;box-shadow:0 3px 10px var(--glow);white-space:nowrap}
+.promo-text-wrap{flex:1;min-width:0}
+.promo-title{font-size:13px;font-weight:800;color:var(--blue)}
+.promo-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:500}
+.promo-code-pill{background:rgba(0,82,255,.1);border:1.5px dashed rgba(0,82,255,.3);color:var(--blue);font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px;letter-spacing:.05em;flex-shrink:0;white-space:nowrap}
+
+/* ── RIDE CARDS ── */
 .rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;border-radius:15px;border:2px solid var(--border);cursor:pointer;transition:all .17s var(--ease-smooth);background:#fff;position:relative;flex-shrink:0}
 .rcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06)}
 .rcard.sel{border-color:var(--blue);background:rgba(0,82,255,.04);box-shadow:0 4px 16px var(--glow)}
@@ -142,13 +189,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .rprice{font-size:15px;font-weight:700}
 .rtbadge{font-size:10px;font-weight:600;color:var(--blue);background:rgba(0,82,255,.09);padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
 
-/* RECENT SEARCHES */
-.recent-search-item { display:flex; align-items:center; gap:12px; padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:#fff; cursor:pointer; transition:all .18s; }
-.recent-search-item:hover { border-color:var(--blue); box-shadow:0 4px 12px var(--glow); transform:translateY(-1px); }
-.recent-icon { width:32px; height:32px; border-radius:50%; background:rgba(0,82,255,.08); color:var(--blue); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-.recent-text { font-size:13px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-/* SEARCH OVERLAY */
+/* ── SEARCH OVERLAY ── */
 .search-overlay{position:fixed;inset:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);display:none;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .35s var(--ease-smooth)}
 .search-overlay.show{display:flex;opacity:1}
 .circular-progress{width:140px;height:140px;position:relative;display:flex;align-items:center;justify-content:center}
@@ -161,46 +202,42 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .search-sub{font-size:14px;color:var(--muted);margin-top:8px;font-weight:500;text-align:center;max-width:260px;line-height:1.55}
 .cancel-search-btn{margin-top:40px;padding:14px 32px;border-radius:20px;background:rgba(229,53,53,.1);color:var(--red);font-weight:700;font-size:15px;border:none;cursor:pointer;transition:background .2s;font-family:'Outfit',sans-serif}
 .cancel-search-btn:active{background:rgba(229,53,53,.2)}
+.search-actions{display:flex;flex-direction:column;gap:12px;margin-top:32px;width:100%;max-width:280px}
+.retry-btn{width:100%;padding:16px;border-radius:20px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;transition:transform .18s,box-shadow .18s;font-family:'Outfit',sans-serif;box-shadow:0 6px 20px var(--glow)}
+.retry-btn:active{transform:scale(.96);box-shadow:0 2px 10px var(--glow)}
 
-/* Retry Styles */
-.search-actions { display:flex; flex-direction:column; gap:12px; margin-top:32px; width:100%; max-width:280px; }
-.retry-btn { width:100%; padding:16px; border-radius:20px; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; font-weight:800; font-size:15px; border:none; cursor:pointer; transition:transform .18s, box-shadow .18s; font-family:'Outfit',sans-serif; box-shadow:0 6px 20px var(--glow); }
-.retry-btn:active { transform:scale(.96); box-shadow:0 2px 10px var(--glow); }
-
-/* ACTIVE RIDE PANEL */
+/* ── ACTIVE RIDE PANEL ── */
 .active-panel{
-  position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);
-  display:none;flex-direction:column;z-index:35;gap:0;border:1px solid rgba(255,255,255,.9);
-  will-change:transform; transition:transform .45s var(--ease-spring);
-  transform:translateY(120%);
+  position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(28px);
+  display:none;flex-direction:column;z-index:35;
+  border:1px solid rgba(255,255,255,.9);
+  will-change:transform;
 }
-.active-panel.show{display:flex;transform:translateY(0)} /* Desktop show */
+.active-panel.show{display:flex}
 @media(max-width:899px){
   .active-panel{
     bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;
     border-radius:28px 28px 0 0;padding:0;
-    box-shadow:0 -12px 40px rgba(0,0,0,.1);
-    height: var(--panel-full);
+    box-shadow:0 -8px 40px rgba(0,0,0,.13);
+    height:var(--panel-full);
   }
-  .active-panel.collapsed{transform:translateY(calc(100% - 130px))}
-  .active-panel.mid{transform:translateY(calc(100% - 40vh))}
-  .active-panel.expanded{transform:translateY(0)}
+  .active-panel.snap-collapsed{transform:translateY(calc(var(--panel-full) - 118px)) translateZ(0)}
+  .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 44vh)) translateZ(0)}
+  .active-panel.snap-expanded{transform:translateY(0) translateZ(0)}
+  .active-panel.animating{transition:transform .44s var(--ease-decel)}
 }
 @media(min-width:900px){
-  .active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12)}
-  .active-panel-inner{padding-top:24px;}
+  .active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);transform:none!important;transition:none!important}
 }
-.active-drag-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 10px;flex-shrink:0;cursor:pointer;touch-action:none;}
+.active-drag-wrap{display:flex;align-items:center;justify-content:center;padding:14px 16px 10px;flex-shrink:0;cursor:grab;touch-action:none;user-select:none}
+.active-drag-wrap:active{cursor:grabbing}
 @media(min-width:900px){.active-drag-wrap{display:none}}
-.active-drag{width:38px;height:4px;background:var(--border);border-radius:4px;transition:width .2s var(--ease-spring),background .2s}
-.active-panel:not(.collapsed) .active-drag{width:52px;background:var(--blue2)}
+.active-drag{width:40px;height:5px;background:var(--border);border-radius:5px;transition:width .25s var(--ease-spring),background .25s,transform .2s var(--ease-spring)}
+.active-drag.dragging-active{width:56px;background:var(--blue2);transform:scaleY(1.3)}
+.active-panel.snap-expanded .active-drag,.active-panel.snap-mid .active-drag{width:52px;background:var(--blue2)}
 
-.active-panel-inner{
-  flex: 1; overflow-y: auto; padding: 0 20px 20px;
-  -webkit-overflow-scrolling: touch; display: flex; flex-direction: column;
-}
+.active-panel-inner{flex:1;overflow-y:auto;padding:0 20px 20px;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
 .active-panel-inner::-webkit-scrollbar{display:none}
-
 .ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0}
 .ad-info{display:flex;align-items:center;gap:14px}
 .ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue);border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
@@ -224,7 +261,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
 .rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
 
-/* BOTTOM NAV */
+/* ── BOTTOM NAV ── */
 .bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + var(--sb));background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;z-index:50}
 @media(min-width:900px){.bnav{display:none}}
 .bni{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:.17s;padding:4px 16px;position:relative}
@@ -233,13 +270,13 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .bni-dot.show{display:block}
 @keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
 
-/* FULL PAGES */
+/* ── FULL PAGES ── */
 .fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 20px)}
 @media(min-width:900px){.fpage{padding:32px 36px 32px}}
 .fpage.show{display:flex}
 .ph{font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px}
 
-/* TRIPS PAGE */
+/* ── TRIPS ── */
 .tc{background:var(--card);border-radius:16px;padding:16px 18px;margin-bottom:11px;border:1px solid var(--border);transition:.17s}
 .tc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07)}
 .tc-row{display:flex;justify-content:space-between;align-items:flex-start}
@@ -249,7 +286,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(0,82,255,.08);color:var(--blue)}
 .tc-badge.canceled{background:rgba(229,53,53,.08);color:var(--red)}
 
-/* WALLET PAGE */
+/* ── WALLET ── */
 .w-hero{background:linear-gradient(135deg,#0044FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden}
 .w-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%}
 .w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px;width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%}
@@ -265,10 +302,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .txa{font-size:14px;font-weight:700}
 .txa.cr{color:var(--green)}.txa.dr{color:var(--red)}
 
-/* ACCOUNT PAGE */
+/* ── ACCOUNT ── */
 .prof-banner{background:linear-gradient(135deg,#0033CC,#0052FF,#3377FF);border-radius:20px;padding:22px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden}
 .prof-banner::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
-.prof-av-lg{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.35);box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.prof-av-lg{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.35)}
 .prof-name{font-size:19px;font-weight:700;letter-spacing:-.2px}
 .prof-email{font-size:13px;opacity:.72;margin-top:3px}
 .acc-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px 4px}
@@ -288,7 +325,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ts input:checked + .ts-slider{background:var(--blue)}
 .ts input:checked + .ts-slider::before{transform:translateX(18px)}
 
-/* MODALS */
+/* ── MODALS ── */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 @media(min-width:900px){.mbg{align-items:center}}
 .mbg.show{display:flex}
@@ -314,7 +351,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .t-input:focus{border-color:var(--blue)}
 .input-wrap{margin-bottom:14px;text-align:left}
 
-/* PIN OVERLAY */
+/* ── PIN OVERLAY ── */
 .pin-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}
 .pin-overlay.show{display:flex}
 .pin-card{background:#fff;border-radius:28px 28px 0 0;padding:24px 24px calc(32px + var(--sb));width:100%;max-width:440px;animation:slideUp .38s var(--ease-spring);position:relative;text-align:center}
@@ -326,10 +363,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .pin-section-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left}
 .pin-display-row{display:flex;gap:10px;justify-content:center;margin-bottom:6px}
 .pin-digit-box{width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,rgba(0,82,255,.1),rgba(51,119,255,.18));border:2px solid rgba(0,82,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--blue);animation:pinIn .3s var(--ease-spring) both}
-.pin-digit-box:nth-child(1){animation-delay:.05s}
-.pin-digit-box:nth-child(2){animation-delay:.1s}
-.pin-digit-box:nth-child(3){animation-delay:.15s}
-.pin-digit-box:nth-child(4){animation-delay:.2s}
 @keyframes pinIn{from{transform:translateY(8px) scale(.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
 .pin-hint{font-size:11px;color:var(--muted);font-weight:500}
 .pin-input-section{background:rgba(0,82,255,.04);border-radius:16px;padding:16px;margin-bottom:16px}
@@ -343,7 +376,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .pin-close-btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);position:absolute;top:16px;right:16px;transition:background .18s,transform .18s var(--ease-spring)}
 .pin-close-btn:active{transform:scale(.9)}
 
-/* CHAT SHEET */
+/* ── CHAT SHEET ── */
 .chat-bg{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
 .chat-bg.show{display:flex}
 .chat-sheet{background:#fff;border-radius:26px 26px 0 0;width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;animation:slideUp .32s var(--ease-spring);box-shadow:0 -4px 30px rgba(0,0,0,.15)}
@@ -379,7 +412,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes typeBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 
-/* AUTH */
+/* ── AUTH ── */
 .auth-overlay{position:fixed;inset:0;z-index:998;display:none;flex-direction:column;opacity:0;transition:opacity .4s;font-family:'Outfit',sans-serif;overflow:hidden}
 .auth-overlay.show{display:flex;opacity:1}
 .auth-bg{position:absolute;inset:0;background:url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center/cover no-repeat;transform:scale(1.04);animation:authZoom 18s ease-in-out infinite alternate}
@@ -405,7 +438,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .auth-feat-dot{width:5px;height:5px;border-radius:50%;background:#4A9AFF;flex-shrink:0}
 @media(min-width:900px){.auth-bottom{max-width:460px;margin:0 auto;padding-left:40px;padding-right:40px}.auth-topbar{padding-left:40px}}
 
-/* GOOGLE SHEET */
+/* ── GOOGLE SHEET ── */
 .gsheet-bg{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .gsheet-bg.show{display:flex}
 .gsheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 28px calc(40px + var(--sb));width:100%;max-width:480px;animation:slideUp .32s var(--ease-spring)}
@@ -425,24 +458,16 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .gs-close:hover{background:var(--border)}
 .gs-close-wrap{position:relative}
 
-/* DRIVER CANCELED BANNER */
+/* ── DRIVER CANCELED BANNER ── */
 .driver-canceled-banner{position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--red);color:#fff;padding:14px 22px;border-radius:20px;font-size:14px;font-weight:700;opacity:0;transition:opacity .35s var(--ease-smooth),transform .35s var(--ease-spring);z-index:600;pointer-events:none;text-align:center;box-shadow:0 6px 24px rgba(229,53,53,.4);max-width:90vw}
 .driver-canceled-banner.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* TOAST */
+/* ── TOAST ── */
 .toast{position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.22s;z-index:600;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(min-width:900px){.toast{bottom:26px}}
 
-/* SPINNER */
-.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
-.spin.on{display:inline-block}
-
-/* EMPTY */
-.empty{text-align:center;padding:44px 20px;color:var(--muted)}
-.empty-ico{font-size:34px;margin-bottom:10px}
-
-/* PAYMENT MODAL */
+/* ── PAYMENT / PLACES ── */
 .pm-card{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
 .pm-card:last-child{border:none}
 .pm-card:hover{background:rgba(0,82,255,.03)}
@@ -451,14 +476,16 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .pm-sub{font-size:12px;color:var(--muted);margin-top:1px}
 .pm-badge{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(23,168,90,.1);color:var(--green)}
 .pm-default-badge{background:rgba(0,82,255,.08);color:var(--blue)}
-
-/* SAVED PLACES */
 .sp-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border)}
 .sp-row:last-child{border:none}
 .sp-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .sp-field{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;outline:none;color:var(--ink);transition:border-color .18s;background:var(--bg)}
 .sp-field:focus{border-color:var(--blue);background:#fff}
 .sp-field::placeholder{color:#b0b3c6}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:44px 20px;color:var(--muted)}
+.empty-ico{font-size:34px;margin-bottom:10px}
 </style>
 </head>
 <body>
@@ -502,10 +529,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <div class="gs-brand">
-      <div class="gs-brand-dot">VX</div>
-      <div class="gs-brand-name">VynixRide</div>
-    </div>
+    <div class="gs-brand"><div class="gs-brand-dot">VX</div><div class="gs-brand-name">VynixRide</div></div>
     <div class="gs-headline" id="gsHeadline">Welcome back</div>
     <div class="gs-sub" id="gsSub">Sign in with Google to book rides and manage your wallet.</div>
     <button class="gs-google-btn" id="gsGoogleBtn">
@@ -516,6 +540,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </div>
 </div>
 
+<!-- Modals -->
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="modal-pill"></div>
@@ -554,6 +579,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
     <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare" style="color:var(--blue);font-size:17px;font-weight:800">—</b></div>
+    <div id="promoAppliedRow" style="display:none" class="mr"><span class="mrl">Promo (RIDE20)</span><b class="mrv" style="color:var(--green)" id="m-discount">—</b></div>
     <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px">
       <button class="mok" onclick="initiateRidePayment('card')" style="width:100%">Pay with Card (Yoco)</button>
       <button class="mok green" onclick="initiateRidePayment('cash')" style="width:100%">Book with Cash</button>
@@ -626,19 +652,16 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="pin-icon">🔐</div>
     <div class="pin-title">Security Verification</div>
     <div class="pin-subtitle">Share your PIN with the driver, then enter the driver's PIN to start your trip.</div>
-    
     <div class="pin-section">
       <div class="pin-section-label">📱 Your PIN — show this to your driver</div>
       <div class="pin-display-row" id="riderPinDisplay"></div>
       <div class="pin-hint">The driver must confirm this in their app</div>
     </div>
-    
     <div class="pin-input-section">
       <div class="pin-section-label">🚗 Driver's PIN — enter what the driver tells you</div>
       <div class="pin-input-row" id="pinInputRow"></div>
       <div class="pin-error" id="pinError">❌ Wrong PIN — try again</div>
     </div>
-    
     <button class="pin-verify-btn" onclick="verifyDriverPin()">Verify & Start Ride</button>
     <div style="font-size:11px;color:var(--muted);font-weight:500">Both PINs must match to confirm the correct driver</div>
   </div>
@@ -685,19 +708,17 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </div>
   <div class="search-title" id="searchTitle">Finding your driver…</div>
   <div class="search-sub" id="searchSub">Pinging nearby drivers. If no one accepts within 60 seconds, the request will timeout.</div>
-  
   <button class="cancel-search-btn" id="cancelSearchBtn" onclick="cancelSearch('Search cancelled by you')">Cancel Request</button>
-  
-  <div class="search-actions" id="timeoutActions" style="display:none;">
+  <div class="search-actions" id="timeoutActions" style="display:none">
     <button class="retry-btn" onclick="retrySearch()">Try Again</button>
     <button class="cancel-search-btn" style="margin-top:0" onclick="cancelSearch('Search cancelled')">Cancel Request</button>
   </div>
 </div>
 
 <div class="driver-canceled-banner" id="driverCanceledBanner">🚗 Your driver cancelled. Please rebook your ride.</div>
-
 <div class="toast" id="toast"></div>
 
+<!-- ══════════════ MAIN SHELL ══════════════ -->
 <div class="shell">
   <aside class="sidebar" id="mainSidebar">
     <div class="logo"><div class="logo-mark">VX</div><span class="l-txt">VynixRide</span></div>
@@ -728,9 +749,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div id="map"></div>
     <div class="map-click-zone" id="mapClickZone" onclick="collapsePanel()"></div>
 
-    <div class="panel" id="bookPanel">
+    <!-- ── BOOKING PANEL ── -->
+    <div class="panel snap-mid" id="bookPanel">
       <div class="drag-handle-wrap" id="panelDragHandle">
-        <div class="drag-handle"></div>
+        <div class="drag-handle" id="dragHandleBar"></div>
       </div>
       <div class="locate-btn" onclick="zoomToCurrent()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
@@ -746,20 +768,34 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="o-sub" id="originLabel">Detecting…</div>
         </div>
       </div>
-      
       <div class="geo-wrap" id="geoWrap"></div>
-      
-      <div id="recentSearches" style="display:none; margin-bottom:12px; flex-shrink:0;">
-        <div class="slabel">Recent Searches</div>
-        <div id="recentSearchesList" style="display:flex; flex-direction:column; gap:6px;"></div>
+
+      <!-- PROMO BANNER -->
+      <div class="promo-banner" id="promoBanner" onclick="applyPromo()">
+        <div class="promo-badge">20% OFF</div>
+        <div class="promo-text-wrap">
+          <div class="promo-title">First ride discount!</div>
+          <div class="promo-sub">Tap to apply your promo code</div>
+        </div>
+        <div class="promo-code-pill" id="promoCodePill">RIDE20</div>
+      </div>
+
+      <!-- RECENT SEARCHES -->
+      <div class="recent-section" id="recentSection" style="display:none">
+        <div class="recent-section-header">
+          <div class="slabel" style="margin-bottom:0">Recent</div>
+          <button class="recent-clear-btn" onclick="clearRecentSearches()">Clear all</button>
+        </div>
+        <div class="recent-list" id="recentList"></div>
       </div>
 
       <div class="slabel" id="ridesLabel" style="display:none">Available Rides</div>
       <div class="ride-list" id="rideList"></div>
     </div>
 
+    <!-- ── ACTIVE RIDE PANEL ── -->
     <div class="active-panel" id="activeRidePanel">
-      <div class="active-drag-wrap" id="activeDragHandle"><div class="active-drag"></div></div>
+      <div class="active-drag-wrap" id="activeDragHandle"><div class="active-drag" id="activeDragBar"></div></div>
       <div class="active-panel-inner">
         <div class="ride-status-bar" id="rideStatusBar">
           <div class="rsb-dot"></div>
@@ -783,7 +819,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
           <div class="ad-m-item" style="align-items:flex-end"><span class="ad-m-lbl">PIN</span><span class="ad-m-val" id="adPin" style="color:var(--ink);font-size:20px;letter-spacing:2px">----</span></div>
         </div>
-        <div class="ad-actions" style="grid-template-columns:1fr 1fr;">
+        <div class="ad-actions">
           <div class="ad-btn chat-btn" onclick="openChat()">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             Chat
@@ -798,34 +834,24 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     </div>
   </div>
 
-  <div class="fpage" id="tab-trips">
-    <div class="ph">My Trips</div>
-    <div id="tripsList"></div>
-  </div>
-
+  <div class="fpage" id="tab-trips"><div class="ph">My Trips</div><div id="tripsList"></div></div>
   <div class="fpage" id="tab-wallet">
     <div class="ph">Wallet</div>
     <div class="w-hero">
       <div style="position:relative;z-index:1">
         <div class="wlabel">Available Balance</div>
         <div class="wbal" id="walletBal">R 0.00</div>
-        <div class="wbtns">
-          <button class="wbtn" onclick="openTopUpModal()">+ Top Up</button>
-        </div>
+        <div class="wbtns"><button class="wbtn" onclick="openTopUpModal()">+ Top Up</button></div>
       </div>
     </div>
     <div class="slabel">Transactions</div>
     <div id="txList"></div>
   </div>
-
   <div class="fpage" id="tab-account">
     <div class="ph">Account</div>
     <div class="prof-banner">
       <div class="prof-av-lg" id="profAv">?</div>
-      <div>
-        <div class="prof-name" id="profName">Guest</div>
-        <div class="prof-email" id="profEmail">Not signed in</div>
-      </div>
+      <div><div class="prof-name" id="profName">Guest</div><div class="prof-email" id="profEmail">Not signed in</div></div>
     </div>
     <div class="acc-section-title">My Account</div>
     <div class="ss">
@@ -850,7 +876,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
         <div class="srl"><div class="sri" style="background:rgba(229,53,53,.08)"><svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><span class="srt" style="color:var(--red)">Sign Out</span></div><span class="sra" style="color:var(--red)">›</span>
       </div>
     </div>
-    <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">VynixRide v2.0 · South Africa 🇿🇦</div>
+    <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">VynixRide v2.1 · South Africa 🇿🇦</div>
   </div>
 
   <nav class="bnav">
@@ -873,6 +899,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </nav>
 </div>
 
+<!-- ══════════════ FIREBASE + APP LOGIC ══════════════ -->
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as fbOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -891,55 +918,6 @@ let chatMsgs=[],chatUnread=0;
 const rc=getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis=3600000;
 fetchAndActivate(rc).then(()=>{const k=getValue(rc,'yoco_public_key').asString();if(k)yocoPublicKey=k;}).catch(()=>{});
-
-/* ── RECENT SEARCHES ── */
-function loadRecentSearches() {
-  let searches = JSON.parse(localStorage.getItem('vx_recent_searches') || '[]');
-  const listEl = document.getElementById('recentSearchesList');
-  const wrapEl = document.getElementById('recentSearches');
-  if (searches.length === 0) {
-      wrapEl.style.display = 'none';
-      return;
-  }
-  wrapEl.style.display = 'block';
-  listEl.innerHTML = searches.map((s, i) => `
-      <div class="recent-search-item" onclick="selectRecentSearch('${s.name.replace(/'/g, "\\'")}', ${s.lng}, ${s.lat})">
-          <div class="recent-icon">🕒</div>
-          <div class="recent-text">${s.name}</div>
-      </div>
-  `).join('');
-}
-
-window.saveRecentSearch = function(name, lng, lat) {
-  let searches = JSON.parse(localStorage.getItem('vx_recent_searches') || '[]');
-  searches = searches.filter(s => s.name !== name);
-  searches.unshift({ name, lng, lat });
-  if (searches.length > 3) searches = searches.slice(0, 3);
-  localStorage.setItem('vx_recent_searches', JSON.stringify(searches));
-  loadRecentSearches();
-}
-
-window.selectRecentSearch = function(name, lng, lat) {
-  document.querySelector('.mapboxgl-ctrl-geocoder--input').value = name;
-  window._destName = name;
-  window._destLng = lng;
-  window._destLat = lat;
-
-  if(window._dMk) window._dMk.remove();
-  const de = document.createElement('div'); de.className = 'dmarker';
-  window._dMk = new mapboxgl.Marker({element: de, anchor: 'center'}).setLngLat([lng, lat]).addTo(window._mapInstance);
-
-  drawRoute([window._wULng, window._wULat], [lng, lat], true);
-
-  setPanelState('expanded');
-  document.getElementById('ridesLabel').style.display = 'block';
-  const r = window._rides.find(x => x.id === window._selId);
-  const btn = document.getElementById('confirmBtn');
-  btn.style.display = 'block';
-  btn.textContent = `Book ${r.type}`;
-  
-  document.getElementById('recentSearches').style.display = 'none';
-}
 
 /* ── GOOGLE SHEET ── */
 function openGoogleSheet(mode){
@@ -968,114 +946,51 @@ onAuthStateChanged(auth,async u=>{
   if(!ws.exists())await set(ref(db,`users/${u.uid}/wallet/balance`),0);
   onValue(ref(db,`users/${u.uid}/trips`),snap=>renderTrips(Object.values(snap.val()||{}).reverse()));
   onValue(ref(db,`users/${u.uid}/wallet`),snap=>{const d=snap.val()||{balance:0};document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;renderTx(d.transactions||{});});
-  
   const arSnap=await get(ref(db,`users/${u.uid}/activeRideId`));
-  if(arSnap.exists()&&arSnap.val()){
-    activeRideReqId=arSnap.val();
-    listenToActiveRide(activeRideReqId);
-  }
+  if(arSnap.exists()&&arSnap.val()){activeRideReqId=arSnap.val();listenToActiveRide(activeRideReqId);}
 });
 
 function updateUI(u){
   const n=u?(u.displayName||'Rider'):'Guest',e=u?u.email:'Not signed in',i=ini2(n);
   ['sbAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=i;});
-  document.getElementById('sbName').textContent=n;
-  document.getElementById('sbEmail').textContent=e;
-  document.getElementById('profName').textContent=n;
-  document.getElementById('profEmail').textContent=e;
+  document.getElementById('sbName').textContent=n;document.getElementById('sbEmail').textContent=e;
+  document.getElementById('profName').textContent=n;document.getElementById('profEmail').textContent=e;
   const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
   if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';}
   else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
 }
 
 /* ── LISTEN ACTIVE RIDE ── */
-window._drawnPhase = null;
-window._activeRideData = null;
-
+window._drawnPhase=null;window._activeRideData=null;
 function listenToActiveRide(rideId){
   if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
   rideReqUnsub=onValue(ref(db,`ride_requests/${rideId}`),snap=>{
     const data=snap.val();
-    if(!data){
-      if(activeRideReqId){handleRideCanceled('driver', 'Ride was deleted from server');}
-      return;
-    }
-    
-    window._activeRideData = data;
-    
-    const isPanelActive = document.getElementById('activeRidePanel').style.display === 'flex';
-
-    if(data.status==='accepted' && !isPanelActive){
-      showDriverAccepted(data);
-      document.getElementById('searchOverlay').classList.remove('show');
-      document.getElementById('bookPanel').style.display='none';
-      clearInterval(window._searchInterval);
-    }
-    
-    if(data.status==='accepted' || data.status==='in_progress'){
+    if(!data){if(activeRideReqId)handleRideCanceled('driver','Ride was deleted from server');return;}
+    window._activeRideData=data;
+    const isPanelActive=document.getElementById('activeRidePanel').style.display==='flex';
+    if(data.status==='accepted'&&!isPanelActive){showDriverAccepted(data);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='none';clearInterval(window._searchInterval);}
+    if(data.status==='accepted'||data.status==='in_progress'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
       if(data.driverAv)document.getElementById('adAv').textContent=ini2(data.driverName||'D');
       if(data.driverCar)document.getElementById('adCar').textContent=data.driverCar;
       if(data.driverPlate)document.getElementById('adPlate').textContent=data.driverPlate;
       if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
-      if(data.arrivedPin){window._driverPin=data.arrivedPin;}
-      if(data.arrived){document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';}
-      
-      // Determine routing phase
-      let currentPhase = 'accepted';
-      if (data.arrived || data.status === 'in_progress') currentPhase = 'arrived';
-      
-      if (window._drawnPhase !== currentPhase) {
-          window._drawnPhase = currentPhase;
-          if (currentPhase === 'accepted' && data.driverId) {
-              get(ref(db, `active_drivers/${data.driverId}`)).then(dSnap => {
-                  const dd = dSnap.val();
-                  if (dd && dd.lat && dd.lng) {
-                      drawRoute([dd.lng, dd.lat], [data.pickupLng || window._wULng, data.pickupLat || window._wULat], false);
-                  }
-              });
-          } else if (currentPhase === 'arrived') {
-              if (data.destLng && data.destLat) {
-                  drawRoute([data.pickupLng || window._wULng, data.pickupLat || window._wULat], [data.destLng, data.destLat], false);
-              }
-          }
+      if(data.arrivedPin)window._driverPin=data.arrivedPin;
+      if(data.arrived)document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';
+      let currentPhase=data.arrived||data.status==='in_progress'?'arrived':'accepted';
+      if(window._drawnPhase!==currentPhase){
+        window._drawnPhase=currentPhase;
+        if(currentPhase==='accepted'&&data.driverId){get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{const dd=dSnap.val();if(dd&&dd.lat&&dd.lng)drawRoute([dd.lng,dd.lat],[data.pickupLng||window._wULng,data.pickupLat||window._wULat],false);});}
+        else if(currentPhase==='arrived'&&data.destLng&&data.destLat)drawRoute([data.pickupLng||window._wULng,data.pickupLat||window._wULat],[data.destLng,data.destLat],false);
       }
-
       if(data.driverId){
-        get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{
-          const dd=dSnap.val();
-          if(dd&&dd.lat&&dd.lng&&window._mapInstance){
-            updateCarMarker(dd.lat,dd.lng);
-            const targetLat = currentPhase === 'accepted' ? (data.pickupLat || window._wULat) : (data.destLat || window._wULat);
-            const targetLng = currentPhase === 'accepted' ? (data.pickupLng || window._wULng) : (data.destLng || window._wULng);
-            const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);
-            document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
-            document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
-          }
-        });
-        onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{
-          const dd=dSnap.val();
-          if(dd&&dd.lat&&dd.lng&&window._mapInstance){
-            updateCarMarker(dd.lat,dd.lng);
-            const targetLat = currentPhase === 'accepted' ? (data.pickupLat || window._wULat) : (data.destLat || window._wULat);
-            const targetLng = currentPhase === 'accepted' ? (data.pickupLng || window._wULng) : (data.destLng || window._wULng);
-            const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);
-            document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
-            document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
-          }
-        });
+        get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{const dd=dSnap.val();if(dd&&dd.lat&&dd.lng&&window._mapInstance){updateCarMarker(dd.lat,dd.lng);const targetLat=data.arrived?(data.destLat||window._wULat):(data.pickupLat||window._wULat);const targetLng=data.arrived?(data.destLng||window._wULng):(data.pickupLng||window._wULng);const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);document.getElementById('adDist').textContent=dist.toFixed(1)+' km';document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';}});
+        onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{const dd=dSnap.val();if(dd&&dd.lat&&dd.lng&&window._mapInstance){updateCarMarker(dd.lat,dd.lng);const targetLat=data.arrived?(data.destLat||window._wULat):(data.pickupLat||window._wULat);const targetLng=data.arrived?(data.destLng||window._wULng):(data.pickupLng||window._wULng);const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);document.getElementById('adDist').textContent=dist.toFixed(1)+' km';document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';}});
       }
     }
-    
-    // FIX: Catch if driver reverted it to pending OR officially set to canceled_by_driver
-    if(data.status==='canceled_by_driver' || (data.status === 'pending' && data.cancelReason)){
-      handleRideCanceled('driver', data.cancelReason);
-    }
-
-    if(data.status==='completed'){
-      resetToBooking();
-      window.showToast('🎉 Ride completed! Thanks for riding with VynixRide.');
-    }
+    if(data.status==='canceled_by_driver'||(data.status==='pending'&&data.cancelReason))handleRideCanceled('driver',data.cancelReason);
+    if(data.status==='completed'){resetToBooking();window.showToast('🎉 Ride completed! Thanks for riding with VynixRide.');}
   });
   listenChat(rideId);
 }
@@ -1087,71 +1002,43 @@ function showDriverAccepted(data){
   document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
   document.getElementById('adPin').textContent=data.securityPin||'----';
   window._riderPin=data.securityPin;
-  
   document.getElementById('activeRidePanel').style.display='flex';
-  requestAnimationFrame(()=>{
-    document.getElementById('activeRidePanel').classList.add('show');
-    if(window.setActivePanelState) window.setActivePanelState('mid'); 
-  });
-  
+  requestAnimationFrame(()=>{document.getElementById('activeRidePanel').classList.add('show');if(window.setActivePanelState)window.setActivePanelState('mid');});
   document.getElementById('rideStatusText').textContent='Driver on the way to pickup…';
   window.showToast('🎉 Driver accepted! Track them on the map.');
 }
 
-function handleRideCanceled(by, reason = ''){
-  const rideIdToCancel = activeRideReqId; // Capture ID before nulling it
-  
+function handleRideCanceled(by,reason=''){
+  const rideIdToCancel=activeRideReqId;
   if(!activeRideReqId)return;
   if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
   if(chatUnsub){chatUnsub();chatUnsub=null;}
   if(cu)set(ref(db,`users/${cu.uid}/activeRideId`),null).catch(()=>{});
   activeRideReqId=null;
-  
-  // Wipe destination data completely to reset app state
-  window._destName='';
-  window._destLng=null;
-  window._destLat=null;
-  
+  window._destName='';window._destLng=null;window._destLat=null;
   resetToBooking();
-  
-  // Force geocoder clear, wipes map routes & markers inherently
-  if(window._geocoder) window._geocoder.clear();
-  
+  if(window._geocoder)window._geocoder.clear();
   loadRecentSearches();
-
   if(by==='driver'){
-    
-    // Officially cancel the ride in the DB so it drops off pending lists
-    if(window.db && rideIdToCancel) {
-      update(ref(window.db, `ride_requests/${rideIdToCancel}`), { status: 'canceled_by_driver' }).catch(()=>{});
-    }
-
+    if(window.db&&rideIdToCancel)update(ref(window.db,`ride_requests/${rideIdToCancel}`),{status:'canceled_by_driver'}).catch(()=>{});
     const b=document.getElementById('driverCanceledBanner');
-    if (reason) {
-      b.innerHTML = `🚗 Driver cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`;
-    } else {
-      b.textContent = `🚗 Your driver cancelled. Please rebook your ride.`;
-    }
-    b.classList.add('show');
-    setTimeout(()=>b.classList.remove('show'),7000);
+    b.innerHTML=reason?`🚗 Driver cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`:'🚗 Your driver cancelled. Please rebook your ride.';
+    b.classList.add('show');setTimeout(()=>b.classList.remove('show'),7000);
   }
 }
 
 function resetToBooking(){
-  window._drawnPhase = null;
-  document.getElementById('activeRidePanel').classList.remove('show');
-  if(window.setActivePanelState) window.setActivePanelState('collapsed');
-  setTimeout(()=>{document.getElementById('activeRidePanel').style.display='none';},450);
+  window._drawnPhase=null;
+  const ap=document.getElementById('activeRidePanel');
+  ap.classList.remove('show','snap-expanded','snap-mid','snap-collapsed');
+  if(window.setActivePanelState)window.setActivePanelState('collapsed');
+  setTimeout(()=>{ap.style.display='none';},450);
   document.getElementById('bookPanel').style.display='flex';
   if(window._carMarkerEl){window._carMarkerEl.remove();window._carMarkerEl=null;}
   chatMsgs=[];chatUnread=0;
   document.getElementById('chatMessages').innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>';
-  
-  if (window._destLng && window._destLat) {
-      drawRoute([window._wULng, window._wULat], [window._destLng, window._destLat], true);
-  } else {
-      clearRoute();
-  }
+  if(window._destLng&&window._destLat)drawRoute([window._wULng,window._wULat],[window._destLng,window._destLat],true);
+  else clearRoute();
 }
 
 /* ── CHAT ── */
@@ -1159,88 +1046,40 @@ function listenChat(rideId){
   if(chatUnsub){chatUnsub();chatUnsub=null;}
   chatUnsub=onValue(ref(db,`ride_requests/${rideId}/chat`),snap=>{
     const msgs=Object.entries(snap.val()||{}).map(([k,v])=>({...v,_key:k})).sort((a,b)=>a.ts-b.ts);
-    const prev=chatMsgs.length;chatMsgs=msgs;
-    renderChatMsgs();
+    const prev=chatMsgs.length;chatMsgs=msgs;renderChatMsgs();
     const chatOpen=document.getElementById('chatBg').classList.contains('show');
     const newDriverMsgs=msgs.filter(m=>m.sender==='driver'&&!m.readByRider).length;
     if(chatOpen){markRead(rideId);chatUnread=0;}
     else if(newDriverMsgs>0){chatUnread=newDriverMsgs;updateChatBadge();}
     if(chatOpen)scrollChatBottom();
-    if(msgs.length>prev&&msgs[msgs.length-1].sender==='driver'&&!chatOpen){
-      showTyping();
-    }
+    if(msgs.length>prev&&msgs[msgs.length-1].sender==='driver'&&!chatOpen)showTyping();
   });
 }
-function markRead(rideId){
-  chatMsgs.filter(m=>m.sender==='driver'&&!m.readByRider).forEach(m=>{
-    update(ref(db,`ride_requests/${rideId}/chat/${m._key}`),{readByRider:true}).catch(()=>{});
-  });
-}
+function markRead(rideId){chatMsgs.filter(m=>m.sender==='driver'&&!m.readByRider).forEach(m=>{update(ref(db,`ride_requests/${rideId}/chat/${m._key}`),{readByRider:true}).catch(()=>{});});}
 let typingTimer=null;
-function showTyping(){
-  const el=document.getElementById('typingIndicator');if(!el)return;
-  el.classList.add('show');clearTimeout(typingTimer);
-  typingTimer=setTimeout(()=>el.classList.remove('show'),2500);
-}
-function renderChatMsgs(){
-  const el=document.getElementById('chatMessages');
-  if(!chatMsgs.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>';return;}
-  el.innerHTML=chatMsgs.map(m=>{
-    const mine=m.sender==='rider';
-    const time=m.ts?new Date(m.ts).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'}):'';
-    const tick=mine?(m.readByDriver?'✓✓':'✓'):'';
-    return `<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-meta">${time} ${tick}</div></div>`;
-  }).join('');
-}
+function showTyping(){const el=document.getElementById('typingIndicator');if(!el)return;el.classList.add('show');clearTimeout(typingTimer);typingTimer=setTimeout(()=>el.classList.remove('show'),2500);}
+function renderChatMsgs(){const el=document.getElementById('chatMessages');if(!chatMsgs.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>';return;}el.innerHTML=chatMsgs.map(m=>{const mine=m.sender==='rider';const time=m.ts?new Date(m.ts).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'}):'';const tick=mine?(m.readByDriver?'✓✓':'✓'):'';return `<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-meta">${time} ${tick}</div></div>`;}).join('');}
 function scrollChatBottom(){const el=document.getElementById('chatMessages');if(el)setTimeout(()=>el.scrollTop=el.scrollHeight,60);}
 function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function updateChatBadge(){
-  const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;
-  if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}
-  else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}
-}
-window.openChat=function(){
-  if(!activeRideReqId){window.showToast('No active ride');return;}
-  const data=window._activeRideData||{};
-  document.getElementById('chatAv').textContent=ini2(data.driverName||'D');
-  document.getElementById('chatDriverName').textContent=data.driverName||'Driver';
-  document.getElementById('chatBg').classList.add('show');
-  chatUnread=0;updateChatBadge();
-  markRead(activeRideReqId);
-  renderChatMsgs();scrollChatBottom();
-};
+function updateChatBadge(){const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}}
+window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};document.getElementById('chatAv').textContent=ini2(data.driverName||'D');document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
 window.closeChat=()=>document.getElementById('chatBg').classList.remove('show');
-window.sendChatMsg=async function(){
-  const inp=document.getElementById('chatInput');const text=inp.value.trim();
-  if(!text||!activeRideReqId)return;
-  inp.value='';inp.style.height='';
-  await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));
-  scrollChatBottom();
-};
-window.sendQR=async function(text){
-  if(!activeRideReqId){window.showToast('No active ride');return;}
-  await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});
-  scrollChatBottom();
-};
+window.sendChatMsg=async function(){const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text||!activeRideReqId)return;inp.value='';inp.style.height='';await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));scrollChatBottom();};
+window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No active ride');return;}await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});scrollChatBottom();};
 window.chatKeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMsg();}};
 window.autoResize=function(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';};
 
 /* ── PIN OVERLAY ── */
 window.showPinOverlay=function(){
   const rPin=window._riderPin||'----';
-  const display=document.getElementById('riderPinDisplay');
-  display.innerHTML=String(rPin).split('').map(d=>`<div class="pin-digit-box">${d}</div>`).join('');
-  const row=document.getElementById('pinInputRow');
-  row.innerHTML=Array.from({length:4},(_,i)=>`<input class="pin-input-digit" id="pdi${i}" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" oninput="pinNext(event,${i})">`).join('');
+  document.getElementById('riderPinDisplay').innerHTML=String(rPin).split('').map(d=>`<div class="pin-digit-box">${d}</div>`).join('');
+  document.getElementById('pinInputRow').innerHTML=Array.from({length:4},(_,i)=>`<input class="pin-input-digit" id="pdi${i}" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" oninput="pinNext(event,${i})">`).join('');
   document.getElementById('pinError').style.display='none';
   document.getElementById('pinOverlay').classList.add('show');
   setTimeout(()=>document.getElementById('pdi0')?.focus(),250);
 };
 window.closePinOverlay=()=>document.getElementById('pinOverlay').classList.remove('show');
-window.pinNext=function(e,i){
-  e.target.value=e.target.value.replace(/\D/,'');
-  if(e.target.value&&i<3)document.getElementById(`pdi${i+1}`)?.focus();
-};
+window.pinNext=function(e,i){e.target.value=e.target.value.replace(/\D/,'');if(e.target.value&&i<3)document.getElementById(`pdi${i+1}`)?.focus();};
 window.verifyDriverPin=function(){
   const entered=[0,1,2,3].map(i=>document.getElementById(`pdi${i}`)?.value||'').join('');
   const expected=window._driverPin||'';
@@ -1249,11 +1088,7 @@ window.verifyDriverPin=function(){
     document.getElementById('pinOverlay').classList.remove('show');
     document.getElementById('rideStatusText').textContent='🚗 Ride in progress!';
     window.showToast('✅ PIN verified — enjoy your ride!');
-    
-    if (window._activeRideData && window._activeRideData.destLng) {
-        drawRoute([window._activeRideData.pickupLng || window._wULng, window._activeRideData.pickupLat || window._wULat], [window._activeRideData.destLng, window._activeRideData.destLat], false);
-        window._drawnPhase = 'arrived';
-    }
+    if(window._activeRideData&&window._activeRideData.destLng){drawRoute([window._activeRideData.pickupLng||window._wULng,window._activeRideData.pickupLat||window._wULat],[window._activeRideData.destLng,window._activeRideData.destLat],false);window._drawnPhase='arrived';}
   }else{
     document.getElementById('pinError').style.display='block';
     [0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el){el.value='';el.style.borderColor='var(--red)';}});
@@ -1266,15 +1101,17 @@ window.verifyDriverPin=function(){
 window.initiateRidePayment=async function(method='card'){
   if(!cu){window.showToast('Please sign in first');return;}
   const r=window._rides.find(x=>x.id===window._selId);
+  let finalFare = r.price;
+  if(window._promoApplied) finalFare = Math.round(finalFare * 0.8 * 100) / 100;
   const processBooking=async(payType)=>{
     try{
       const dest=window._destName.split(',').slice(0,2).join(',');
       const secPin=Math.floor(1000+Math.random()*9000).toString();
       const rideReqRef=await push(ref(db,'ride_requests'),{
         status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',
-        rideType:r.type,fare:r.price,pickup:document.getElementById('originLabel').textContent||'Current Location',
+        rideType:r.type,fare:finalFare,pickup:document.getElementById('originLabel').textContent||'Current Location',
         destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,
-        destLng: window._destLng, destLat: window._destLat, pickupLng: window._wULng, pickupLat: window._wULat,
+        destLng:window._destLng,destLat:window._destLat,pickupLng:window._wULng,pickupLat:window._wULat,
         capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now()
       });
       activeRideReqId=rideReqRef.key;
@@ -1283,20 +1120,20 @@ window.initiateRidePayment=async function(method='card'){
       document.getElementById('confirmModal').classList.remove('show');
       document.getElementById('bookPanel').style.display='none';
       window.startSearchTimer();
-      listenToActiveRide(activeRideReqId); // FIX: Start listening for the driver to accept immediately
+      listenToActiveRide(activeRideReqId);
     }catch(e){window.showToast('Error creating ride request');}
   };
   if(method==='card'){
-    window.triggerYocoPayment(r.price,`Ride: ${r.type}`,async()=>{
+    window.triggerYocoPayment(finalFare,`Ride: ${r.type}`,async()=>{
       await processBooking('Card');
       if(cu){
-        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card'});
-        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ride (Card)`,amount:r.price,type:'dr',date:Date.now()});
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card'});
+        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ride (Card)`,amount:finalFare,type:'dr',date:Date.now()});
       }
     },'confirmModal');
   }else{
     await processBooking('Cash');
-    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash'});
+    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash'});
   }
 };
 
@@ -1306,16 +1143,10 @@ window.cancelActiveRide=async function(){
   try{
     const snap=await get(ref(db,`ride_requests/${activeRideReqId}`));
     const d=snap.val();
-    if(d&&(d.status==='pending'||d.status==='accepted')){
-      await update(ref(db,`ride_requests/${activeRideReqId}`),{status:'canceled_by_rider',canceledAt:Date.now()});
-      await push(ref(db,`users/${cu.uid}/trips`),{type:d.rideType||'—',driver:d.driverName||'—',fare:d.fare||0,destination:d.destination||'—',status:'Canceled',date:Date.now(),paymentMethod:d.paymentMethod||'—'});
-    }
-    if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
-    if(chatUnsub){chatUnsub();chatUnsub=null;}
+    if(d&&(d.status==='pending'||d.status==='accepted')){await update(ref(db,`ride_requests/${activeRideReqId}`),{status:'canceled_by_rider',canceledAt:Date.now()});await push(ref(db,`users/${cu.uid}/trips`),{type:d.rideType||'—',driver:d.driverName||'—',fare:d.fare||0,destination:d.destination||'—',status:'Canceled',date:Date.now(),paymentMethod:d.paymentMethod||'—'});}
+    if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}if(chatUnsub){chatUnsub();chatUnsub=null;}
     await set(ref(db,`users/${cu.uid}/activeRideId`),null);
-    activeRideReqId=null;
-    resetToBooking();
-    window.showToast('Ride cancelled');
+    activeRideReqId=null;resetToBooking();window.showToast('Ride cancelled');
   }catch(e){window.showToast('Error cancelling ride');}
 };
 
@@ -1335,32 +1166,25 @@ window.executeYocoTopUp=async function(){
   const amt=parseFloat(document.getElementById('yocoAmount').value);
   if(isNaN(amt)||amt<10){window.showToast('Min R10');return;}
   window.triggerYocoPayment(amt,'Wallet Top-Up',async()=>{
-    const wRef=ref(db,`users/${cu.uid}/wallet/balance`);
-    const snap=await get(wRef);const curr=snap.val()||0;
+    const wRef=ref(db,`users/${cu.uid}/wallet/balance`);const snap=await get(wRef);const curr=snap.val()||0;
     await update(ref(db,`users/${cu.uid}/wallet`),{balance:curr+amt});
     await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
-    document.getElementById('yocoAmount').value='';
-    window.showToast(`Added R${amt.toFixed(2)}`);
+    document.getElementById('yocoAmount').value='';window.showToast(`Added R${amt.toFixed(2)}`);
   },'topUpModal');
 };
 
 window.executeVoucher=async function(){
   if(!cu){window.showToast('Sign in first');return;}
-  const code=document.getElementById('voucherCode').value.trim().toUpperCase();
-  if(!code){window.showToast('Enter a code');return;}
+  const code=document.getElementById('voucherCode').value.trim().toUpperCase();if(!code){window.showToast('Enter a code');return;}
   try{
     const vRef=ref(db,`vouchers/${code}`);const snap=await get(vRef);
     if(snap.exists()){
-      const data=snap.val();
-      if(data.used){window.showToast('Already used');return;}
+      const data=snap.val();if(data.used){window.showToast('Already used');return;}
       const amt=parseFloat(data.amount);if(isNaN(amt)){window.showToast('Invalid voucher');return;}
       const wSnap=await get(ref(db,`users/${cu.uid}/wallet/balance`));const curr=wSnap.val()||0;
-      const updates={};
-      updates[`users/${cu.uid}/wallet/balance`]=curr+amt;updates[`vouchers/${code}/used`]=true;updates[`vouchers/${code}/redeemedBy`]=cu.uid;
-      await update(ref(db),updates);
-      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
-      window.closeTopUpModal();window.showToast(`R${amt.toFixed(2)} added!`);
-      document.getElementById('voucherCode').value='';
+      const updates={};updates[`users/${cu.uid}/wallet/balance`]=curr+amt;updates[`vouchers/${code}/used`]=true;updates[`vouchers/${code}/redeemedBy`]=cu.uid;
+      await update(ref(db),updates);await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
+      window.closeTopUpModal();window.showToast(`R${amt.toFixed(2)} added!`);document.getElementById('voucherCode').value='';
     }else{window.showToast('Invalid voucher code');}
   }catch(e){window.showToast('Error processing voucher');}
 };
@@ -1369,7 +1193,7 @@ window.executeVoucher=async function(){
 function renderTrips(list){
   const el=document.getElementById('tripsList');
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
-  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,.05)">${t.paymentMethod||'Card'}</span></div><div class="tc-meta">${t.destination||'—'} · ${t.driver||'—'}</div></div><div class="tc-fare">R ${parseFloat(t.fare||0).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge ${t.status==='Canceled'?'canceled':''}">${t.status==='Canceled'?'✕ Canceled':'✓ '+( t.status||'Completed')}</span></div>`).join('');
+  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,.05)">${t.paymentMethod||'Card'}</span></div><div class="tc-meta">${t.destination||'—'} · ${t.driver||'—'}</div></div><div class="tc-fare">R ${parseFloat(t.fare||0).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge ${t.status==='Canceled'?'canceled':''}">${t.status==='Canceled'?'✕ Canceled':'✓ '+(t.status||'Completed')}</span></div>`).join('');
 }
 function renderTx(obj){
   const el=document.getElementById('txList'),list=Object.values(obj).reverse();
@@ -1379,118 +1203,64 @@ function renderTx(obj){
 
 /* ── ACCOUNT ── */
 window.handleAuthAction=()=>{if(cu)return;openGoogleSheet('login');};
-window.doSignOut=async()=>{
-  await fbOut(auth);
-  document.getElementById('tripsList').innerHTML='';
-  document.getElementById('txList').innerHTML='';
-  document.getElementById('walletBal').textContent='R 0.00';
-  window.showToast('Signed out');
-  document.getElementById('authOverlay').classList.add('show');
-};
+window.doSignOut=async()=>{await fbOut(auth);document.getElementById('tripsList').innerHTML='';document.getElementById('txList').innerHTML='';document.getElementById('walletBal').textContent='R 0.00';window.showToast('Signed out');document.getElementById('authOverlay').classList.add('show');};
 window.saveNotifPrefs=function(){const prefs={};['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});localStorage.setItem('vx_notif_prefs',JSON.stringify(prefs));document.getElementById('notifModal').classList.remove('show');window.showToast('Preferences saved');};
 window.openPayModal=function(){const b=document.getElementById('walletBal');document.getElementById('payModalWalletBal').textContent='Balance: '+(b?b.textContent:'R 0.00');document.getElementById('payModal').classList.add('show');};
-window.savePlaces=async function(){
-  const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};
-  localStorage.setItem('vx_saved_places',JSON.stringify(data));
-  if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});
-  document.getElementById('placesModal').classList.remove('show');window.showToast('Saved places updated');
-};
-
-setTimeout(()=>{
-  if(window.db){
-    onValue(ref(db,'active_drivers'),snap=>{
-      const drivers=snap.val()||{};
-      Object.entries(drivers).forEach(([id,d])=>{
-        if(d.lat&&d.lng&&window._mapInstance&&id!==window._trackingDriverId){
-          // Show ghost markers for other drivers
-        }
-      });
-    });
-  }
-},2000);
+window.savePlaces=async function(){const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};localStorage.setItem('vx_saved_places',JSON.stringify(data));if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});document.getElementById('placesModal').classList.remove('show');window.showToast('Saved places updated');};
 
 function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 window.ini2=ini2;
 </script>
 
+<!-- ══════════════ MAP + PANEL DRAG ENGINE ══════════════ -->
 <script>
 const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
 mapboxgl.accessToken=TK;
 const DLNG=28.9934,DLAT=-24.1991,DEFAULT_ZOOM=15.5;
 
-/* ── 3D ENHANCED MAP ── */
-const map=new mapboxgl.Map({
-  container:'map',
-  style:'mapbox://styles/mapbox/light-v11',
-  center:[DLNG,DLAT],zoom:DEFAULT_ZOOM,
-  pitch:55,bearing:0,
-  antialias:true,
-  attributionControl:false,
-  logoPosition:'bottom-right',
-  maxPitch:70
-});
+/* ── MAP INIT ── */
+const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/mapbox/light-v11',center:[DLNG,DLAT],zoom:DEFAULT_ZOOM,pitch:55,bearing:0,antialias:true,attributionControl:false,logoPosition:'bottom-right',maxPitch:70});
 window._mapInstance=map;
 map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
 
 map.on('load',()=>{
   map.addSource('mapbox-dem',{type:'raster-dem',url:'mapbox://mapbox.mapbox-terrain-dem-v1',tileSize:512,maxzoom:14});
   map.setTerrain({source:'mapbox-dem',exaggeration:1.2});
-  map.addLayer({id:'sky',type:'sky',paint:{'sky-type':'atmosphere','sky-atmosphere-sun':[0,0],'sky-atmosphere-sun-intensity':15,'sky-atmosphere-color':'rgba(135, 206, 235, 1.0)','sky-atmosphere-halo-color':'rgba(255, 255, 255, 0.5)','sky-atmosphere-horizon-blend':0.1}});
+  map.addLayer({id:'sky',type:'sky',paint:{'sky-type':'atmosphere','sky-atmosphere-sun':[0,0],'sky-atmosphere-sun-intensity':15,'sky-atmosphere-color':'rgba(135,206,235,1)','sky-atmosphere-halo-color':'rgba(255,255,255,.5)','sky-atmosphere-horizon-blend':0.1}});
   const layers=map.getStyle().layers;
   const labelLayerId=layers.find(l=>l.type==='symbol'&&l.layout['text-field'])?.id;
-  map.addLayer({
-    id:'3d-buildings',source:'composite','source-layer':'building',
-    filter:['==','extrude','true'],type:'fill-extrusion',minzoom:14,
-    paint:{'fill-extrusion-color':['interpolate',['linear'],['get','height'],0,'#dde4f0',100,'#b8c4e0',300,'#8fa0c8'],'fill-extrusion-height':['interpolate',['linear'],['zoom'],14,0,14.05,['get','height']],'fill-extrusion-base':['interpolate',['linear'],['zoom'],14,0,14.05,['get','min_height']],'fill-extrusion-opacity':.75,'fill-extrusion-ambient-occlusion-intensity':0.7,'fill-extrusion-ambient-occlusion-radius':2}
-  },labelLayerId);
+  map.addLayer({id:'3d-buildings',source:'composite','source-layer':'building',filter:['==','extrude','true'],type:'fill-extrusion',minzoom:14,paint:{'fill-extrusion-color':['interpolate',['linear'],['get','height'],0,'#dde4f0',100,'#b8c4e0',300,'#8fa0c8'],'fill-extrusion-height':['interpolate',['linear'],['zoom'],14,0,14.05,['get','height']],'fill-extrusion-base':['interpolate',['linear'],['zoom'],14,0,14.05,['get','min_height']],'fill-extrusion-opacity':.75}},labelLayerId);
   map.setPaintProperty('road-primary','line-color','#0052FF');
   map.setPaintProperty('road-primary','line-opacity',0.15);
-  
   loadRecentSearches();
 });
+map.on('style.load',()=>{map.setFog({'color':'rgba(220,225,245,1)','high-color':'rgba(180,195,240,1)','horizon-blend':0.06,'space-color':'rgba(100,130,200,1)','star-intensity':0.06});});
 
-map.on('style.load',()=>{
-  map.setFog({'color':'rgba(220, 225, 245, 1)','high-color':'rgba(180, 195, 240, 1)','horizon-blend':0.06,'space-color':'rgba(100, 130, 200, 1)','star-intensity':0.06});
-});
-
-window._mapInstance=map;
 const oEl=document.createElement('div');oEl.className='cmarker';
 const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
 let dMk=null,wULng=DLNG,wULat=DLAT;
-window._wULat=DLAT;window._wULng=DLNG;
-window._carMarkerEl=null;
+window._wULat=DLAT;window._wULng=DLNG;window._carMarkerEl=null;
 
 function getMobilePad(){return window.innerWidth<900?window.innerHeight*.38:55;}
 
-/* ── CAR MARKER ── */
 function updateCarMarker(lat,lng){
   if(window._carMarkerEl){window._carMarkerEl.setLngLat([lng,lat]);return;}
-  const wrap=document.createElement('div');
-  wrap.style.cssText='position:relative;width:34px;height:34px';
+  const wrap=document.createElement('div');wrap.style.cssText='position:relative;width:34px;height:34px';
   const pulse=document.createElement('div');pulse.className='car-pulse';
   const car=document.createElement('div');car.className='car-marker';car.textContent='🚕';
   wrap.appendChild(pulse);wrap.appendChild(car);
   window._carMarkerEl=new mapboxgl.Marker({element:wrap,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
 }
 
-/* ── LOCATE ── */
 window.requestLocation=function(){
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
       document.getElementById('locModal').classList.remove('show');
       const{latitude:la,longitude:lo}=pos.coords;
-      wULng=lo;wULat=la;oMk.setLngLat([lo,la]);
-      window._wULat=la;window._wULng=lo;
+      wULng=lo;wULat=la;oMk.setLngLat([lo,la]);window._wULat=la;window._wULng=lo;
       map.flyTo({center:[lo,la],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
-      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lo},${la}.json?access_token=${TK}&types=place,neighborhood,address&limit=1`)
-        .then(r=>r.json()).then(d=>{
-          const lbl=d.features?.[0]?.place_name||`${la.toFixed(4)},${lo.toFixed(4)}`;
-          document.getElementById('originLabel').textContent=lbl.split(',').slice(0,2).join(',');
-        });
-    },()=>{
-      document.getElementById('locModal').classList.add('show');
-      document.getElementById('originLabel').textContent='Mokopane, Limpopo (Default)';
-    });
+      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lo},${la}.json?access_token=${TK}&types=place,neighborhood,address&limit=1`).then(r=>r.json()).then(d=>{const lbl=d.features?.[0]?.place_name||`${la.toFixed(4)},${lo.toFixed(4)}`;document.getElementById('originLabel').textContent=lbl.split(',').slice(0,2).join(',');});
+    },()=>{document.getElementById('locModal').classList.add('show');document.getElementById('originLabel').textContent='Mokopane, Limpopo (Default)';});
   }
 };
 window.requestLocation();
@@ -1499,75 +1269,125 @@ window.zoomToCurrent=function(){if(wULng&&wULat)map.flyTo({center:[wULng,wULat],
 /* ── GEOCODER ── */
 const geocoder=new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search destination…',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
 document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
-window._geocoder = geocoder;
+window._geocoder=geocoder;
 
 function clearRoute(){if(map.getLayer('route'))map.removeLayer('route');if(map.getLayer('route-bg'))map.removeLayer('route-bg');if(map.getSource('route'))map.removeSource('route');}
 
-function drawRoute(o, d, isBooking = false){
-  fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${o[0]},${o[1]};${d[0]},${d[1]}?geometries=geojson&access_token=${TK}`)
-    .then(r=>r.json()).then(data=>{
-      if(!data.routes?.length)return;
-      
-      if(isBooking){
-        window._distKm=data.routes[0].distance/1000;
-        window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
-        updatePrices();
-      }
-      
-      clearRoute();
-      map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});
-      map.addLayer({id:'route-bg',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0052FF','line-width':10,'line-opacity':.15}});
-      map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0052FF','line-width':5,'line-opacity':.82}});
-      
-      const bounds = new mapboxgl.LngLatBounds(o, o);
-      bounds.extend(d);
-      data.routes[0].geometry.coordinates.forEach(c => bounds.extend(c));
-      map.fitBounds(bounds, {padding: {top: 80, bottom: getMobilePad(), left: 40, right: 40}, duration: 1200, pitch: 50});
-    }).catch(()=>{
-      if(isBooking){
-        window._distKm=haversine(o[1],o[0],d[1],d[0]);
-        window._tripDurationMins=0;
-        updatePrices();
-      }
-    });
+function drawRoute(o,d,isBooking=false){
+  fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${o[0]},${o[1]};${d[0]},${d[1]}?geometries=geojson&access_token=${TK}`).then(r=>r.json()).then(data=>{
+    if(!data.routes?.length)return;
+    if(isBooking){window._distKm=data.routes[0].distance/1000;window._tripDurationMins=Math.ceil(data.routes[0].duration/60);updatePrices();}
+    clearRoute();
+    map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});
+    map.addLayer({id:'route-bg',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0052FF','line-width':10,'line-opacity':.15}});
+    map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0052FF','line-width':5,'line-opacity':.82}});
+    const bounds=new mapboxgl.LngLatBounds(o,o);bounds.extend(d);data.routes[0].geometry.coordinates.forEach(c=>bounds.extend(c));
+    map.fitBounds(bounds,{padding:{top:80,bottom:getMobilePad(),left:40,right:40},duration:1200,pitch:50});
+  }).catch(()=>{if(isBooking){window._distKm=haversine(o[1],o[0],d[1],d[0]);window._tripDurationMins=0;updatePrices();}});
 }
 
 geocoder.on('result',e=>{
   const[lng,lat]=e.result.geometry.coordinates;
   const destName=e.result.place_name||e.result.text;
-  window._destName=destName;
-  window._destLng=lng;
-  window._destLat=lat;
-  
+  window._destName=destName;window._destLng=lng;window._destLat=lat;
   if(window._dMk)window._dMk.remove();
   const de=document.createElement('div');de.className='dmarker';
   window._dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
-  
-  drawRoute([wULng,wULat],[lng,lat], true);
-  
+  drawRoute([wULng,wULat],[lng,lat],true);
   setPanelState('expanded');
   document.getElementById('ridesLabel').style.display='block';
-  
-  saveRecentSearch(destName, lng, lat);
-  document.getElementById('recentSearches').style.display='none';
-  
+  document.getElementById('recentSection').style.display='none';
+  document.getElementById('promoBanner').style.display='none';
+  saveRecentSearch(destName,lng,lat);
   const r=window._rides.find(x=>x.id===window._selId);
   const btn=document.getElementById('confirmBtn');btn.style.display='block';btn.textContent=`Book ${r.type}`;
 });
 geocoder.on('clear',()=>{
   if(window._dMk){window._dMk.remove();window._dMk=null;}
   clearRoute();
-  window._destName='';
-  window._destLng=null;
-  window._destLat=null;
+  window._destName='';window._destLng=null;window._destLat=null;
   document.getElementById('confirmBtn').style.display='none';
   document.getElementById('ridesLabel').style.display='none';
   window._distKm=0;window._tripDurationMins=0;
   renderRides(false);
   map.flyTo({center:[wULng,wULat],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
-  
+  document.getElementById('promoBanner').style.display='';
   loadRecentSearches();
 });
+
+/* ── PROMO LOGIC ── */
+window._promoApplied = false;
+window.applyPromo = function(){
+  if(window._promoApplied){window.showToast('Promo RIDE20 already applied! 🎉');return;}
+  if(!window._destName){
+    // Animate the geocoder to focus
+    document.querySelector('.mapboxgl-ctrl-geocoder--input')?.focus();
+    window.showToast('Search for a destination first, then apply promo');
+    return;
+  }
+  window._promoApplied = true;
+  const pill = document.getElementById('promoCodePill');
+  const banner = document.getElementById('promoBanner');
+  pill.textContent = '✓ Applied!';
+  pill.style.background = 'rgba(23,168,90,.12)';
+  pill.style.borderColor = 'rgba(23,168,90,.3)';
+  pill.style.color = 'var(--green)';
+  banner.style.background = 'linear-gradient(120deg,rgba(23,168,90,.07),rgba(23,168,90,.12))';
+  banner.style.borderColor = 'rgba(23,168,90,.25)';
+  document.querySelector('.promo-title').textContent = '20% off applied!';
+  document.querySelector('.promo-sub').textContent = 'Discount on your next booking';
+  updatePrices();
+  window.showToast('🎉 RIDE20 applied — 20% off your ride!');
+};
+
+/* ── RECENT SEARCHES ── */
+function loadRecentSearches(){
+  const searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');
+  const section=document.getElementById('recentSection');
+  const list=document.getElementById('recentList');
+  if(!searches.length){section.style.display='none';return;}
+  section.style.display='block';
+  list.innerHTML=searches.map((s,i)=>`
+    <div class="recent-item" onclick="selectRecentSearch(${JSON.stringify(s.name)},${s.lng},${s.lat})">
+      <div class="recent-icon">🕐</div>
+      <div class="recent-text-wrap">
+        <div class="recent-name">${s.name.split(',').slice(0,2).join(',')}</div>
+        <div class="recent-sub">${s.name.split(',').slice(2,4).join(',').trim()||'Recent'}</div>
+      </div>
+      <div class="recent-arrow">›</div>
+    </div>
+  `).join('');
+}
+
+window.saveRecentSearch=function(name,lng,lat){
+  let searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');
+  searches=searches.filter(s=>s.name!==name);
+  searches.unshift({name,lng,lat});
+  if(searches.length>3)searches=searches.slice(0,3);
+  localStorage.setItem('vx_recent_searches',JSON.stringify(searches));
+};
+
+window.clearRecentSearches=function(){
+  localStorage.removeItem('vx_recent_searches');
+  document.getElementById('recentSection').style.display='none';
+  window.showToast('Recent searches cleared');
+};
+
+window.selectRecentSearch=function(name,lng,lat){
+  window._destName=name;window._destLng=lng;window._destLat=lat;
+  const input=document.querySelector('.mapboxgl-ctrl-geocoder--input');
+  if(input)input.value=name.split(',').slice(0,2).join(',');
+  if(window._dMk)window._dMk.remove();
+  const de=document.createElement('div');de.className='dmarker';
+  window._dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
+  drawRoute([wULng,wULat],[lng,lat],true);
+  setPanelState('expanded');
+  document.getElementById('ridesLabel').style.display='block';
+  document.getElementById('recentSection').style.display='none';
+  document.getElementById('promoBanner').style.display='none';
+  const r=window._rides.find(x=>x.id===window._selId);
+  const btn=document.getElementById('confirmBtn');btn.style.display='block';btn.textContent=`Book ${r.type}`;
+};
 
 /* ── RIDE DATA ── */
 const BASE=[
@@ -1578,18 +1398,20 @@ const BASE=[
 window._rides=BASE.map(r=>({...r,price:r.baseFare,time:'3 min'}));
 window._selId=1;window._distKm=0;window._destName='';window._tripDurationMins=0;
 
-function haversine(la1,lo1,la2,lo2){
-  const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;
-  const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
+function haversine(la1,lo1,la2,lo2){const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
 window.haversine=haversine;
 
 function updatePrices(){
   const km=window._distKm||0;
-  window._rides=BASE.map(r=>({...r,price:Math.round((r.baseFare+r.perKm*km)*10)/10,time:`${3+(r.id-1)} min`,tripTime:window._tripDurationMins?`${window._tripDurationMins} min`:'N/A'}));
+  const discount = window._promoApplied ? 0.8 : 1;
+  window._rides=BASE.map(r=>{
+    const base=Math.round((r.baseFare+r.perKm*km)*10)/10;
+    const final=Math.round(base*discount*10)/10;
+    return{...r,price:final,originalPrice:base,time:`${3+(r.id-1)} min`,tripTime:window._tripDurationMins?`${window._tripDurationMins} min`:'N/A'};
+  });
   renderRides(true);
 }
+
 function renderRides(withDest=false){
   const list=document.getElementById('rideList');
   if(!withDest){list.innerHTML='';return;}
@@ -1599,14 +1421,20 @@ function renderRides(withDest=false){
         <div class="rav">${window.ini2(r.driver)}</div>
         <div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">👤${r.capacity}</span></div><div class="rmeta">${r.specs}</div></div>
       </div>
-      <div style="text-align:right;flex-shrink:0"><div class="rprice">R ${r.price.toFixed(2)}</div><div class="rtbadge">${r.time}</div></div>
+      <div style="text-align:right;flex-shrink:0">
+        ${window._promoApplied&&r.originalPrice?`<div style="font-size:11px;color:var(--muted);text-decoration:line-through;font-weight:500">R ${r.originalPrice.toFixed(2)}</div>`:''}
+        <div class="rprice" style="${window._promoApplied?'color:var(--green)':''}">R ${r.price.toFixed(2)}</div>
+        <div class="rtbadge">${r.time}</div>
+      </div>
     </div>`).join('');
 }
+
 window.selRide=function(id){
   window._selId=id;renderRides(!!window._destName);
   const r=window._rides.find(x=>x.id===id);
   if(window._destName){const btn=document.getElementById('confirmBtn');btn.textContent=`Book ${r.type}`;}
 };
+
 window.openModal=function(){
   if(!window._destName){window.showToast('Search for a destination first');return;}
   const r=window._rides.find(x=>x.id===window._selId);
@@ -1615,7 +1443,16 @@ window.openModal=function(){
   document.getElementById('m-eta').textContent=r.time;
   document.getElementById('m-trip-time').textContent=r.tripTime||'N/A';
   document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
-  document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+  if(window._promoApplied&&r.originalPrice){
+    document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+    document.getElementById('m-fare').style.color='var(--green)';
+    document.getElementById('m-discount').textContent=`-R ${(r.originalPrice-r.price).toFixed(2)}`;
+    document.getElementById('promoAppliedRow').style.display='';
+  }else{
+    document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+    document.getElementById('m-fare').style.color='var(--blue)';
+    document.getElementById('promoAppliedRow').style.display='none';
+  }
   document.getElementById('confirmModal').classList.add('show');
 };
 window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
@@ -1624,177 +1461,257 @@ window.closeTopUpModal=()=>document.getElementById('topUpModal').classList.remov
 
 /* ── SEARCH TIMER ── */
 window.startSearchTimer=function(){
-  const overlay=document.getElementById('searchOverlay');
-  overlay.classList.add('show');
-  
-  // Reset UI
+  const overlay=document.getElementById('searchOverlay');overlay.classList.add('show');
   document.getElementById('searchTitle').textContent='Finding your driver…';
   document.getElementById('searchSub').textContent='Pinging nearby drivers. If no one accepts within 60 seconds, the request will timeout.';
   document.getElementById('searchProgressWrap').style.display='flex';
   document.getElementById('cancelSearchBtn').style.display='block';
   document.getElementById('timeoutActions').style.display='none';
-
   let t=60;
   const circle=document.getElementById('searchProgress'),txt=document.getElementById('searchTimerTxt');
-  circle.style.transition='none';
-  circle.style.strokeDashoffset='0';
-  
-  // Trigger reflow
-  void circle.offsetWidth;
-  setTimeout(()=>circle.style.transition='stroke-dashoffset 1s linear', 50);
-  
+  circle.style.transition='none';circle.style.strokeDashoffset='0';void circle.offsetWidth;
+  setTimeout(()=>circle.style.transition='stroke-dashoffset 1s linear',50);
   txt.textContent='60s';
-
   clearInterval(window._searchInterval);
-  window._searchInterval=setInterval(()=>{
-    t--;
-    txt.textContent=t+'s';
-    circle.style.strokeDashoffset=(283-(t/60)*283);
-    if(t<=0){
-      clearInterval(window._searchInterval);
-      window.showSearchTimeout();
-    }
-  },1000);
+  window._searchInterval=setInterval(()=>{t--;txt.textContent=t+'s';circle.style.strokeDashoffset=(283-(t/60)*283);if(t<=0){clearInterval(window._searchInterval);window.showSearchTimeout();}},1000);
 };
+window.showSearchTimeout=function(){document.getElementById('searchTitle').textContent='No drivers available';document.getElementById('searchSub').textContent='All nearby drivers are currently busy. Would you like to keep trying?';document.getElementById('searchProgressWrap').style.display='none';document.getElementById('cancelSearchBtn').style.display='none';document.getElementById('timeoutActions').style.display='flex';};
+window.retrySearch=async function(){if(window.activeRideReqId&&window.db){try{const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId),{createdAt:Date.now()});}catch(e){}}window.startSearchTimer();};
+window.cancelSearch=async function(msg='Search cancelled'){clearInterval(window._searchInterval);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='flex';window.showToast(msg);if(window.activeRideReqId&&window.db){try{const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);const s=await fbGet(r);if(s.exists()&&s.val().status==='pending')await fbRemove(r);}catch(e){}window.activeRideReqId=null;}};
 
-window.showSearchTimeout=function(){
-  document.getElementById('searchTitle').textContent='No drivers available';
-  document.getElementById('searchSub').textContent='All nearby drivers are currently busy. Would you like to keep trying?';
-  document.getElementById('searchProgressWrap').style.display='none';
-  document.getElementById('cancelSearchBtn').style.display='none';
-  document.getElementById('timeoutActions').style.display='flex';
-};
+/* ══════════════════════════════════════════════
+   ULTRA-SMOOTH DRAG ENGINE
+   Physics model:
+   - Track velocity over last 80ms of gesture
+   - After release: project 200ms of momentum
+   - Snap to nearest anchor considering momentum
+   - Use spring curve for snap animation
+   - GPU compositing: transform3d, will-change
+   - Inhibit map touch events while dragging
+══════════════════════════════════════════════ */
 
-window.retrySearch=async function(){
-  if(window.activeRideReqId && window.db){
-    try{
-      const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
-      await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId), {createdAt:Date.now()});
-    }catch(e){}
+/* Snap positions for booking panel (translateY px from bottom of panel-full) */
+function getSnapPositions(panelFullPx){
+  return{
+    collapsed: panelFullPx - 92,   // only handle visible
+    mid:       panelFullPx - (window.innerHeight * 0.54),
+    expanded:  0
+  };
+}
+function getActiveSnapPositions(panelFullPx){
+  return{
+    collapsed: panelFullPx - 118,
+    mid:       panelFullPx - (window.innerHeight * 0.44),
+    expanded:  0
+  };
+}
+
+function getPanelFullPx(){return window.innerHeight * 0.8;}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+
+/* Determine closest snap anchor given position + velocity */
+function findSnap(pos, vel, snapPos){
+  // Project where finger would land with momentum
+  const projected = pos + vel * 0.15; // ~150ms momentum carry
+  const names=Object.keys(snapPos);
+  let best=names[0],bestDist=Infinity;
+  for(const name of names){
+    const dist=Math.abs(snapPos[name]-projected);
+    if(dist<bestDist){bestDist=dist;best=name;}
   }
-  window.startSearchTimer();
-};
+  return best;
+}
 
-window.cancelSearch=async function(msg='Search cancelled'){
-  clearInterval(window._searchInterval);
-  document.getElementById('searchOverlay').classList.remove('show');
-  document.getElementById('bookPanel').style.display='flex';
-  window.showToast(msg);
-  if(window.activeRideReqId&&window.db){
-    try{
-      const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
-      const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);
-      const s=await fbGet(r);
-      if(s.exists()&&s.val().status==='pending')await fbRemove(r);
-    }catch(e){}
-    window.activeRideReqId=null;
-  }
-};
-
-/* ── PANEL DRAG GLOBALS ── */
-function getPanelFullPx(){return window.innerHeight*.8;}
-function updateMapClickZone(){
-  const pOpen = panelState !== 'collapsed' && document.getElementById('bookPanel').style.display !== 'none';
-  const aOpen = activePanelState !== 'collapsed' && document.getElementById('activeRidePanel').style.display !== 'none';
-  document.getElementById('mapClickZone').classList.toggle('active', pOpen || aOpen);
+function applyTransform(el,y){
+  el.style.transform=`translateY(${y}px) translateZ(0)`;
 }
 
 /* ── BOOKING PANEL DRAG ── */
-let panelState='mid',isDragging=false,dragStartY=0,dragStartT=0,currentT=0;
-const panel=document.getElementById('bookPanel');
+(function(){
+  const panel=document.getElementById('bookPanel');
+  const handle=document.getElementById('panelDragHandle');
+  const bar=document.getElementById('dragHandleBar');
+  if(!handle||!panel)return;
 
-function setPanelState(state,animate=true){
-  if(window.innerWidth>=900)return;
-  panelState=state;
-  const h=document.getElementById('panelDragHandle');
-  if(h)h.querySelector('.drag-handle').style.width=state==='expanded'?'52px':'38px';
-  panel.style.transition=animate?'transform .42s var(--ease-smooth)':'none';
-  panel.classList.remove('collapsed','mid','expanded');
-  panel.classList.add(state);
-  updateMapClickZone();
-  setTimeout(()=>map.resize(),450);
-}
+  let state='mid';
+  let dragging=false;
+  let startY=0, startT=0, curY=0;
+  let velHistory=[]; // [{t, y}]
 
-const dh=document.getElementById('panelDragHandle');
-dh.addEventListener('touchstart',e=>{
-  if(window.innerWidth>=900)return;
-  isDragging=true;dragStartY=e.touches[0].clientY;
-  const style = window.getComputedStyle(panel);
-  const matrix = new DOMMatrixReadOnly(style.transform);
-  dragStartT = matrix.m42 || 0;
-  panel.style.transition='none';
-},{passive:true});
+  function setStateDirect(name, animate=true){
+    if(window.innerWidth>=900)return;
+    state=name;
+    const snapPos=getSnapPositions(getPanelFullPx());
+    const targetY=snapPos[name];
+    if(animate){
+      panel.classList.add('animating');
+      setTimeout(()=>panel.classList.remove('animating'),460);
+    }
+    applyTransform(panel,targetY);
+    panel.className=panel.className.replace(/snap-\w+/g,'').trim();
+    panel.classList.add(`snap-${name}`);
+    // Rubber band handle
+    bar.style.width=name==='collapsed'?'40px':'52px';
+    bar.style.background=name==='collapsed'?'var(--border)':'var(--blue2)';
+    updateMapClickZone();
+    setTimeout(()=>map.resize(),460);
+  }
+  window.setPanelState=setStateDirect;
 
-document.addEventListener('touchmove',e=>{
-  if(!isDragging)return;
-  const dy=e.touches[0].clientY-dragStartY;
-  const maxT = getPanelFullPx() - 110; 
-  currentT=Math.max(0,Math.min(maxT,dragStartT+dy));
-  panel.style.transform=`translateY(${currentT}px)`;
-},{passive:true});
+  function getVelocity(){
+    const now=performance.now();
+    const recent=velHistory.filter(e=>now-e.t<80);
+    if(recent.length<2)return 0;
+    const oldest=recent[0],newest=recent[recent.length-1];
+    return(newest.y-oldest.y)/(newest.t-oldest.t);
+  }
 
-document.addEventListener('touchend',()=>{
-  if(!isDragging)return;
-  isDragging=false;
-  panel.style.transform=''; 
-  const ratio=currentT/getPanelFullPx();
-  if(ratio>0.55)setPanelState('collapsed');
-  else if(ratio>0.15)setPanelState('mid');
-  else setPanelState('expanded');
-});
-setTimeout(()=>setPanelState('mid',false),100);
+  function onTouchStart(e){
+    if(window.innerWidth>=900)return;
+    dragging=true;
+    startY=e.touches[0].clientY;
+    startT=performance.now();
+    velHistory=[];
+    const snapPos=getSnapPositions(getPanelFullPx());
+    curY=snapPos[state]||0;
+    panel.classList.remove('animating');
+    bar.classList.add('active');
+    e.stopPropagation();
+  }
+  function onTouchMove(e){
+    if(!dragging)return;
+    const snapPos=getSnapPositions(getPanelFullPx());
+    const minY=0, maxY=snapPos.collapsed;
+    const raw=curY+(e.touches[0].clientY-startY);
+    // Rubber-band overscroll: resist beyond bounds
+    let y;
+    if(raw<minY){ y=minY-(minY-raw)*0.2; }
+    else if(raw>maxY){ y=maxY+(raw-maxY)*0.25; }
+    else{ y=raw; }
+    applyTransform(panel,y);
+    velHistory.push({t:performance.now(),y:e.touches[0].clientY});
+    if(velHistory.length>20)velHistory.shift();
+    e.preventDefault();
+  }
+  function onTouchEnd(){
+    if(!dragging)return;
+    dragging=false;
+    bar.classList.remove('active');
+    const style=window.getComputedStyle(panel);
+    const matrix=new DOMMatrixReadOnly(style.transform);
+    const currentY=matrix.m42||0;
+    const vel=getVelocity(); // px/ms
+    const snapPos=getSnapPositions(getPanelFullPx());
+    const snap=findSnap(currentY,vel*120,snapPos); // scale vel for projection
+    setStateDirect(snap,true);
+  }
+
+  handle.addEventListener('touchstart',onTouchStart,{passive:false});
+  document.addEventListener('touchmove',e=>{if(dragging)onTouchMove(e);},{passive:false});
+  document.addEventListener('touchend',onTouchEnd,{passive:true});
+  document.addEventListener('touchcancel',onTouchEnd,{passive:true});
+
+  // Init
+  setTimeout(()=>setStateDirect('mid',false),120);
+})();
 
 /* ── ACTIVE RIDE PANEL DRAG ── */
-let activePanelState='mid',activeIsDragging=false,activeDragStartY=0,activeDragStartT=0,activeCurrentT=0;
-const activePanel=document.getElementById('activeRidePanel');
+(function(){
+  const panel=document.getElementById('activeRidePanel');
+  const handle=document.getElementById('activeDragHandle');
+  const bar=document.getElementById('activeDragBar');
+  if(!handle||!panel)return;
 
-window.setActivePanelState = function(state,animate=true){
-  if(window.innerWidth>=900)return;
-  activePanelState=state;
-  const h=document.getElementById('activeDragHandle');
-  if(h)h.querySelector('.active-drag').style.width=state==='expanded'?'52px':'38px';
-  activePanel.style.transition=animate?'transform .42s var(--ease-smooth)':'none';
-  activePanel.classList.remove('collapsed','mid','expanded');
-  activePanel.classList.add(state);
-  updateMapClickZone();
-  setTimeout(()=>map.resize(),450);
-};
+  let state='mid';
+  let dragging=false;
+  let startY=0, curY=0;
+  let velHistory=[];
 
-const adh=document.getElementById('activeDragHandle');
-if(adh){
-  adh.addEventListener('touchstart',e=>{
+  function setStateDirect(name,animate=true){
     if(window.innerWidth>=900)return;
-    activeIsDragging=true;activeDragStartY=e.touches[0].clientY;
-    const style = window.getComputedStyle(activePanel);
-    const matrix = new DOMMatrixReadOnly(style.transform);
-    activeDragStartT = matrix.m42 || 0;
-    activePanel.style.transition='none';
-  },{passive:true});
+    state=name;
+    const snapPos=getActiveSnapPositions(getPanelFullPx());
+    const targetY=snapPos[name];
+    if(animate){panel.classList.add('animating');setTimeout(()=>panel.classList.remove('animating'),460);}
+    applyTransform(panel,targetY);
+    panel.className=panel.className.replace(/snap-\w+/g,'').trim();
+    panel.classList.add(`snap-${name}`);
+    bar.style.width=name==='collapsed'?'40px':'52px';
+    bar.style.background=name==='collapsed'?'var(--border)':'var(--blue2)';
+    updateMapClickZone();
+    setTimeout(()=>map.resize(),460);
+  }
+  window.setActivePanelState=setStateDirect;
 
-  document.addEventListener('touchmove',e=>{
-    if(!activeIsDragging)return;
-    const dy=e.touches[0].clientY-activeDragStartY;
-    const maxT = getPanelFullPx() - 130; 
-    activeCurrentT=Math.max(0,Math.min(maxT,activeDragStartT+dy));
-    activePanel.style.transform=`translateY(${activeCurrentT}px)`;
-  },{passive:true});
+  function getVelocity(){
+    const now=performance.now();
+    const recent=velHistory.filter(e=>now-e.t<80);
+    if(recent.length<2)return 0;
+    const oldest=recent[0],newest=recent[recent.length-1];
+    return(newest.y-oldest.y)/(newest.t-oldest.t);
+  }
 
-  document.addEventListener('touchend',()=>{
-    if(!activeIsDragging)return;
-    activeIsDragging=false;
-    activePanel.style.transform=''; 
-    const ratio=activeCurrentT/getPanelFullPx();
-    if(ratio>0.6)setActivePanelState('collapsed');
-    else if(ratio>0.2)setActivePanelState('mid');
-    else setActivePanelState('expanded');
-  });
+  function onTouchStart(e){
+    if(window.innerWidth>=900)return;
+    dragging=true;
+    startY=e.touches[0].clientY;
+    velHistory=[];
+    const snapPos=getActiveSnapPositions(getPanelFullPx());
+    curY=snapPos[state]||0;
+    panel.classList.remove('animating');
+    bar.classList.add('dragging-active');
+    e.stopPropagation();
+  }
+  function onTouchMove(e){
+    if(!dragging)return;
+    const snapPos=getActiveSnapPositions(getPanelFullPx());
+    const minY=0,maxY=snapPos.collapsed;
+    const raw=curY+(e.touches[0].clientY-startY);
+    let y;
+    if(raw<minY){y=minY-(minY-raw)*0.2;}
+    else if(raw>maxY){y=maxY+(raw-maxY)*0.25;}
+    else{y=raw;}
+    applyTransform(panel,y);
+    velHistory.push({t:performance.now(),y:e.touches[0].clientY});
+    if(velHistory.length>20)velHistory.shift();
+    e.preventDefault();
+  }
+  function onTouchEnd(){
+    if(!dragging)return;
+    dragging=false;
+    bar.classList.remove('dragging-active');
+    const style=window.getComputedStyle(panel);
+    const matrix=new DOMMatrixReadOnly(style.transform);
+    const currentY=matrix.m42||0;
+    const vel=getVelocity();
+    const snapPos=getActiveSnapPositions(getPanelFullPx());
+    const snap=findSnap(currentY,vel*120,snapPos);
+    setStateDirect(snap,true);
+  }
+
+  handle.addEventListener('touchstart',onTouchStart,{passive:false});
+  document.addEventListener('touchmove',e=>{if(dragging)onTouchMove(e);},{passive:false});
+  document.addEventListener('touchend',onTouchEnd,{passive:true});
+  document.addEventListener('touchcancel',onTouchEnd,{passive:true});
+})();
+
+/* ── MAP CLICK ZONE ── */
+function updateMapClickZone(){
+  const bookEl=document.getElementById('bookPanel');
+  const activeEl=document.getElementById('activeRidePanel');
+  const bookVisible=bookEl.style.display!=='none';
+  const activeVisible=activeEl.style.display==='flex';
+  const bookCollapsed=bookEl.classList.contains('snap-collapsed');
+  const activeCollapsed=activeEl.classList.contains('snap-collapsed');
+  const open=(bookVisible&&!bookCollapsed)||(activeVisible&&!activeCollapsed);
+  document.getElementById('mapClickZone').classList.toggle('active',open);
 }
+window.updateMapClickZone=updateMapClickZone;
 
 window.collapsePanel=function(){
-  if(panelState!=='collapsed')setPanelState('collapsed');
-  if(activePanelState!=='collapsed')setActivePanelState('collapsed');
+  if(window.setPanelState)window.setPanelState('collapsed');
+  if(window.setActivePanelState)window.setActivePanelState('collapsed');
 };
-function expandPanel(){setPanelState('mid');}
 
 /* ── TABS ── */
 const TABS=['ride','trips','wallet','account'];
