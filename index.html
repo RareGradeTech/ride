@@ -939,7 +939,7 @@ function listenToActiveRide(rideId){
   rideReqUnsub=onValue(ref(db,`ride_requests/${rideId}`),snap=>{
     const data=snap.val();
     if(!data){
-      if(activeRideReqId){handleRideCanceled('driver');}
+      if(activeRideReqId){handleRideCanceled('driver', 'Ride was deleted from server');}
       return;
     }
     
@@ -1009,7 +1009,8 @@ function listenToActiveRide(rideId){
       }
     }
     if(data.status==='canceled_by_driver'){
-      handleRideCanceled('driver');
+      // Passes the cancelReason explicitly saved by the driver to the handler
+      handleRideCanceled('driver', data.cancelReason);
     }
     if(data.status==='completed'){
       resetToBooking();
@@ -1037,7 +1038,7 @@ function showDriverAccepted(data){
   window.showToast('🎉 Driver accepted! Track them on the map.');
 }
 
-function handleRideCanceled(by){
+function handleRideCanceled(by, reason = ''){
   if(!activeRideReqId)return;
   if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
   if(chatUnsub){chatUnsub();chatUnsub=null;}
@@ -1046,8 +1047,16 @@ function handleRideCanceled(by){
   resetToBooking();
   if(by==='driver'){
     const b=document.getElementById('driverCanceledBanner');
+    
+    // Update banner text dynamically with reason if available
+    if (reason) {
+      b.innerHTML = `🚗 Driver cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`;
+    } else {
+      b.textContent = `🚗 Your driver cancelled. Please rebook your ride.`;
+    }
+    
     b.classList.add('show');
-    setTimeout(()=>b.classList.remove('show'),6000);
+    setTimeout(()=>b.classList.remove('show'),7000);
   }
 }
 
