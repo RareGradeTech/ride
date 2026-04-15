@@ -918,17 +918,18 @@ function listenToActiveRide(rideId){
       if(activeRideReqId){handleRideCanceled('driver');}
       return;
     }
-    const isShowing = window.innerWidth >= 900 
-      ? document.getElementById('activeRidePanel').classList.contains('show')
-      : activePanelState !== 'collapsed'; // Check mobile state
+    
+    // FIX: Check if the panel is actually rendered in the DOM, rather than checking the mobile drag state variable.
+    const isPanelActive = document.getElementById('activeRidePanel').style.display === 'flex';
 
-    if(data.status==='accepted' && !isShowing){
+    if(data.status==='accepted' && !isPanelActive){
       showDriverAccepted(data);
       document.getElementById('searchOverlay').classList.remove('show');
       document.getElementById('bookPanel').style.display='none';
       clearInterval(window._searchInterval);
       clearTimeout(window._searchTimeout);
     }
+    
     if(data.status==='accepted'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
       if(data.driverAv)document.getElementById('adAv').textContent=ini2(data.driverName||'D');
