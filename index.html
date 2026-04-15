@@ -756,7 +756,7 @@ body.yoco-active .bnav {
     <button class="gs-google-btn" id="gsGoogleBtn">
       <svg width="20" height="20" viewBox="0 0 48 48">
         <path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
-        <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/>
+        <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
         <path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/>
         <path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/>
       </svg>
@@ -815,10 +815,9 @@ body.yoco-active .bnav {
     <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
     <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare">—</b></div>
-    <div class="mbtns" style="display:flex; flex-direction:column; gap:11px; margin-top:20px;">
-      <button class="mok" onclick="initiateRidePayment('card')" style="width:100%;">Pay with Card</button>
-      <button class="mok" onclick="initiateRidePayment('cash')" style="width:100%; background:var(--green); border-color:var(--green);">Book with Cash</button>
-      <button class="mcancel" onclick="closeModal()" style="width:100%;">Cancel</button>
+    <div class="mbtns">
+      <button class="mcancel" onclick="closeModal()">Cancel</button>
+      <button class="mok" id="bookBtn" onclick="initiateRidePayment()">Pay & Book <span class="spin" id="bspin"></span></button>
     </div>
   </div>
 </div>
@@ -1384,65 +1383,56 @@ onAuthStateChanged(auth,async u=>{
 function renderTrips(list){
   const el=document.getElementById('tripsList');
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
-  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px; font-weight:600; padding:2px 6px; border-radius:10px; background:rgba(0,0,0,0.05);">${t.paymentMethod || 'Card'}</span></div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
+  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type}</div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
 }
 function renderTx(obj){
   const el=document.getElementById('txList'),list=Object.values(obj).reverse();
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
-window.initiateRidePayment = async function(method = 'card') {
+window.initiateRidePayment = async function(){
   if(!cu) { window.showToast('Please sign in first'); return; }
   const r = window._rides.find(x => x.id === window._selId);
-  
-  const processBooking = async (paymentType) => {
-    try {
-      const dest = window._destName.split(',').slice(0,2).join(',');
-      
-      await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now(), paymentMethod: paymentType});
-      
-      if (paymentType === 'Card') {
+  window.triggerYocoPayment(
+    r.price, `Ride: ${r.type}`,
+    async (token) => {
+      try {
+        const dest = window._destName.split(',').slice(0,2).join(',');
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now()});
         await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()});
-      }
+        // ── Write ride request so drivers can see & accept it ──────────
+        const secPin = Math.floor(1000 + Math.random() * 9000).toString();
+        const rideReqRef = await push(ref(db,'ride_requests'),{
+          status:'pending',
+          riderUid: cu.uid,
+          riderName: cu.displayName || 'Rider',
+          rideType: r.type,
+          fare: r.price,
+          pickup: document.getElementById('originLabel').textContent || 'Current Location',
+          destination: window._destName,
+          distKm: window._distKm || 0,
+          tripMins: window._tripDurationMins || 0,
+          capacity: r.capacity || 4,
+          securityPin: secPin,
+          createdAt: Date.now()
+        });
+        window._activeRideReqId = rideReqRef.key;
 
-      // ── Write ride request so drivers can see & accept it ──────────
-      const secPin = Math.floor(1000 + Math.random() * 9000).toString();
-      const rideReqRef = await push(ref(db,'ride_requests'),{
-        status:'pending',
-        riderUid: cu.uid,
-        riderName: cu.displayName || 'Rider',
-        rideType: r.type,
-        fare: r.price,
-        pickup: document.getElementById('originLabel').textContent || 'Current Location',
-        destination: window._destName,
-        distKm: window._distKm || 0,
-        tripMins: window._tripDurationMins || 0,
-        capacity: r.capacity || 4,
-        securityPin: secPin,
-        paymentMethod: paymentType,
-        createdAt: Date.now()
-      });
-      window._activeRideReqId = rideReqRef.key;
-      // ───────────────────────────────────────────────────────────────
-      
-      document.getElementById('confirmModal').classList.remove('show');
-      document.getElementById('bookPanel').style.display = 'none';
-      if(window._mapFly) window._mapFly();
-      window.startSearchTimer();
-    } catch(e) { window.showToast('Database error after payment.'); }
-  };
-
-  if (method === 'card') {
-    window.triggerYocoPayment(
-      r.price, `Ride: ${r.type}`,
-      async (token) => {
-        await processBooking('Card');
-      },
-      'confirmModal'
-    );
-  } else if (method === 'cash') {
-    await processBooking('Cash');
-  }
+        // ── Listen for driver acceptance ──────────
+        onValue(rideReqRef, (snap) => {
+          const reqData = snap.val();
+          if (reqData && reqData.status === 'accepted') {
+            if (window.handleDriverAccepted) window.handleDriverAccepted(reqData, secPin);
+          }
+        });
+        // ───────────────────────────────────────────────────────────────
+        document.getElementById('bookPanel').style.display = 'none';
+        if(window._mapFly) window._mapFly();
+        window.startSearchTimer();
+      } catch(e) { window.showToast('Database error after payment.'); }
+    },
+    'confirmModal'
+  );
 };
 window.executeYocoTopUp = async function() {
   if(!cu) { window.showToast("Sign in first."); return; }
@@ -1590,6 +1580,8 @@ function drawRoute(o,d){
       updatePrices();
     }).catch(()=>{ window._distKm=haversine(wULat,wULng,d[1],d[0]); window._tripDurationMins=0; updatePrices(); });
 }
+// Expose these for our acceptance listener
+window.drawRoute = drawRoute;
 geocoder.on('result',e=>{
   const[lng,lat]=e.result.geometry.coordinates;
   destName=e.result.place_name||e.result.text;
@@ -1623,6 +1615,9 @@ function haversine(la1,lo1,la2,lo2){
   const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
+// Expose for our acceptance listener
+window.haversine = haversine;
+
 function updatePrices(){
   const km=window._distKm||0;
   window._rides=BASE.map(r=>({
@@ -1664,6 +1659,38 @@ window.openModal=function(){
 window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
 window.openTopUpModal = () => document.getElementById('topUpModal').classList.add('show');
 window.closeTopUpModal = () => document.getElementById('topUpModal').classList.remove('show');
+
+// ── NEW: DRIVER ACCEPTED HANDLER ────────────────────────────────────
+window.handleDriverAccepted = function(data, fallbackPin) {
+  clearInterval(searchInterval);
+  clearTimeout(searchTimeout);
+  document.getElementById('searchOverlay').classList.remove('show');
+
+  const ap = document.getElementById('activeRidePanel');
+  if (!ap.classList.contains('show')) {
+    ap.style.display = 'flex';
+    setTimeout(() => ap.classList.add('show'), 10);
+    window.showToast('Driver accepted your ride!');
+  }
+
+  if (data.driverName) document.getElementById('adName').textContent = data.driverName;
+  if (data.driverCar) document.getElementById('adCar').textContent = data.driverCar;
+  if (data.driverPlate) document.getElementById('adPlate').textContent = data.driverPlate;
+
+  const pinEl = document.querySelectorAll('.ad-m-val')[2];
+  if (pinEl) pinEl.textContent = data.securityPin || fallbackPin;
+
+  const distEl = document.getElementById('adDist');
+  if (data.driverLat && data.driverLng) {
+     const d = window.haversine(wULat, wULng, data.driverLat, data.driverLng);
+     if (distEl) distEl.textContent = d.toFixed(1) + ' km';
+     window.drawRoute([data.driverLng, data.driverLat], [wULng, wULat]); // Draws mapbox route from driver to you
+  } else if (distEl) {
+     distEl.textContent = (window._distKm || 1.2).toFixed(1) + ' km';
+  }
+};
+// ──────────────────────────────────────────────────────────────────
+
 window.cancelSearch = function(msg = 'Search cancelled.') {
   clearInterval(searchInterval); clearTimeout(searchTimeout);
   document.getElementById('searchOverlay').classList.remove('show');
