@@ -156,6 +156,11 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .cancel-search-btn{margin-top:40px;padding:14px 32px;border-radius:20px;background:rgba(229,53,53,.1);color:var(--red);font-weight:700;font-size:15px;border:none;cursor:pointer;transition:background .2s;font-family:'Outfit',sans-serif}
 .cancel-search-btn:active{background:rgba(229,53,53,.2)}
 
+/* New Retry Styles */
+.search-actions { display:flex; flex-direction:column; gap:12px; margin-top:32px; width:100%; max-width:280px; }
+.retry-btn { width:100%; padding:16px; border-radius:20px; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff; font-weight:800; font-size:15px; border:none; cursor:pointer; transition:transform .18s, box-shadow .18s; font-family:'Outfit',sans-serif; box-shadow:0 6px 20px var(--glow); }
+.retry-btn:active { transform:scale(.96); box-shadow:0 2px 10px var(--glow); }
+
 /* ACTIVE RIDE PANEL */
 .active-panel{
   position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);
@@ -668,13 +673,19 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 </div>
 
 <div class="search-overlay" id="searchOverlay">
-  <div class="circular-progress">
+  <div class="circular-progress" id="searchProgressWrap">
     <svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="45"></circle><circle class="circ-fill" id="searchProgress" cx="50" cy="50" r="45"></circle></svg>
     <div class="time-left" id="searchTimerTxt">60s</div>
   </div>
-  <div class="search-title">Finding your driver…</div>
-  <div class="search-sub">Pinging nearby drivers. If no one accepts within 60 seconds, the request will cancel automatically.</div>
-  <button class="cancel-search-btn" onclick="cancelSearch('Search cancelled by you')">Cancel Request</button>
+  <div class="search-title" id="searchTitle">Finding your driver…</div>
+  <div class="search-sub" id="searchSub">Pinging nearby drivers. If no one accepts within 60 seconds, the request will timeout.</div>
+  
+  <button class="cancel-search-btn" id="cancelSearchBtn" onclick="cancelSearch('Search cancelled by you')">Cancel Request</button>
+  
+  <div class="search-actions" id="timeoutActions" style="display:none;">
+    <button class="retry-btn" onclick="retrySearch()">Try Again</button>
+    <button class="cancel-search-btn" style="margin-top:0" onclick="cancelSearch('Search cancelled')">Cancel Request</button>
+  </div>
 </div>
 
 <div class="driver-canceled-banner" id="driverCanceledBanner">🚗 Your driver cancelled. Please rebook your ride.</div>
@@ -941,7 +952,6 @@ function listenToActiveRide(rideId){
       document.getElementById('searchOverlay').classList.remove('show');
       document.getElementById('bookPanel').style.display='none';
       clearInterval(window._searchInterval);
-      clearTimeout(window._searchTimeout);
     }
     
     if(data.status==='accepted' || data.status==='in_progress'){
@@ -1190,7 +1200,6 @@ window.initiateRidePayment=async function(method='card'){
       document.getElementById('confirmModal').classList.remove('show');
       document.getElementById('bookPanel').style.display='none';
       window.startSearchTimer();
-      listenToActiveRide(activeRideReqId);
     }catch(e){window.showToast('Error creating ride request');}
   };
   if(method==='card'){
@@ -1522,15 +1531,59 @@ window.closeTopUpModal=()=>document.getElementById('topUpModal').classList.remov
 
 /* ── SEARCH TIMER ── */
 window.startSearchTimer=function(){
-  const overlay=document.getElementById('searchOverlay');overlay.classList.add('show');
-  let t=60;const circle=document.getElementById('searchProgress'),txt=document.getElementById('searchTimerTxt');
-  circle.style.strokeDashoffset='0';txt.textContent='60s';
-  clearInterval(window._searchInterval);clearTimeout(window._searchTimeout);
-  window._searchInterval=setInterval(()=>{t--;txt.textContent=t+'s';circle.style.strokeDashoffset=(283-(t/60)*283);if(t<=0)clearInterval(window._searchInterval);},1000);
-  window._searchTimeout=setTimeout(()=>window.cancelSearch('No drivers found. Please try again.'),60000);
+  const overlay=document.getElementById('searchOverlay');
+  overlay.classList.add('show');
+  
+  // Reset UI
+  document.getElementById('searchTitle').textContent='Finding your driver…';
+  document.getElementById('searchSub').textContent='Pinging nearby drivers. If no one accepts within 60 seconds, the request will timeout.';
+  document.getElementById('searchProgressWrap').style.display='flex';
+  document.getElementById('cancelSearchBtn').style.display='block';
+  document.getElementById('timeoutActions').style.display='none';
+
+  let t=60;
+  const circle=document.getElementById('searchProgress'),txt=document.getElementById('searchTimerTxt');
+  circle.style.transition='none';
+  circle.style.strokeDashoffset='0';
+  
+  // Trigger reflow
+  void circle.offsetWidth;
+  setTimeout(()=>circle.style.transition='stroke-dashoffset 1s linear', 50);
+  
+  txt.textContent='60s';
+
+  clearInterval(window._searchInterval);
+  window._searchInterval=setInterval(()=>{
+    t--;
+    txt.textContent=t+'s';
+    circle.style.strokeDashoffset=(283-(t/60)*283);
+    if(t<=0){
+      clearInterval(window._searchInterval);
+      window.showSearchTimeout();
+    }
+  },1000);
 };
+
+window.showSearchTimeout=function(){
+  document.getElementById('searchTitle').textContent='No drivers available';
+  document.getElementById('searchSub').textContent='All nearby drivers are currently busy. Would you like to keep trying?';
+  document.getElementById('searchProgressWrap').style.display='none';
+  document.getElementById('cancelSearchBtn').style.display='none';
+  document.getElementById('timeoutActions').style.display='flex';
+};
+
+window.retrySearch=async function(){
+  if(window.activeRideReqId && window.db){
+    try{
+      const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
+      await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId), {createdAt:Date.now()});
+    }catch(e){}
+  }
+  window.startSearchTimer();
+};
+
 window.cancelSearch=async function(msg='Search cancelled'){
-  clearInterval(window._searchInterval);clearTimeout(window._searchTimeout);
+  clearInterval(window._searchInterval);
   document.getElementById('searchOverlay').classList.remove('show');
   document.getElementById('bookPanel').style.display='flex';
   window.showToast(msg);
