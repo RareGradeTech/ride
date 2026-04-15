@@ -4,279 +4,426 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>VynixRide</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.4.0/mapbox-gl.js"></script>
 <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
 <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <style>
-:root{ --blue:#1A3BFF;--blue2:#4A6CFF;--glow:rgba(26,59,255,.2); --ink:#0C0C14;--bg:#EEF0FA;--card:#fff;--muted:#7C7C96; --border:#E2E4F0;--green:#17A85A;--red:#E53535;--nav-h:72px;}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg);}
-iframe[src*="yoco"], div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, .yoco-overlay { z-index: 2147483647 !important; }
-@media(min-width:900px){ .yoco-popup, .yoco-modal, div[class*="yoco-popup"], div[id*="yoco-popup"] { left: auto !important; right: 40px !important; transform: none !important; } }
-body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, body.yoco-active .bnav { z-index: 0 !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-.shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative;}
-.init-loader { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.4s; }
-.init-loader.hide { opacity: 0; pointer-events: none; }
-.loader-spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: sp 0.8s linear infinite; margin-bottom: 16px; }
-.sidebar{ display:none; width:80px; background:var(--card); border-right:1px solid var(--border); flex-direction:column; padding:26px 14px; z-index:60; flex-shrink:0; transition:width .32s cubic-bezier(.4,0,.2,1), padding .32s cubic-bezier(.4,0,.2,1); overflow:hidden; white-space:nowrap; }
-@media(min-width:900px){.sidebar{display:flex;}}
-.sidebar:hover{ width:270px; padding:26px 20px; box-shadow:4px 0 28px rgba(0,0,0,.06); }
-.logo{ font-family:'Outfit',sans-serif;font-size:20px;font-weight:800;color:var(--blue); display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px; min-width:240px; }
-.logo-mark{ width:38px;height:38px;background:var(--blue);border-radius:10px; display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px; font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow); }
-.l-txt{ opacity:0;transition:opacity .18s .1s; font-size:19px;letter-spacing:-.4px;font-weight:800; }
-.sidebar:hover .l-txt{opacity:1;}
-.nl{ display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px; color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s; margin-bottom:4px;min-width:240px; }
-.nl svg{flex-shrink:0;width:22px;height:22px;}
-.nl:hover{background:rgba(26,59,255,.05);color:var(--blue);}
-.nl.act{background:rgba(26,59,255,.09);color:var(--blue);font-weight:600;}
-.n-txt{opacity:0;transition:opacity .18s .1s;font-size:15px;}
-.sidebar:hover .n-txt{opacity:1;}
-.nav-spacer{flex:1;}
-.user-mini{ display:flex;align-items:center;gap:14px;padding:11px 11px; background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer; transition:.17s;min-width:240px; }
-.user-mini:hover{background:rgba(26,59,255,.07);}
-.av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff; display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
-.user-txt{ opacity:0;transition:opacity .18s .1s; display:flex;flex-direction:column;overflow:hidden; }
-.sidebar:hover .user-txt{opacity:1;}
-.user-txt .u-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
-.user-txt .u-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;}
-.map-wrap{flex:1;position:relative;height:100vh;}
-#map{position:absolute;inset:0;width:100%;height:100%;}
-.mapboxgl-ctrl-bottom-right{bottom:10px;right:10px;}
-@media(max-width:899px){.mapboxgl-ctrl-bottom-right{display: none;}}
-.cmarker{width:18px;height:18px;background:var(--blue);border:3px solid #fff; border-radius:50%;box-shadow:0 2px 12px var(--glow);}
-.dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid #fff; border-radius:50%;box-shadow:0 2px 10px var(--glow);}
-.car-marker { width: 28px; height: 28px; background: #fff; border: 2px solid var(--ink); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.3s; }
-.locate-btn { position: absolute; right: 20px; bottom: calc(100% + 16px); width: 46px; height: 46px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.12); cursor: pointer; z-index: 40; color: var(--blue); transition: 0.2s; border: 1px solid var(--border); }
-.locate-btn:active { transform: scale(0.92); }
-@media(min-width: 900px) { .locate-btn { bottom: 24px; right: 24px; } }
-.panel{position:absolute;background:rgba(255,255,255,.95);backdrop-filter:blur(22px) saturate(1.8); -webkit-backdrop-filter:blur(22px) saturate(1.8); display:flex;flex-direction:column;z-index:30; border:1px solid rgba(255,255,255,.8);}
-@media(max-width:899px){ .panel{ bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;height:auto;max-height:calc(100vh - var(--nav-h) - 80px); border-radius:28px 28px 0 0; padding:16px 20px 20px; box-shadow:0 -12px 40px rgba(0,0,0,.1); } }
-@media(min-width:900px){ .panel{top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px; border-radius:22px;padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);} }
-.drag-handle{width:34px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 14px;flex-shrink:0;}
-@media(min-width:900px){.drag-handle{display:none;}}
-.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-shrink: 0; }
-.ptitle{font-family:'Outfit',sans-serif;font-size:21px;font-weight:800; letter-spacing:-.35px; margin: 0;}
-.top-cbtn { background: linear-gradient(130deg,var(--blue2),var(--blue)); color: #fff; padding: 9px 18px; border-radius: 20px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px var(--glow); transition: transform 0.1s, opacity 0.2s; display: none; font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; }
-.top-cbtn:active { transform: scale(0.96); }
-.geo-wrap{margin-bottom:12px;flex-shrink:0;}
-.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important; border-radius:13px!important;border:1.5px solid var(--border)!important; box-shadow:none!important;background:#fff!important; font-family:'Outfit',sans-serif!important;}
-.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important; color:var(--ink)!important;font-family:'Outfit',sans-serif!important; padding:11px 40px 11px 40px!important;height:46px!important;}
-.mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important;}
-.mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important; box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important;}
-.mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important;}
-.origin-row{display:flex;align-items:center;gap:10px;background:#fff; padding:11px 14px;border-radius:13px;border:1.5px solid var(--border); margin-bottom:12px;flex-shrink:0;}
-.o-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;}
-.o-main{font-size:13px;font-weight:600;}
-.o-sub{font-size:11px;color:var(--muted);}
-.slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em; text-transform:uppercase;margin-bottom:10px;flex-shrink:0;}
-.ride-list{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:2px; padding-bottom: 24px; -webkit-overflow-scrolling: touch; }
-@media(max-width:899px){ .ride-list{max-height: 48vh; padding-bottom: 40px;} }
-.ride-list::-webkit-scrollbar{display:none;}
-.rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px; border-radius:15px;border:2px solid var(--border);cursor:pointer; transition:all .17s;background:#fff;position:relative;}
-.rcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06);}
-.rcard.sel{border-color:var(--blue);background:rgba(26,59,255,.04);box-shadow:0 4px 16px var(--glow);}
-.rinfo{display:flex;align-items:center;gap:11px;}
-.rav{width:42px;height:42px;border-radius:50%; background:linear-gradient(135deg,var(--blue2),var(--blue)); color:#fff;display:flex;align-items:center;justify-content:center; font-weight:700;font-size:12px;flex-shrink:0;}
-.rname{font-size:14px;font-weight:700;font-family:'Outfit',sans-serif;margin-bottom:1px;}
-.rmeta{font-size:11px;color:var(--muted);}
-.rprice{font-size:15px;font-weight:700;}
-.rtbadge{font-size:10px;font-weight:600;color:var(--blue); background:rgba(26,59,255,.09);padding:2px 8px;border-radius:20px; margin-top:4px;display:inline-block;}
-.search-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); display: none; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
-.search-overlay.show { display: flex; opacity: 1; }
-.circular-progress { width: 140px; height: 140px; position: relative; display: flex; align-items: center; justify-content: center; }
-.circular-progress svg { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.circular-progress circle { fill: none; stroke-width: 8; stroke-linecap: round; }
-.circ-bg { stroke: var(--border); }
-.circ-fill { stroke: var(--blue); stroke-dasharray: 283; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
-.time-left { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: var(--blue); }
-.search-title { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; margin-top: 24px; color: var(--ink); }
-.search-sub { font-size: 14px; color: var(--muted); margin-top: 8px; font-weight: 500; text-align: center; max-width: 250px; }
-.cancel-search-btn { margin-top: 40px; padding: 14px 32px; border-radius: 20px; background: rgba(229,53,53,0.1); color: var(--red); font-weight: 700; font-size: 15px; border: none; cursor: pointer; transition: background 0.2s;}
-.cancel-search-btn:active { background: rgba(229,53,53,0.2); }
-.active-panel{ position:absolute;background:rgba(255,255,255,.96);backdrop-filter:blur(22px); display:none;flex-direction:column;z-index:35;gap:18px; border:1px solid rgba(255,255,255,.8); transform:translateY(120%);transition:transform .45s cubic-bezier(.4,0,.2,1); }
-.active-panel.show{transform:translateY(0);}
-@media(max-width:899px){ .active-panel{bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); left:0;width:100%;border-radius:28px 28px 0 0; padding:20px 24px 24px; box-shadow:0 -12px 40px rgba(0,0,0,.1);} }
-@media(min-width:900px){ .active-panel{top:22px;left:22px;bottom:auto;width:385px;border-radius:22px; padding:26px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12);} }
-.ad-header{display:flex;justify-content:space-between;align-items:center;}
-.ad-info{display:flex;align-items:center;gap:14px;}
-.ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0); display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue); border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08);}
-.ad-car-info{text-align:right;}
-.ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px; font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block;}
-.ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px; padding-top:18px;border-top:1px solid var(--border);}
-.ad-m-item{display:flex;flex-direction:column;}
-.ad-m-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px;}
-.ad-m-val{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:var(--blue);}
-.bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); background:rgba(255,255,255,.96);backdrop-filter:blur(16px); border-top:1px solid var(--border);display:flex;justify-content:space-around; align-items:flex-start;padding-top:10px;z-index:50;}
-@media(min-width:900px){.bnav{display:none;}}
-.bni{display:flex;flex-direction:column;align-items:center;gap:4px; color:var(--muted);font-size:11px;font-weight:600;cursor:pointer; transition:.17s;padding:4px 16px;}
-.bni.act{color:var(--blue);}
-.bni.act svg path,.bni.act svg circle,.bni.act svg rect,.bni.act svg polyline,.bni.act svg line{stroke:var(--blue);}
-.fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg); display:none;flex-direction:column;overflow-y:auto; padding:28px 20px calc(var(--nav-h) + env(safe-area-inset-bottom, 20px));}
-@media(min-width:900px){.fpage{padding:32px 36px 32px;}}
-.fpage.show{display:flex;}
-.ph{font-family:'Outfit',sans-serif;font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;}
-.tc{background:var(--card);border-radius:16px;padding:16px 18px; margin-bottom:11px;border:1px solid var(--border);transition:.17s;}
-.tc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);}
-.tc-row{display:flex;justify-content:space-between;align-items:flex-start;}
-.tc-type{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;}
-.tc-fare{font-size:15px;font-weight:700;color:var(--blue);}
-.tc-meta{font-size:12px;color:var(--muted);margin-top:4px;}
-.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px; font-size:11px;font-weight:600;padding:3px 10px; border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue);}
-.w-hero{background:linear-gradient(135deg,#1E40FF,var(--blue)); border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff; position:relative;overflow:hidden;}
-.w-hero::before{content:'';position:absolute;top:-30px;right:-30px; width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%;}
-.w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px; width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%;}
-.wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500;}
-.wbal{font-family:'Outfit',sans-serif;font-size:36px;font-weight:800; margin-bottom:16px;letter-spacing:-.5px;}
-.wbtns{display:flex;gap:10px;position:relative;z-index:1;}
-.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3); color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600; cursor:pointer;font-family:'Outfit',sans-serif; transition:.2s;}
-.wbtn:hover{background:rgba(255,255,255,.3);}
-.txi{display:flex;justify-content:space-between;align-items:center; padding:13px 0;border-bottom:1px solid var(--border);}
-.txi:last-child{border:none;}
-.txl{font-size:14px;font-weight:500;}
-.txd{font-size:11px;color:var(--muted);margin-top:2px;}
-.txa{font-size:14px;font-weight:700;}
-.txa.cr{color:var(--green);}.txa.dr{color:var(--red);}
-.input-wrap { margin-bottom: 16px; text-align: left; }
-.t-input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 2px solid var(--border); font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; outline: none; transition: .2s; }
-.t-input:focus { border-color: var(--blue); }
-#tab-account { font-family: 'Outfit', sans-serif; }
-#tab-account .ph { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -.6px; margin-bottom: 20px; }
-.prof-banner{ background: linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff); border-radius: 20px; padding: 22px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; color: #fff; position: relative; overflow: hidden; }
-.prof-banner::after { content: ''; position: absolute; top: -40px; right: -40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,.06); pointer-events: none; }
-.prof-av-lg{ width: 58px; height: 58px; border-radius: 16px; background: rgba(255,255,255,.22); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; font-family: 'Outfit', sans-serif; flex-shrink: 0; border: 2px solid rgba(255,255,255,.35); box-shadow: 0 4px 16px rgba(0,0,0,.12); }
-.prof-name { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -.2px; }
-.prof-email { font-size: 13px; opacity: .72; margin-top: 3px; font-weight: 400; }
-.acc-section-title { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin: 18px 0 8px 4px; }
-.ss{ background: var(--card); border-radius: 18px; margin-bottom: 12px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,.04); }
-.sr{ display: flex; align-items: center; justify-content: space-between; padding: 15px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; user-select: none; }
-.sr:last-child{border:none;}
-.sr:hover{background: rgba(26,59,255,.03);}
-.sr:active{background: rgba(26,59,255,.06);}
-.srl{display:flex;align-items:center;gap:12px;}
-.sri{ width: 34px; height: 34px; border-radius: 10px; background: rgba(26,59,255,.07); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-.srt{ font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500; color: var(--ink); }
-.sra{ color: var(--muted); font-size: 16px; font-weight: 400; }
-.ts { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
-.ts input { opacity: 0; width: 0; height: 0; position: absolute; }
-.ts-slider { position: absolute; inset: 0; background: var(--border); border-radius: 26px; cursor: pointer; transition: background .22s; }
-.ts-slider::before { content: ''; position: absolute; width: 20px; height: 20px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .22s; box-shadow: 0 1px 5px rgba(0,0,0,.22); }
-.ts input:checked + .ts-slider { background: var(--blue); }
-.ts input:checked + .ts-slider::before { transform: translateX(18px); }
-.notif-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
-.notif-row:last-child { border: none; }
-.notif-left { flex: 1; padding-right: 16px; }
-.notif-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
-.notif-sub { font-size: 12px; color: var(--muted); font-family: 'Outfit', sans-serif; }
-.pm-card { display: flex; align-items: center; gap: 14px; padding: 15px 18px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
-.pm-card:last-child { border: none; }
-.pm-card:hover { background: rgba(26,59,255,.03); }
-.pm-icon { width: 40px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1.5px solid var(--border); background: #fff; }
-.pm-label { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; }
-.pm-sub { font-size: 12px; color: var(--muted); margin-top: 1px; font-family: 'Outfit', sans-serif; }
-.pm-badge { margin-left: auto; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(23,168,90,.1); color: var(--green); font-family: 'Outfit', sans-serif; }
-.pm-default-badge { background: rgba(26,59,255,.08); color: var(--blue); }
-.sp-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
-.sp-row:last-child { border: none; }
-.sp-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.sp-icon.home { background: rgba(255,174,0,.12); }
-.sp-icon.work { background: rgba(26,59,255,.09); }
-.sp-icon.fav { background: rgba(229,53,53,.09); }
-.sp-field-wrap { flex: 1; }
-.sp-field-label { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
-.sp-field { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--border); font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; outline: none; color: var(--ink); transition: border-color .18s; background: var(--bg); }
-.sp-field:focus { border-color: var(--blue); background: #fff; }
-.sp-field::placeholder { color: #b0b3c6; }
-.mbg-acc { font-family: 'Outfit', sans-serif; }
-.mbg-acc .mh { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; }
-.mbg-acc .mcancel { font-family: 'Outfit', sans-serif; }
-.mbg-acc .mok { font-family: 'Outfit', sans-serif; }
-.account-version { text-align: center; font-family: 'Outfit', sans-serif; font-size: 12px; color: var(--muted); margin-top: 8px; padding-top: 4px; }
-.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500; display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
-@media(min-width:900px){.mbg{align-items:center;}}
-.mbg.show{display:flex;}
-.modal{background:#fff;border-radius:26px 26px 0 0;padding:26px 24px calc(34px + env(safe-area-inset-bottom, 0px)); width:100%;max-width:420px;animation:su .28s cubic-bezier(.4,0,.2,1); text-align:center;}
-@media(min-width:900px){.modal{border-radius:22px; padding-bottom:34px;}}
-@keyframes su{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
-.mh{font-family:'Outfit',sans-serif;font-size:19px;font-weight:800;margin-bottom:16px; text-align:left;}
-.mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);}
-.mr:last-of-type{border:none;}
-.mrl{font-size:13px;color:var(--muted);}
-.mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px;}
-.mbtns{display:flex;gap:11px;margin-top:20px;}
-.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff; border-radius:13px;font-size:14px;font-weight:600;cursor:pointer; font-family:'Outfit',sans-serif; transition:.1s;}
-.mcancel:hover{background:var(--bg);}
-.mok{flex:2;padding:14px;border:none; background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff; border-radius:13px;font-size:14px;font-weight:700;cursor:pointer; font-family:'Outfit',sans-serif;display:flex;align-items:center; justify-content:center;gap:10px;}
-.toast{position:fixed;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 12px);left:50%; transform:translateX(-50%) translateY(10px); background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px; font-size:13px;font-weight:600;opacity:0;pointer-events:none; transition:.22s;z-index:600;white-space:nowrap; box-shadow:0 4px 20px rgba(0,0,0,.25);}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-@media(min-width:900px){.toast{bottom:26px;}}
-.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3); border-top-color:#fff;border-radius:50%;animation:sp .65s linear infinite;display:none;}
-.spin.on{display:inline-block;}
-@keyframes sp{to{transform:rotate(360deg)}}
-.empty{text-align:center;padding:44px 20px;color:var(--muted);}
-.empty-ico{font-size:34px;margin-bottom:10px;}
-.auth-overlay { position: fixed; inset: 0; z-index: 998; display: none; flex-direction: column; opacity: 0; transition: opacity .4s; font-family: 'Outfit', sans-serif; overflow: hidden; }
-.auth-overlay.show { display: flex; opacity: 1; }
-.auth-bg { position: absolute; inset: 0; background: url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center / cover no-repeat; transform: scale(1.04); animation: auth-zoom 18s ease-in-out infinite alternate; }
-@keyframes auth-zoom { from { transform: scale(1.04); } to { transform: scale(1.12); } }
-.auth-scrim { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.05) 30%, rgba(0,0,0,0.45) 65%, rgba(0,0,0,0.88) 100%); }
-.auth-topbar { position: relative; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 56px 28px 0; }
-.auth-logo-dot { width: 44px; height: 44px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 15px; color: var(--blue); flex-shrink: 0; box-shadow: 0 4px 18px rgba(0,0,0,0.28); }
-.auth-logo-name { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #fff; letter-spacing: -.3px; text-shadow: 0 2px 12px rgba(0,0,0,0.35); }
-.auth-spacer { flex: 1; position: relative; z-index: 2; }
-.auth-bottom { position: relative; z-index: 2; padding: 32px 28px calc(44px + env(safe-area-inset-bottom, 0px)); }
-.auth-headline { font-family: 'Outfit', sans-serif; font-size: clamp(32px, 8vw, 46px); font-weight: 800; color: #fff; line-height: 1.12; letter-spacing: -1px; margin-bottom: 12px; text-shadow: 0 2px 16px rgba(0,0,0,0.3); }
-.auth-subline { font-size: 15px; color: rgba(255,255,255,.68); font-weight: 400; margin-bottom: 36px; line-height: 1.55; max-width: 320px; }
-.auth-pills { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-.pill-login { width: 100%; padding: 18px 28px; border-radius: 100px; border: none; background: #fff; color: #0C0C14; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 800; cursor: pointer; letter-spacing: -.1px; box-shadow: 0 6px 28px rgba(0,0,0,0.32); transition: transform .15s, box-shadow .15s, background .15s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.pill-login:active { transform: scale(0.97); box-shadow: 0 2px 12px rgba(0,0,0,0.22); }
-.pill-login:hover { background: #f0f0f0; }
-.pill-g-icon { width: 20px; height: 20px; flex-shrink: 0; }
-.pill-create { width: 100%; padding: 17px 28px; border-radius: 100px; border: 2px solid rgba(255,255,255,.55); background: rgba(255,255,255,.08); color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; letter-spacing: -.1px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); transition: transform .15s, background .15s, border-color .15s; }
-.pill-create:active { transform: scale(0.97); }
-.pill-create:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.75); }
-.auth-demo-link { display: block; width: 100%; text-align: center; background: none; border: none; padding: 8px; font-family: 'Outfit', sans-serif; font-size: 13px; color: rgba(255,255,255,.42); font-weight: 500; cursor: pointer; letter-spacing: .01em; transition: color .2s; }
-.auth-demo-link:hover { color: rgba(255,255,255,.65); }
-.auth-trust-bar { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 14px; font-size: 11.5px; color: rgba(255,255,255,.28); font-family: 'Outfit', sans-serif; }
-.auth-trust-bar svg { opacity: .38; flex-shrink: 0; }
-.auth-feats { display: flex; gap: 20px; margin-bottom: 30px; }
-.auth-feat-chip { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: rgba(255,255,255,.7); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); padding: 5px 12px; border-radius: 100px; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-.auth-feat-dot { width: 5px; height: 5px; border-radius: 50%; background: #4A9AFF; flex-shrink: 0; }
-@media(min-width:900px){ .auth-bottom { max-width: 460px; margin: 0 auto; padding-left: 40px; padding-right: 40px; } .auth-topbar { padding-left: 40px; } }
-.google-sheet-bg { position: fixed; inset: 0; z-index: 999; background: rgba(0,0,0,0.5); display: none; align-items: flex-end; justify-content: center; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
-.google-sheet-bg.show { display: flex; }
-.google-sheet { background: #fff; border-radius: 28px 28px 0 0; padding: 10px 28px calc(40px + env(safe-area-inset-bottom, 0px)); width: 100%; max-width: 480px; animation: sheetUp .32s cubic-bezier(.4,0,.2,1); font-family: 'Outfit', sans-serif; }
-@media(min-width:900px){ .google-sheet-bg { align-items: center; } .google-sheet { border-radius: 22px; padding-bottom: 36px; max-width: 420px; } }
-@keyframes sheetUp { from { transform: translateY(80px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-.gs-pill { width: 36px; height: 4px; background: #E2E4F0; border-radius: 4px; margin: 0 auto 22px; }
-@media(min-width:900px){ .gs-pill { display: none; } }
-.gs-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.gs-brand-dot { width: 36px; height: 36px; background: var(--blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 13px; font-family: 'Outfit', sans-serif; box-shadow: 0 4px 12px var(--glow); flex-shrink: 0; }
-.gs-brand-name { font-size: 17px; font-weight: 800; color: var(--ink); font-family: 'Outfit', sans-serif; }
-.gs-headline { font-size: 22px; font-weight: 800; color: var(--ink); letter-spacing: -.4px; margin-bottom: 6px; margin-top: 18px; font-family: 'Outfit', sans-serif; }
-.gs-sub { font-size: 14px; color: var(--muted); margin-bottom: 28px; line-height: 1.55; font-weight: 400; font-family: 'Outfit', sans-serif; }
-.gs-google-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 16px 24px; border-radius: 14px; background: #fff; border: 2px solid #E2E4F0; font-size: 15px; font-weight: 700; color: var(--ink); font-family: 'Outfit', sans-serif; cursor: pointer; transition: background .18s, border-color .18s, transform .1s; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 12px; }
-.gs-google-btn:hover { background: #F7F8FF; border-color: #c5caff; }
-.gs-google-btn:active { transform: scale(0.98); }
-.gs-divider { display: flex; align-items: center; gap: 12px; margin: 4px 0 16px; color: var(--muted); font-size: 12px; }
-.gs-divider-line { flex: 1; height: 1px; background: var(--border); }
-.gs-note { font-size: 12px; color: var(--muted); text-align: center; line-height: 1.6; font-family: 'Outfit', sans-serif; }
-.gs-note a { color: var(--blue); text-decoration: none; font-weight: 600; }
-.gs-close { position: absolute; top: 16px; right: 20px; width: 32px; height: 32px; border-radius: 50%; background: var(--bg); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--muted); transition: background .15s; }
-.gs-close:hover { background: var(--border); }
-.gs-close-wrap { position: relative; }
+:root{
+  --blue:#1A3BFF;--blue2:#4A6CFF;--glow:rgba(26,59,255,.22);
+  --ink:#0C0C14;--bg:#EEF0FA;--card:#fff;--muted:#7C7C96;
+  --border:#E2E4F0;--green:#17A85A;--red:#E53535;--orange:#F59E0B;
+  --nav-h:72px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
+  --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
+  --ease-smooth:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+  --panel-full:80vh;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg)}
+
+/* INIT LOADER */
+.init-loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s var(--ease-smooth)}
+.init-loader.hide{opacity:0;pointer-events:none}
+.loader-ring{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SHELL */
+.shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative}
+
+/* SIDEBAR - desktop */
+.sidebar{display:none;width:80px;background:var(--card);border-right:1px solid var(--border);flex-direction:column;padding:26px 14px;z-index:60;flex-shrink:0;transition:width .32s var(--ease-smooth),padding .32s var(--ease-smooth);overflow:hidden;white-space:nowrap}
+@media(min-width:900px){.sidebar{display:flex}}
+.sidebar:hover{width:270px;padding:26px 20px;box-shadow:4px 0 28px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:14px;margin-bottom:36px;padding-left:4px;min-width:240px}
+.logo-mark{width:38px;height:38px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:800;flex-shrink:0;box-shadow:0 4px 14px var(--glow)}
+.l-txt{opacity:0;transition:opacity .18s .1s;font-size:19px;letter-spacing:-.4px;font-weight:800;color:var(--ink)}
+.sidebar:hover .l-txt{opacity:1}
+.nl{display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px;color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s;margin-bottom:4px;min-width:240px}
+.nl svg{flex-shrink:0;width:22px;height:22px}
+.nl:hover{background:rgba(26,59,255,.05);color:var(--blue)}
+.nl.act{background:rgba(26,59,255,.09);color:var(--blue);font-weight:600}
+.n-txt{opacity:0;transition:opacity .18s .1s;font-size:15px}
+.sidebar:hover .n-txt{opacity:1}
+.nav-spacer{flex:1}
+.user-mini{display:flex;align-items:center;gap:14px;padding:11px;background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer;transition:.17s;min-width:240px}
+.user-mini:hover{background:rgba(26,59,255,.07)}
+.av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.user-txt{opacity:0;transition:opacity .18s .1s;display:flex;flex-direction:column;overflow:hidden}
+.sidebar:hover .user-txt{opacity:1}
+.u-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+.u-email{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+
+/* MAP */
+.map-wrap{flex:1;position:relative;height:100vh}
+#map{position:absolute;inset:0;width:100%;height:100%}
+.mapboxgl-ctrl-bottom-right{bottom:10px;right:10px}
+@media(max-width:899px){.mapboxgl-ctrl-bottom-right{display:none}}
+.cmarker{width:18px;height:18px;background:var(--blue);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 12px var(--glow)}
+.dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 10px var(--glow)}
+.car-marker{width:34px;height:34px;background:#fff;border:2.5px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:transform .4s var(--ease-smooth)}
+.car-pulse{width:52px;height:52px;border-radius:50%;position:absolute;top:-9px;left:-9px;background:rgba(26,59,255,.15);animation:carPulse 2.2s infinite}
+@keyframes carPulse{0%,100%{transform:scale(.8);opacity:.8}50%{transform:scale(1.4);opacity:0}}
+
+/* LOCATE BTN */
+.locate-btn{position:absolute;right:16px;bottom:20px;width:46px;height:46px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12);cursor:pointer;z-index:40;color:var(--blue);transition:.2s;border:1px solid var(--border)}
+.locate-btn:active{transform:scale(.92)}
+@media(min-width:900px){.locate-btn{bottom:24px;right:24px}}
+
+/* MAP CLICK OVERLAY - collapse panel on map click */
+.map-click-zone{position:absolute;inset:0;z-index:2;pointer-events:none}
+.map-click-zone.active{pointer-events:all}
+
+/* BOTTOM PANEL */
+.panel{
+  position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px) saturate(1.9);
+  -webkit-backdrop-filter:blur(24px) saturate(1.9);
+  display:flex;flex-direction:column;z-index:30;
+  border:1px solid rgba(255,255,255,.9);
+  transition:transform .42s var(--ease-smooth),background .3s;
+  will-change:transform;
+}
+@media(max-width:899px){
+  .panel{
+    bottom:calc(var(--nav-h) + var(--sb));
+    left:0;width:100%;
+    border-radius:28px 28px 0 0;
+    padding:0 20px 20px;
+    box-shadow:0 -12px 40px rgba(0,0,0,.1);
+    max-height:calc(var(--panel-full));
+    transform:translateY(0);
+  }
+  .panel.collapsed{transform:translateY(calc(100% - 110px))}
+  .panel.mid{transform:translateY(calc(100% - 55vh))}
+}
+@media(min-width:900px){
+  .panel{top:22px;left:22px;width:385px;height:calc(100vh - 44px);max-height:860px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12)}
+}
+.drag-handle-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 8px;flex-shrink:0;cursor:pointer;touch-action:none}
+@media(min-width:900px){.drag-handle-wrap{display:none}}
+.drag-handle{width:38px;height:4px;background:var(--border);border-radius:4px;transition:width .2s var(--ease-spring),background .2s}
+.panel:not(.collapsed) .drag-handle{width:52px;background:var(--blue2)}
+.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;padding-top:4px}
+.ptitle{font-size:21px;font-weight:800;letter-spacing:-.35px}
+.top-cbtn{background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;padding:9px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px var(--glow);transition:transform .1s,opacity .2s;display:none;font-family:'Outfit',sans-serif;letter-spacing:.02em}
+.top-cbtn:active{transform:scale(.96)}
+.geo-wrap{margin-bottom:10px;flex-shrink:0}
+.mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;border-radius:13px!important;border:1.5px solid var(--border)!important;box-shadow:none!important;background:#fff!important;font-family:'Outfit',sans-serif!important}
+.mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;color:var(--ink)!important;font-family:'Outfit',sans-serif!important;padding:11px 40px 11px 40px!important;height:46px!important}
+.mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important}
+.mapboxgl-ctrl-geocoder--suggestions{border-radius:12px!important;box-shadow:0 8px 24px rgba(0,0,0,.1)!important;border:1px solid var(--border)!important}
+.mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important}
+.origin-row{display:flex;align-items:center;gap:10px;background:#fff;padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);margin-bottom:10px;flex-shrink:0}
+.o-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0}
+.o-main{font-size:13px;font-weight:600}
+.o-sub{font-size:11px;color:var(--muted)}
+.slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;flex-shrink:0}
+.ride-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.ride-list::-webkit-scrollbar{display:none}
+.rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;border-radius:15px;border:2px solid var(--border);cursor:pointer;transition:all .17s var(--ease-smooth);background:#fff;position:relative;flex-shrink:0}
+.rcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06)}
+.rcard.sel{border-color:var(--blue);background:rgba(26,59,255,.04);box-shadow:0 4px 16px var(--glow)}
+.rinfo{display:flex;align-items:center;gap:11px}
+.rav{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.rname{font-size:14px;font-weight:700;margin-bottom:1px}
+.rmeta{font-size:11px;color:var(--muted)}
+.rprice{font-size:15px;font-weight:700}
+.rtbadge{font-size:10px;font-weight:600;color:var(--blue);background:rgba(26,59,255,.09);padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
+
+/* SEARCH OVERLAY */
+.search-overlay{position:fixed;inset:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);display:none;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .35s var(--ease-smooth)}
+.search-overlay.show{display:flex;opacity:1}
+.circular-progress{width:140px;height:140px;position:relative;display:flex;align-items:center;justify-content:center}
+.circular-progress svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.circular-progress circle{fill:none;stroke-width:8;stroke-linecap:round}
+.circ-bg{stroke:var(--border)}
+.circ-fill{stroke:var(--blue);stroke-dasharray:283;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear}
+.time-left{font-size:28px;font-weight:800;color:var(--blue)}
+.search-title{font-size:22px;font-weight:800;margin-top:24px;color:var(--ink)}
+.search-sub{font-size:14px;color:var(--muted);margin-top:8px;font-weight:500;text-align:center;max-width:260px;line-height:1.55}
+.cancel-search-btn{margin-top:40px;padding:14px 32px;border-radius:20px;background:rgba(229,53,53,.1);color:var(--red);font-weight:700;font-size:15px;border:none;cursor:pointer;transition:background .2s;font-family:'Outfit',sans-serif}
+.cancel-search-btn:active{background:rgba(229,53,53,.2)}
+
+/* ACTIVE RIDE PANEL */
+.active-panel{position:absolute;background:rgba(255,255,255,.97);backdrop-filter:blur(24px);display:none;flex-direction:column;z-index:35;gap:0;border:1px solid rgba(255,255,255,.9);transform:translateY(120%);transition:transform .45s var(--ease-spring);will-change:transform}
+.active-panel.show{display:flex;transform:translateY(0)}
+@media(max-width:899px){.active-panel{bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;border-radius:28px 28px 0 0;padding:0 20px 20px;box-shadow:0 -12px 40px rgba(0,0,0,.1)}}
+@media(min-width:900px){.active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0 24px 24px;box-shadow:0 20px 50px rgba(0,0,0,.12)}}
+.active-drag-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 10px;flex-shrink:0;cursor:pointer}
+@media(min-width:900px){.active-drag-wrap{display:none}}
+.active-drag{width:38px;height:4px;background:var(--border);border-radius:4px}
+.ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.ad-info{display:flex;align-items:center;gap:14px}
+.ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue);border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.ad-car-info{text-align:right}
+.ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block}
+.ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px}
+.ad-m-item{display:flex;flex-direction:column}
+.ad-m-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
+.ad-m-val{font-size:17px;font-weight:800;color:var(--blue)}
+.ad-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.ad-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 8px;border-radius:13px;border:1.5px solid var(--border);cursor:pointer;transition:all .18s var(--ease-smooth);background:#fff;font-size:10px;font-weight:700;color:var(--muted)}
+.ad-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,59,255,.04)}
+.ad-btn:active{transform:scale(.94)}
+.ad-btn svg{width:20px;height:20px}
+.ad-btn.chat-btn.has-unread{border-color:var(--blue);color:var(--blue);position:relative}
+.ad-btn.chat-btn.has-unread::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
+.cancel-ride-btn{width:100%;padding:13px;border:1.5px solid rgba(229,53,53,.25);background:rgba(229,53,53,.06);border-radius:13px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif}
+.cancel-ride-btn:active{background:rgba(229,53,53,.14)}
+.ride-status-bar{background:linear-gradient(130deg,rgba(26,59,255,.08),rgba(74,108,255,.12));border:1px solid rgba(26,59,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.rsb-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulseDot 1.8s infinite;flex-shrink:0}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(26,59,255,.4)}50%{box-shadow:0 0 0 6px rgba(26,59,255,0)}}
+.rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + var(--sb));background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;z-index:50}
+@media(min-width:900px){.bnav{display:none}}
+.bni{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:.17s;padding:4px 16px;position:relative}
+.bni.act{color:var(--blue)}
+.bni-dot{position:absolute;top:2px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid #fff;display:none;animation:badgePop .3s var(--ease-spring)}
+.bni-dot.show{display:block}
+@keyframes badgePop{from{transform:scale(0)}to{transform:scale(1)}}
+
+/* FULL PAGES */
+.fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 20px)}
+@media(min-width:900px){.fpage{padding:32px 36px 32px}}
+.fpage.show{display:flex}
+.ph{font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px}
+
+/* TRIPS PAGE */
+.tc{background:var(--card);border-radius:16px;padding:16px 18px;margin-bottom:11px;border:1px solid var(--border);transition:.17s}
+.tc:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07)}
+.tc-row{display:flex;justify-content:space-between;align-items:flex-start}
+.tc-type{font-size:15px;font-weight:700}
+.tc-fare{font-size:15px;font-weight:700;color:var(--blue)}
+.tc-meta{font-size:12px;color:var(--muted);margin-top:4px}
+.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue)}
+.tc-badge.canceled{background:rgba(229,53,53,.08);color:var(--red)}
+
+/* WALLET PAGE */
+.w-hero{background:linear-gradient(135deg,#1E40FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden}
+.w-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%}
+.w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px;width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%}
+.wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500}
+.wbal{font-size:36px;font-weight:800;margin-bottom:16px;letter-spacing:-.5px}
+.wbtns{display:flex;gap:10px;position:relative;z-index:1}
+.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:.2s}
+.wbtn:hover{background:rgba(255,255,255,.3)}
+.txi{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
+.txi:last-child{border:none}
+.txl{font-size:14px;font-weight:500}
+.txd{font-size:11px;color:var(--muted);margin-top:2px}
+.txa{font-size:14px;font-weight:700}
+.txa.cr{color:var(--green)}.txa.dr{color:var(--red)}
+
+/* ACCOUNT PAGE */
+.prof-banner{background:linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff);border-radius:20px;padding:22px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden}
+.prof-banner::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
+.prof-av-lg{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.35);box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.prof-name{font-size:19px;font-weight:700;letter-spacing:-.2px}
+.prof-email{font-size:13px;opacity:.72;margin-top:3px}
+.acc-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px 4px}
+.ss{background:var(--card);border-radius:18px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none}
+.sr:last-child{border:none}
+.sr:hover{background:rgba(26,59,255,.03)}
+.sr:active{background:rgba(26,59,255,.06)}
+.srl{display:flex;align-items:center;gap:12px}
+.sri{width:34px;height:34px;border-radius:10px;background:rgba(26,59,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.srt{font-size:15px;font-weight:500;color:var(--ink)}
+.sra{color:var(--muted);font-size:16px}
+.ts{position:relative;width:44px;height:26px;flex-shrink:0}
+.ts input{opacity:0;width:0;height:0;position:absolute}
+.ts-slider{position:absolute;inset:0;background:var(--border);border-radius:26px;cursor:pointer;transition:background .22s}
+.ts-slider::before{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .22s;box-shadow:0 1px 5px rgba(0,0,0,.22)}
+.ts input:checked + .ts-slider{background:var(--blue)}
+.ts input:checked + .ts-slider::before{transform:translateX(18px)}
+
+/* MODALS */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+@media(min-width:900px){.mbg{align-items:center}}
+.mbg.show{display:flex}
+.modal{background:#fff;border-radius:26px 26px 0 0;padding:22px 22px calc(30px + var(--sb));width:100%;max-width:440px;animation:slideUp .32s var(--ease-spring);text-align:center}
+@media(min-width:900px){.modal{border-radius:22px;padding-bottom:28px}}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-pill{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 18px}
+@media(min-width:900px){.modal-pill{display:none}}
+.modal-back-btn{position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;transition:background .18s,transform .18s var(--ease-spring)}
+.modal-back-btn:active{background:var(--border);transform:scale(.9)}
+.mh{font-size:19px;font-weight:800;margin-bottom:14px;text-align:left}
+.mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.mr:last-of-type{border:none}
+.mrl{font-size:13px;color:var(--muted)}
+.mrv{font-size:13px;font-weight:600;text-align:right;max-width:210px}
+.mbtns{display:flex;gap:11px;margin-top:18px}
+.mcancel{flex:1;padding:14px;border:2px solid var(--border);background:#fff;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:.1s}
+.mcancel:hover{background:var(--bg)}
+.mok{flex:2;padding:14px;border:none;background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:10px}
+.mok.green{background:linear-gradient(130deg,#17A85A,#0d7a3e)}
+.mok:active{transform:scale(.97)}
+.t-input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;outline:none;transition:.2s;color:var(--ink)}
+.t-input:focus{border-color:var(--blue)}
+.input-wrap{margin-bottom:14px;text-align:left}
+
+/* PIN OVERLAY */
+.pin-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}
+.pin-overlay.show{display:flex}
+.pin-card{background:#fff;border-radius:28px 28px 0 0;padding:24px 24px calc(32px + var(--sb));width:100%;max-width:440px;animation:slideUp .38s var(--ease-spring);position:relative;text-align:center}
+@media(min-width:900px){.pin-card{border-radius:22px;max-width:420px;padding-bottom:32px}}
+.pin-icon{font-size:42px;margin-bottom:12px}
+.pin-title{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
+.pin-subtitle{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.55;font-weight:500}
+.pin-section{background:var(--bg);border-radius:16px;padding:16px;margin-bottom:16px}
+.pin-section-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left}
+.pin-display-row{display:flex;gap:10px;justify-content:center;margin-bottom:6px}
+.pin-digit-box{width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,rgba(26,59,255,.1),rgba(74,108,255,.18));border:2px solid rgba(26,59,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--blue);animation:pinIn .3s var(--ease-spring) both}
+.pin-digit-box:nth-child(1){animation-delay:.05s}
+.pin-digit-box:nth-child(2){animation-delay:.1s}
+.pin-digit-box:nth-child(3){animation-delay:.15s}
+.pin-digit-box:nth-child(4){animation-delay:.2s}
+@keyframes pinIn{from{transform:translateY(8px) scale(.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.pin-hint{font-size:11px;color:var(--muted);font-weight:500}
+.pin-input-section{background:rgba(26,59,255,.04);border-radius:16px;padding:16px;margin-bottom:16px}
+.pin-input-row{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.pin-input-digit{width:56px;height:58px;border-radius:12px;border:2px solid var(--border);background:#fff;font-size:24px;font-weight:800;text-align:center;font-family:'Outfit',sans-serif;color:var(--ink);outline:none;transition:border-color .2s,transform .2s var(--ease-spring)}
+.pin-input-digit:focus{border-color:var(--blue);transform:scale(1.06)}
+.pin-verify-btn{width:100%;padding:15px;border-radius:13px;border:none;background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 4px 16px var(--glow);transition:transform .18s var(--ease-spring);margin-bottom:10px}
+.pin-verify-btn:active{transform:scale(.97)}
+.pin-error{font-size:12px;color:var(--red);font-weight:700;display:none;margin-top:4px;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.pin-close-btn{width:36px;height:36px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);position:absolute;top:16px;right:16px;transition:background .18s,transform .18s var(--ease-spring)}
+.pin-close-btn:active{transform:scale(.9)}
+
+/* CHAT SHEET */
+.chat-bg{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
+.chat-bg.show{display:flex}
+.chat-sheet{background:#fff;border-radius:26px 26px 0 0;width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;animation:slideUp .32s var(--ease-spring);box-shadow:0 -4px 30px rgba(0,0,0,.15)}
+@media(min-width:900px){.chat-sheet{border-radius:22px;max-width:480px;max-height:80vh}}
+.chat-header{display:flex;align-items:center;gap:11px;padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.chat-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+.chat-rider-name{font-size:15px;font-weight:800;color:var(--ink)}
+.chat-status{font-size:12px;color:var(--green);font-weight:700;margin-top:1px}
+.chat-close{margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .15s,transform .18s var(--ease-spring)}
+.chat-close:active{transform:scale(.88)}
+.chat-messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:9px;-webkit-overflow-scrolling:touch}
+.chat-msg{display:flex;flex-direction:column;gap:3px;max-width:80%;animation:msgIn .25s var(--ease-spring)}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+.chat-msg.mine{align-self:flex-end;align-items:flex-end}
+.chat-msg.theirs{align-self:flex-start;align-items:flex-start}
+.chat-bubble{padding:10px 14px;border-radius:18px;font-size:14px;font-weight:500;line-height:1.4;word-break:break-word}
+.chat-msg.mine .chat-bubble{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border-bottom-right-radius:4px}
+.chat-msg.theirs .chat-bubble{background:var(--bg);border:1px solid var(--border);color:var(--ink);border-bottom-left-radius:4px}
+.chat-meta{font-size:10px;color:var(--muted);font-weight:600}
+.quick-replies{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:7px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
+.quick-replies::-webkit-scrollbar{display:none}
+.qr-btn{white-space:nowrap;padding:7px 13px;border-radius:18px;background:rgba(26,59,255,.06);border:1px solid rgba(26,59,255,.18);color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s,transform .18s var(--ease-spring);flex-shrink:0}
+.qr-btn:active{background:rgba(26,59,255,.14);transform:scale(.94)}
+.chat-input-row{display:flex;gap:8px;padding:10px 14px calc(14px + var(--sb));border-top:1px solid var(--border);flex-shrink:0;align-items:flex-end}
+.chat-text-input{flex:1;border:1.5px solid var(--border);border-radius:22px;padding:10px 15px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;resize:none;max-height:90px;line-height:1.4;transition:border-color .2s}
+.chat-text-input:focus{border-color:var(--blue2);background:#fff}
+.chat-send-btn{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .18s var(--ease-spring);box-shadow:0 3px 10px var(--glow);flex-shrink:0}
+.chat-send-btn:active{transform:scale(.88)}
+.typing-indicator{align-self:flex-start;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:18px;border-bottom-left-radius:4px;display:none}
+.typing-indicator.show{display:flex;align-items:center;gap:4px;animation:msgIn .25s var(--ease-spring)}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:typeBounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes typeBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* AUTH */
+.auth-overlay{position:fixed;inset:0;z-index:998;display:none;flex-direction:column;opacity:0;transition:opacity .4s;font-family:'Outfit',sans-serif;overflow:hidden}
+.auth-overlay.show{display:flex;opacity:1}
+.auth-bg{position:absolute;inset:0;background:url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center/cover no-repeat;transform:scale(1.04);animation:authZoom 18s ease-in-out infinite alternate}
+@keyframes authZoom{from{transform:scale(1.04)}to{transform:scale(1.12)}}
+.auth-scrim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.18) 0%,rgba(0,0,0,.05) 30%,rgba(0,0,0,.45) 65%,rgba(0,0,0,.88) 100%)}
+.auth-topbar{position:relative;z-index:2;display:flex;align-items:center;gap:12px;padding:56px 28px 0}
+.auth-logo-dot{width:44px;height:44px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--blue);flex-shrink:0;box-shadow:0 4px 18px rgba(0,0,0,.28)}
+.auth-logo-name{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px;text-shadow:0 2px 12px rgba(0,0,0,.35)}
+.auth-spacer{flex:1;position:relative;z-index:2}
+.auth-bottom{position:relative;z-index:2;padding:32px 28px calc(44px + var(--sb))}
+.auth-headline{font-size:clamp(32px,8vw,46px);font-weight:800;color:#fff;line-height:1.12;letter-spacing:-1px;margin-bottom:12px;text-shadow:0 2px 16px rgba(0,0,0,.3)}
+.auth-subline{font-size:15px;color:rgba(255,255,255,.68);font-weight:400;margin-bottom:36px;line-height:1.55;max-width:320px}
+.auth-pills{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.pill-login{width:100%;padding:18px 28px;border-radius:100px;border:none;background:#fff;color:#0C0C14;font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;cursor:pointer;letter-spacing:-.1px;box-shadow:0 6px 28px rgba(0,0,0,.32);transition:transform .15s,box-shadow .15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.pill-login:active{transform:scale(.97)}
+.pill-create{width:100%;padding:17px 28px;border-radius:100px;border:2px solid rgba(255,255,255,.55);background:rgba(255,255,255,.08);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;backdrop-filter:blur(12px);transition:transform .15s,background .15s}
+.pill-create:active{transform:scale(.97)}
+.pill-g-icon{width:20px;height:20px;flex-shrink:0}
+.auth-demo-link{display:block;width:100%;text-align:center;background:none;border:none;padding:8px;font-family:'Outfit',sans-serif;font-size:13px;color:rgba(255,255,255,.42);font-weight:500;cursor:pointer;transition:color .2s}
+.auth-demo-link:hover{color:rgba(255,255,255,.65)}
+.auth-feats{display:flex;gap:20px;margin-bottom:30px;flex-wrap:wrap}
+.auth-feat-chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.7);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:5px 12px;border-radius:100px;backdrop-filter:blur(8px)}
+.auth-feat-dot{width:5px;height:5px;border-radius:50%;background:#4A9AFF;flex-shrink:0}
+@media(min-width:900px){.auth-bottom{max-width:460px;margin:0 auto;padding-left:40px;padding-right:40px}.auth-topbar{padding-left:40px}}
+
+/* GOOGLE SHEET */
+.gsheet-bg{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.gsheet-bg.show{display:flex}
+.gsheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 28px calc(40px + var(--sb));width:100%;max-width:480px;animation:slideUp .32s var(--ease-spring)}
+@media(min-width:900px){.gsheet-bg{align-items:center}.gsheet{border-radius:22px;padding-bottom:36px;max-width:420px}}
+.gs-pill{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 22px}
+@media(min-width:900px){.gs-pill{display:none}}
+.gs-brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.gs-brand-dot{width:36px;height:36px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;box-shadow:0 4px 12px var(--glow);flex-shrink:0}
+.gs-brand-name{font-size:17px;font-weight:800;color:var(--ink)}
+.gs-headline{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;margin-bottom:6px;margin-top:18px}
+.gs-sub{font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.55;font-weight:400}
+.gs-google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 24px;border-radius:14px;background:#fff;border:2px solid var(--border);font-size:15px;font-weight:700;color:var(--ink);font-family:'Outfit',sans-serif;cursor:pointer;transition:background .18s,transform .1s;box-shadow:0 2px 12px rgba(0,0,0,.08);margin-bottom:12px}
+.gs-google-btn:active{transform:scale(.98)}
+.gs-note{font-size:12px;color:var(--muted);text-align:center;line-height:1.6}
+.gs-note a{color:var(--blue);text-decoration:none;font-weight:600}
+.gs-close{position:absolute;top:16px;right:20px;width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .15s}
+.gs-close:hover{background:var(--border)}
+.gs-close-wrap{position:relative}
+
+/* DRIVER CANCELED BANNER */
+.driver-canceled-banner{position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--red);color:#fff;padding:14px 22px;border-radius:20px;font-size:14px;font-weight:700;opacity:0;transition:opacity .35s var(--ease-smooth),transform .35s var(--ease-spring);z-index:600;pointer-events:none;text-align:center;box-shadow:0 6px 24px rgba(229,53,53,.4);max-width:90vw}
+.driver-canceled-banner.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.22s;z-index:600;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:900px){.toast{bottom:26px}}
+
+/* SPINNER */
+.spin{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:none}
+.spin.on{display:inline-block}
+
+/* EMPTY */
+.empty{text-align:center;padding:44px 20px;color:var(--muted)}
+.empty-ico{font-size:34px;margin-bottom:10px}
+
+/* PAYMENT MODAL */
+.pm-card{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.pm-card:last-child{border:none}
+.pm-card:hover{background:rgba(26,59,255,.03)}
+.pm-icon{width:40px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1.5px solid var(--border);background:#fff}
+.pm-label{font-size:14px;font-weight:600}
+.pm-sub{font-size:12px;color:var(--muted);margin-top:1px}
+.pm-badge{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(23,168,90,.1);color:var(--green)}
+.pm-default-badge{background:rgba(26,59,255,.08);color:var(--blue)}
+
+/* SAVED PLACES */
+.sp-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.sp-row:last-child{border:none}
+.sp-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sp-field{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;outline:none;color:var(--ink);transition:border-color .18s;background:var(--bg)}
+.sp-field:focus{border-color:var(--blue);background:#fff}
+.sp-field::placeholder{color:#b0b3c6}
 </style>
 </head>
 <body>
+
 <div class="init-loader" id="initLoader">
-  <div class="loader-spinner"></div>
-  <div style="font-family:'Outfit',sans-serif; font-weight:800; color:var(--blue); font-size:18px;">VynixRide</div>
+  <div class="loader-ring"></div>
+  <div style="font-family:'Outfit',sans-serif;font-weight:800;color:var(--blue);font-size:18px">VynixRide</div>
 </div>
+
+<!-- AUTH -->
 <div class="auth-overlay" id="authOverlay">
-  <div class="auth-bg"></div>
-  <div class="auth-scrim"></div>
+  <div class="auth-bg"></div><div class="auth-scrim"></div>
   <div class="auth-topbar">
     <div class="auth-logo-dot">VX</div>
     <div class="auth-logo-name">VynixRide</div>
@@ -292,33 +439,22 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
     <div class="auth-subline">Fast, safe, and affordable rides anywhere in South Africa.</div>
     <div class="auth-pills">
       <button class="pill-login" id="btnLogin">
-        <svg class="pill-g-icon" viewBox="0 0 48 48">
-          <path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
-          <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/>
-          <path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/>
-          <path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/>
-        </svg>
+        <svg class="pill-g-icon" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/></svg>
         Log In
       </button>
       <button class="pill-create" id="btnCreate">Create an Account</button>
     </div>
     <button class="auth-demo-link" id="skipAuth">Continue without an account →</button>
-    <div class="auth-trust-bar">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
-      Your data is encrypted and never shared
-    </div>
   </div>
 </div>
-<div class="google-sheet-bg" id="googleSheetBg">
-  <div class="google-sheet">
+
+<!-- GOOGLE SHEET -->
+<div class="gsheet-bg" id="googleSheetBg">
+  <div class="gsheet">
     <div class="gs-pill"></div>
     <div class="gs-close-wrap">
-      <button class="gs-close" id="gsClose" aria-label="Close">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+      <button class="gs-close" id="gsClose">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="gs-brand">
@@ -326,239 +462,238 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
       <div class="gs-brand-name">VynixRide</div>
     </div>
     <div class="gs-headline" id="gsHeadline">Welcome back</div>
-    <div class="gs-sub" id="gsSub">Sign in with your Google account to continue booking rides and managing your wallet.</div>
+    <div class="gs-sub" id="gsSub">Sign in with Google to book rides and manage your wallet.</div>
     <button class="gs-google-btn" id="gsGoogleBtn">
-      <svg width="20" height="20" viewBox="0 0 48 48">
-        <path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/>
-        <path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/>
-        <path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/>
-        <path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/>
-      </svg>
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.9C34.5 33.1 30 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.2-2.7-.2-4z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16.4 19.2 14 24 14c3 0 5.7 1.1 7.8 2.9l6.3-6.3C34.3 6 29.4 4 24 4 16.2 4 9.5 8.4 6.3 14.7z"/><path fill="#FBBC05" d="M24 44c5.3 0 10.1-1.8 13.8-4.8l-6.4-5.4C29.5 35.5 26.9 36 24 36c-5.9 0-10.5-3.9-11.9-9.1l-7 5.4C8.4 39.6 15.6 44 24 44z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.9c-.6 3-2.5 5.5-5.1 7.3l6.4 5.4C41.9 37.5 44.5 31.2 44.5 24c0-1.3-.2-2.7-.2-4z"/></svg>
       <span id="gsBtnLabel">Continue with Google</span>
     </button>
-    <div class="gs-divider">
-      <div class="gs-divider-line"></div>
-      <span>Google handles sign-in securely</span>
-      <div class="gs-divider-line"></div>
-    </div>
-    <div class="gs-note">
-      By continuing you agree to VynixRide's Terms of Service.<br>
-      New users will have an account created automatically.
-    </div>
+    <div class="gs-note">By continuing you agree to VynixRide's <a href="#">Terms of Service</a>.</div>
   </div>
 </div>
+
+<!-- LOCATION MODAL -->
 <div class="mbg" id="locModal">
   <div class="modal">
+    <div class="modal-pill"></div>
     <div class="mh">Enable Location</div>
-    <p style="font-size:14px; color:var(--muted); margin-bottom: 24px; line-height:1.5; text-align:left;">
-      VynixRide needs your location to find nearby drivers and accurately set your pickup point. Please turn on location services.
-    </p>
-    <div class="mbtns">
-      <button class="mok" onclick="requestLocation()">Grant Access</button>
-    </div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.5;text-align:left">VynixRide needs your location to find nearby drivers and set your pickup point.</p>
+    <div class="mbtns"><button class="mok" style="flex:1" onclick="requestLocation()">Grant Access</button></div>
   </div>
 </div>
+
+<!-- TOP UP MODAL -->
 <div class="mbg" id="topUpModal">
   <div class="modal">
+    <div class="modal-pill"></div>
     <div class="mh">Add Funds</div>
-    <div class="input-wrap">
-      <div class="slabel">Top Up via Yoco (ZAR)</div>
-      <input type="number" id="yocoAmount" class="t-input" placeholder="e.g. 150">
-    </div>
-    <div class="mbtns" style="margin-bottom: 24px;">
-      <button class="mok" onclick="executeYocoTopUp()" style="width:100%">Pay with Yoco</button>
-    </div>
-    <div style="text-align:center; font-size:12px; color:var(--muted); margin-bottom: 16px;">— OR —</div>
-    <div class="input-wrap">
-      <div class="slabel">Redeem Voucher Code</div>
-      <input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform: uppercase;">
-    </div>
+    <div class="input-wrap"><div class="slabel">Top Up via Yoco (ZAR)</div><input type="number" id="yocoAmount" class="t-input" placeholder="e.g. 150"></div>
+    <div class="mbtns" style="margin-bottom:20px"><button class="mok" style="flex:1" onclick="executeYocoTopUp()">Pay with Yoco</button></div>
+    <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px">— OR —</div>
+    <div class="input-wrap"><div class="slabel">Redeem Voucher Code</div><input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform:uppercase"></div>
     <div class="mbtns">
       <button class="mcancel" onclick="closeTopUpModal()">Cancel</button>
       <button class="mok" onclick="executeVoucher()">Redeem</button>
     </div>
   </div>
 </div>
+
+<!-- CONFIRM BOOKING MODAL -->
 <div class="mbg" id="confirmModal">
-  <div class="modal">
-    <div class="mh">Confirm Booking</div>
+  <div class="modal" style="position:relative">
+    <div class="modal-pill"></div>
+    <button class="modal-back-btn" onclick="closeModal()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="mh" style="padding-left:36px">Confirm Booking</div>
     <div class="mr"><span class="mrl">Ride</span><b class="mrv" id="m-type">—</b></div>
     <div class="mr"><span class="mrl">Driver</span><b class="mrv" id="m-driver">—</b></div>
     <div class="mr"><span class="mrl">ETA (Driver)</span><b class="mrv" id="m-eta">—</b></div>
     <div class="mr"><span class="mrl">Trip Duration</span><b class="mrv" id="m-trip-time">—</b></div>
     <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
-    <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare">—</b></div>
-    <div class="mbtns" style="display:flex; flex-direction:column; gap:11px; margin-top:20px;">
-      <button class="mok" onclick="initiateRidePayment('card')" style="width:100%;">Pay with Card</button>
-      <button class="mok" onclick="initiateRidePayment('cash')" style="width:100%; background:var(--green); border-color:var(--green);">Book with Cash</button>
-      <button class="mcancel" onclick="closeModal()" style="width:100%;">Cancel</button>
+    <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare" style="color:var(--blue);font-size:17px;font-weight:800">—</b></div>
+    <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px">
+      <button class="mok" onclick="initiateRidePayment('card')" style="width:100%">Pay with Card (Yoco)</button>
+      <button class="mok green" onclick="initiateRidePayment('cash')" style="width:100%">Book with Cash</button>
+      <button class="mcancel" onclick="closeModal()" style="width:100%;border-color:rgba(229,53,53,.2);color:var(--red)">Cancel</button>
     </div>
   </div>
 </div>
-<div class="mbg mbg-acc" id="notifModal">
-  <div class="modal" style="text-align:left;">
-    <div class="mh" style="font-family:'Outfit',sans-serif;">Notifications</div>
-    <div class="ss" style="margin-bottom:0; border-radius:14px;">
-      <div class="notif-row">
-        <div class="notif-left">
-          <div class="notif-title">Ride status updates</div>
-          <div class="notif-sub">Driver accepted, arriving, trip started & completed</div>
-        </div>
+
+<!-- NOTIFICATIONS MODAL -->
+<div class="mbg" id="notifModal">
+  <div class="modal" style="text-align:left">
+    <div class="modal-pill"></div>
+    <div class="mh">Notifications</div>
+    <div class="ss" style="margin-bottom:0;border-radius:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:14px;font-weight:600">Ride status updates</div><div style="font-size:12px;color:var(--muted)">Driver accepted, arriving, trip started</div></div>
         <label class="ts"><input type="checkbox" id="notif-ride" checked><span class="ts-slider"></span></label>
       </div>
-      <div class="notif-row">
-        <div class="notif-left">
-          <div class="notif-title">Driver arriving alert</div>
-          <div class="notif-sub">Get notified when your driver is 2 minutes away</div>
-        </div>
-        <label class="ts"><input type="checkbox" id="notif-arriving" checked><span class="ts-slider"></span></label>
-      </div>
-      <div class="notif-row">
-        <div class="notif-left">
-          <div class="notif-title">Promotional offers</div>
-          <div class="notif-sub">Discounts, promo codes and special deals</div>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:14px;font-weight:600">Promotional offers</div><div style="font-size:12px;color:var(--muted)">Discounts and promo codes</div></div>
         <label class="ts"><input type="checkbox" id="notif-promo"><span class="ts-slider"></span></label>
       </div>
-      <div class="notif-row">
-        <div class="notif-left">
-          <div class="notif-title">Weekly trip summary</div>
-          <div class="notif-sub">A weekly digest of your rides and spending</div>
-        </div>
-        <label class="ts"><input type="checkbox" id="notif-weekly"><span class="ts-slider"></span></label>
-      </div>
-      <div class="notif-row" style="border:none;">
-        <div class="notif-left">
-          <div class="notif-title">Wallet activity</div>
-          <div class="notif-sub">Top-ups, deductions and voucher redemptions</div>
-        </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px">
+        <div><div style="font-size:14px;font-weight:600">Wallet activity</div><div style="font-size:12px;color:var(--muted)">Top-ups, deductions, vouchers</div></div>
         <label class="ts"><input type="checkbox" id="notif-wallet" checked><span class="ts-slider"></span></label>
       </div>
     </div>
-    <div class="mbtns" style="margin-top:20px;">
-      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closeNotifModal()">Close</button>
-      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="saveNotifPrefs()">Save Preferences</button>
+    <div class="mbtns" style="margin-top:18px">
+      <button class="mcancel" onclick="document.getElementById('notifModal').classList.remove('show')">Close</button>
+      <button class="mok" onclick="saveNotifPrefs()">Save</button>
     </div>
   </div>
 </div>
-<div class="mbg mbg-acc" id="payModal">
-  <div class="modal" style="text-align:left;">
-    <div class="mh" style="font-family:'Outfit',sans-serif;">Payment Methods</div>
-    <div class="ss" style="margin-bottom:16px; border-radius:14px;">
-      <div class="pm-card">
-        <div class="pm-icon">💳</div>
-        <div>
-          <div class="pm-label">Pay by Card (Yoco)</div>
-          <div class="pm-sub">Visa, Mastercard — secure checkout</div>
-        </div>
-        <span class="pm-badge pm-default-badge">Default</span>
-      </div>
-      <div class="pm-card">
-        <div class="pm-icon">👛</div>
-        <div>
-          <div class="pm-label">VynixRide Wallet</div>
-          <div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div>
-        </div>
-        <span class="pm-badge" id="payModalWalletStatus">—</span>
-      </div>
-    </div>
-    <div style="background:rgba(26,59,255,.04); border:1.5px solid rgba(26,59,255,.12); border-radius:12px; padding:13px 15px; margin-bottom:16px;">
-      <div style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:600; color:var(--blue); margin-bottom:4px;">About payments</div>
-      <div style="font-family:'Outfit',sans-serif; font-size:12.5px; color:var(--muted); line-height:1.55;">
-        All card payments are processed securely via Yoco. Your card details are never stored on VynixRide servers. Top up your wallet for even faster checkout.
-      </div>
+
+<!-- PAYMENT MODAL -->
+<div class="mbg" id="payModal">
+  <div class="modal" style="text-align:left">
+    <div class="modal-pill"></div>
+    <div class="mh">Payment Methods</div>
+    <div class="ss" style="margin-bottom:14px;border-radius:14px">
+      <div class="pm-card"><div class="pm-icon">💳</div><div><div class="pm-label">Pay by Card (Yoco)</div><div class="pm-sub">Visa, Mastercard</div></div><span class="pm-badge pm-default-badge">Default</span></div>
+      <div class="pm-card"><div class="pm-icon">👛</div><div><div class="pm-label">VynixRide Wallet</div><div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div></div></div>
     </div>
     <div class="mbtns">
-      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePayModal()">Close</button>
-      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="closePayModal(); openTopUpModal();">Top Up Wallet</button>
+      <button class="mcancel" onclick="document.getElementById('payModal').classList.remove('show')">Close</button>
+      <button class="mok" onclick="document.getElementById('payModal').classList.remove('show');openTopUpModal()">Top Up Wallet</button>
     </div>
   </div>
 </div>
-<div class="mbg mbg-acc" id="placesModal">
-  <div class="modal" style="text-align:left;">
-    <div class="mh" style="font-family:'Outfit',sans-serif;">Saved Places</div>
-    <div class="ss" style="margin-bottom:16px; border-radius:14px;">
-      <div class="sp-row">
-        <div class="sp-icon home">🏠</div>
-        <div class="sp-field-wrap">
-          <div class="sp-field-label">Home</div>
-          <input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…">
-        </div>
-      </div>
-      <div class="sp-row">
-        <div class="sp-icon work">🏢</div>
-        <div class="sp-field-wrap">
-          <div class="sp-field-label">Work</div>
-          <input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…">
-        </div>
-      </div>
-      <div class="sp-row" style="border:none;">
-        <div class="sp-icon fav">⭐</div>
-        <div class="sp-field-wrap">
-          <div class="sp-field-label">Favourite</div>
-          <input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…">
-        </div>
-      </div>
+
+<!-- SAVED PLACES MODAL -->
+<div class="mbg" id="placesModal">
+  <div class="modal" style="text-align:left">
+    <div class="modal-pill"></div>
+    <div class="mh">Saved Places</div>
+    <div class="ss" style="margin-bottom:14px;border-radius:14px">
+      <div class="sp-row"><div class="sp-icon" style="background:rgba(255,174,0,.12)">🏠</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Home</div><input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…"></div></div>
+      <div class="sp-row"><div class="sp-icon" style="background:rgba(26,59,255,.09)">🏢</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div><input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…"></div></div>
+      <div class="sp-row" style="border:none"><div class="sp-icon" style="background:rgba(229,53,53,.09)">⭐</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Favourite</div><input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…"></div></div>
     </div>
-    <p style="font-family:'Outfit',sans-serif; font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.55;">
-      Saved places appear as quick-select options when booking a ride. They are stored to your account.
-    </p>
     <div class="mbtns">
-      <button class="mcancel" style="font-family:'Outfit',sans-serif;" onclick="closePlacesModal()">Cancel</button>
-      <button class="mok" style="font-family:'Outfit',sans-serif;" onclick="savePlaces()">Save Places</button>
+      <button class="mcancel" onclick="document.getElementById('placesModal').classList.remove('show')">Cancel</button>
+      <button class="mok" onclick="savePlaces()">Save Places</button>
     </div>
   </div>
 </div>
+
+<!-- PIN OVERLAY -->
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-card">
+    <button class="pin-close-btn" onclick="closePinOverlay()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="pin-icon">🔐</div>
+    <div class="pin-title">Security Verification</div>
+    <div class="pin-subtitle">Share your PIN with the driver, then enter the driver's PIN to start your trip.</div>
+    
+    <div class="pin-section">
+      <div class="pin-section-label">📱 Your PIN — show this to your driver</div>
+      <div class="pin-display-row" id="riderPinDisplay"></div>
+      <div class="pin-hint">The driver must confirm this in their app</div>
+    </div>
+    
+    <div class="pin-input-section">
+      <div class="pin-section-label">🚗 Driver's PIN — enter what the driver tells you</div>
+      <div class="pin-input-row" id="pinInputRow"></div>
+      <div class="pin-error" id="pinError">❌ Wrong PIN — try again</div>
+    </div>
+    
+    <button class="pin-verify-btn" onclick="verifyDriverPin()">Verify & Start Ride</button>
+    <div style="font-size:11px;color:var(--muted);font-weight:500">Both PINs must match to confirm the correct driver</div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div class="chat-bg" id="chatBg">
+  <div class="chat-sheet">
+    <div class="chat-header">
+      <div class="chat-av" id="chatAv">?</div>
+      <div>
+        <div class="chat-rider-name" id="chatDriverName">Driver</div>
+        <div class="chat-status" id="chatStatus">🟢 Active Ride</div>
+      </div>
+      <button class="chat-close" onclick="closeChat()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>
+    </div>
+    <div class="typing-indicator" id="typingIndicator">
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+    </div>
+    <div class="quick-replies">
+      <button class="qr-btn" onclick="sendQR(`I'm ready at pickup`)">📍 I'm ready</button>
+      <button class="qr-btn" onclick="sendQR(`How far are you?`)">❓ How far?</button>
+      <button class="qr-btn" onclick="sendQR(`I'm running 2 min late`)">⏱ Running late</button>
+      <button class="qr-btn" onclick="sendQR(`Please wait for me`)">🙏 Please wait</button>
+      <button class="qr-btn" onclick="sendQR(`On my way to pickup now`)">🚶 On my way</button>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-text-input" id="chatInput" placeholder="Message driver…" rows="1" onkeydown="chatKeydown(event)" oninput="autoResize(this)"></textarea>
+      <button class="chat-send-btn" onclick="sendChatMsg()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH OVERLAY -->
 <div class="search-overlay" id="searchOverlay">
   <div class="circular-progress">
-    <svg viewBox="0 0 100 100">
-      <circle class="circ-bg" cx="50" cy="50" r="45"></circle>
-      <circle class="circ-fill" id="searchProgress" cx="50" cy="50" r="45"></circle>
-    </svg>
+    <svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="45"></circle><circle class="circ-fill" id="searchProgress" cx="50" cy="50" r="45"></circle></svg>
     <div class="time-left" id="searchTimerTxt">60s</div>
   </div>
-  <div class="search-title">Finding a driver...</div>
-  <div class="search-sub">Pinging nearby drivers. If no one accepts within 1 minute, the request will automatically cancel.</div>
-  <button class="cancel-search-btn" onclick="cancelSearch('Search cancelled by user')">Cancel Request</button>
+  <div class="search-title">Finding your driver…</div>
+  <div class="search-sub">Pinging nearby drivers. If no one accepts within 60 seconds, the request will cancel automatically.</div>
+  <button class="cancel-search-btn" onclick="cancelSearch('Search cancelled by you')">Cancel Request</button>
 </div>
+
+<!-- DRIVER CANCELED BANNER -->
+<div class="driver-canceled-banner" id="driverCanceledBanner">🚗 Your driver cancelled. Please rebook your ride.</div>
+
 <div class="toast" id="toast"></div>
+
 <div class="shell">
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="mainSidebar">
-    <div class="logo">
-      <div class="logo-mark">VX</div>
-      <span class="l-txt">VynixRide</span>
-    </div>
+    <div class="logo"><div class="logo-mark">VX</div><span class="l-txt">VynixRide</span></div>
     <div class="nl act" data-tab="ride" onclick="switchTab('ride')">
-      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
       <span class="n-txt">Book a Ride</span>
     </div>
     <div class="nl" data-tab="trips" onclick="switchTab('trips')">
-      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       <span class="n-txt">My Trips</span>
     </div>
     <div class="nl" data-tab="wallet" onclick="switchTab('wallet')">
-      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>
       <span class="n-txt">Wallet</span>
     </div>
     <div class="nav-spacer"></div>
     <div class="nl" data-tab="account" onclick="switchTab('account')">
-      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="n-txt">Account</span>
     </div>
     <div class="user-mini" onclick="switchTab('account')">
       <div class="av" id="sbAv">?</div>
-      <div class="user-txt">
-        <div class="u-name" id="sbName">Guest</div>
-        <div class="u-email" id="sbEmail">Not signed in</div>
-      </div>
+      <div class="user-txt"><div class="u-name" id="sbName">Guest</div><div class="u-email" id="sbEmail">Not signed in</div></div>
     </div>
   </aside>
+
+  <!-- MAP / RIDE TAB -->
   <div class="map-wrap" id="tab-ride">
     <div id="map"></div>
+    <div class="map-click-zone" id="mapClickZone" onclick="collapsePanel()"></div>
+
+    <!-- BOOK PANEL -->
     <div class="panel" id="bookPanel">
-      <div class="drag-handle"></div>
-      
+      <div class="drag-handle-wrap" id="panelDragHandle">
+        <div class="drag-handle"></div>
+      </div>
       <div class="locate-btn" onclick="zoomToCurrent()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       </div>
@@ -574,57 +709,76 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
         </div>
       </div>
       <div class="geo-wrap" id="geoWrap"></div>
-      <div class="slabel">Available Rides</div>
+      <div class="slabel" id="ridesLabel" style="display:none">Available Rides</div>
       <div class="ride-list" id="rideList"></div>
     </div>
+
+    <!-- ACTIVE RIDE PANEL -->
     <div class="active-panel" id="activeRidePanel">
-      <div class="drag-handle"></div>
+      <div class="active-drag-wrap"><div class="active-drag"></div></div>
+      <div class="ride-status-bar" id="rideStatusBar">
+        <div class="rsb-dot"></div>
+        <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
+      </div>
       <div class="ad-header">
         <div class="ad-info">
           <div class="ad-av" id="adAv">K</div>
           <div>
-            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;margin-bottom:2px;" id="adName">Kabelo</div>
-            <div style="font-size:13px;color:var(--muted);font-weight:500;">⭐ 4.9 · 1,240 rides</div>
+            <div style="font-weight:800;font-size:17px;margin-bottom:2px" id="adName">Driver</div>
+            <div style="font-size:13px;color:var(--muted);font-weight:500">⭐ 4.9 · 1,240 rides</div>
           </div>
         </div>
         <div class="ad-car-info">
-          <div style="font-size:14px;font-weight:600;" id="adCar">Toyota Corolla</div>
-          <div class="ad-plate" id="adPlate">ABC 123 L</div>
+          <div style="font-size:14px;font-weight:600" id="adCar">—</div>
+          <div class="ad-plate" id="adPlate">— — —</div>
         </div>
       </div>
       <div class="ad-meta-grid">
-        <div class="ad-m-item">
-          <span class="ad-m-lbl">Arriving in</span>
-          <span class="ad-m-val" id="adTime">-- min</span>
+        <div class="ad-m-item"><span class="ad-m-lbl">Arriving in</span><span class="ad-m-val" id="adTime">-- min</span></div>
+        <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
+        <div class="ad-m-item" style="align-items:flex-end"><span class="ad-m-lbl">PIN</span><span class="ad-m-val" id="adPin" style="color:var(--ink);font-size:20px;letter-spacing:2px">----</span></div>
+      </div>
+      <div class="ad-actions">
+        <div class="ad-btn" onclick="openChat()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Chat
         </div>
-        <div class="ad-m-item">
-          <span class="ad-m-lbl">Distance</span>
-          <span class="ad-m-val" id="adDist">-- km</span>
+        <div class="ad-btn" onclick="callDriver()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.56a16 16 0 0 0 6.29 6.29l.87-1.67a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call
         </div>
-        <div class="ad-m-item" style="align-items:flex-end;">
-          <span class="ad-m-lbl">Security PIN</span>
-          <span class="ad-m-val" id="adPin" style="color:var(--ink);">----</span>
+        <div class="ad-btn" onclick="showPinOverlay()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          PIN
         </div>
       </div>
-      <button class="mcancel" style="width:100%;color:var(--red);border-color:rgba(229,53,53,.2);" onclick="cancelActiveRide()">Cancel Ride</button>
+      <button class="cancel-ride-btn" id="cancelRideBtn" onclick="cancelActiveRide()">✕ Cancel Ride</button>
     </div>
   </div>
+
+  <!-- TRIPS PAGE -->
   <div class="fpage" id="tab-trips">
     <div class="ph">My Trips</div>
     <div id="tripsList"></div>
   </div>
+
+  <!-- WALLET PAGE -->
   <div class="fpage" id="tab-wallet">
     <div class="ph">Wallet</div>
     <div class="w-hero">
-      <div class="wlabel">Available Balance</div>
-      <div class="wbal" id="walletBal">R 0.00</div>
-      <div class="wbtns">
-        <button class="wbtn" onclick="openTopUpModal()">+ Top Up (Yoco / Voucher)</button>
+      <div style="position:relative;z-index:1">
+        <div class="wlabel">Available Balance</div>
+        <div class="wbal" id="walletBal">R 0.00</div>
+        <div class="wbtns">
+          <button class="wbtn" onclick="openTopUpModal()">+ Top Up</button>
+        </div>
       </div>
     </div>
     <div class="slabel">Transactions</div>
     <div id="txList"></div>
   </div>
+
+  <!-- ACCOUNT PAGE -->
   <div class="fpage" id="tab-account">
     <div class="ph">Account</div>
     <div class="prof-banner">
@@ -637,68 +791,30 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
     <div class="acc-section-title">My Account</div>
     <div class="ss">
       <div class="sr" id="authRow" onclick="handleAuthAction()">
-        <div class="srl">
-          <div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-          <span class="srt" id="authLabel">Sign in with Google</span>
-        </div><span class="sra">›</span>
+        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="srt" id="authLabel">Sign in with Google</span></div><span class="sra">›</span>
       </div>
     </div>
     <div class="acc-section-title">Preferences</div>
     <div class="ss">
-      <div class="sr" onclick="openNotifModal()">
-        <div class="srl">
-          <div class="sri">
-            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            </svg>
-          </div>
-          <div>
-            <span class="srt">Notifications</span>
-            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;" id="notifSummary">Ride updates · Wallet activity</div>
-          </div>
-        </div><span class="sra">›</span>
+      <div class="sr" onclick="document.getElementById('notifModal').classList.add('show')">
+        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><span class="srt">Notifications</span></div><span class="sra">›</span>
       </div>
       <div class="sr" onclick="openPayModal()">
-        <div class="srl">
-          <div class="sri">
-            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>
-            </svg>
-          </div>
-          <div>
-            <span class="srt">Payment Methods</span>
-            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;">Card (Yoco) · Wallet</div>
-          </div>
-        </div><span class="sra">›</span>
+        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><span class="srt">Payment Methods</span></div><span class="sra">›</span>
       </div>
-      <div class="sr" onclick="openPlacesModal()">
-        <div class="srl">
-          <div class="sri">
-            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-            </svg>
-          </div>
-          <div>
-            <span class="srt">Saved Places</span>
-            <div style="font-family:'Outfit',sans-serif; font-size:11.5px; color:var(--muted); margin-top:1px;" id="savedPlacesSummary">Home · Work · Favourite</div>
-          </div>
-        </div><span class="sra">›</span>
+      <div class="sr" onclick="document.getElementById('placesModal').classList.add('show')">
+        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><span class="srt">Saved Places</span></div><span class="sra">›</span>
       </div>
     </div>
     <div class="ss" id="signOutSection" style="display:none">
       <div class="sr" onclick="doSignOut()">
-        <div class="srl">
-          <div class="sri" style="background:rgba(229,53,53,.08)">
-            <svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-          </div>
-          <span class="srt" style="color:var(--red); font-family:'Outfit',sans-serif;">Sign Out</span>
-        </div><span class="sra" style="color:var(--red)">›</span>
+        <div class="srl"><div class="sri" style="background:rgba(229,53,53,.08)"><svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><span class="srt" style="color:var(--red)">Sign Out</span></div><span class="sra" style="color:var(--red)">›</span>
       </div>
     </div>
-    <div class="account-version">VynixRide v1.0 · South Africa 🇿🇦</div>
+    <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">VynixRide v2.0 · South Africa 🇿🇦</div>
   </div>
+
+  <!-- BOTTOM NAV -->
   <nav class="bnav">
     <div class="bni act" id="bn-ride" onclick="switchTab('ride')">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
@@ -718,247 +834,410 @@ body.yoco-active .panel, body.yoco-active .active-panel, body.yoco-active .mbg, 
     </div>
   </nav>
 </div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as fbOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import{getDatabase,ref,set,push,get,onValue,update}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import{getDatabase,ref,set,push,get,onValue,update,remove,off}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
+
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
-gp.setCustomParameters({ prompt: 'select_account' });
-let cu=null;
-window.db = db;
-const rc = getRemoteConfig(app);
-rc.settings.minimumFetchIntervalMillis = 3600000;
-let yocoPublicKey = 'pk_test_ed3c54a6gOol69qa7f45';
-fetchAndActivate(rc).then(() => {
-  const remoteKey = getValue(rc, 'yoco_public_key').asString();
-  if(remoteKey) { yocoPublicKey = remoteKey; }
-}).catch(console.error);
+gp.setCustomParameters({prompt:'select_account'});
+window.db=db;
 
-function openGoogleSheet(mode) {
-  const bg = document.getElementById('googleSheetBg');
-  const headline = document.getElementById('gsHeadline');
-  const sub = document.getElementById('gsSub');
-  const btnLabel = document.getElementById('gsBtnLabel');
-  if (mode === 'create') {
-    headline.textContent = 'Create your account';
-    sub.textContent = 'Sign up with Google to start booking rides, track your trips, and manage your wallet.';
-    btnLabel.textContent = 'Sign up with Google';
-  } else {
-    headline.textContent = 'Welcome back';
-    sub.textContent = 'Sign in with your Google account to continue booking rides and managing your wallet.';
-    btnLabel.textContent = 'Continue with Google';
-  }
-  bg.classList.add('show');
+let cu=null,yocoPublicKey='pk_test_ed3c54a6gOol69qa7f45';
+let activeRideReqId=null,chatUnsub=null,rideReqUnsub=null;
+let chatMsgs=[],chatUnread=0;
+
+const rc=getRemoteConfig(app);
+rc.settings.minimumFetchIntervalMillis=3600000;
+fetchAndActivate(rc).then(()=>{const k=getValue(rc,'yoco_public_key').asString();if(k)yocoPublicKey=k;}).catch(()=>{});
+
+/* ── GOOGLE SHEET ── */
+function openGoogleSheet(mode){
+  const b=document.getElementById('googleSheetBg');
+  document.getElementById('gsHeadline').textContent=mode==='create'?'Create your account':'Welcome back';
+  document.getElementById('gsSub').textContent=mode==='create'?'Sign up to book rides, track trips, and manage your wallet.':'Sign in to continue booking rides.';
+  document.getElementById('gsBtnLabel').textContent=mode==='create'?'Sign up with Google':'Continue with Google';
+  b.classList.add('show');
 }
-function closeGoogleSheet() { document.getElementById('googleSheetBg').classList.remove('show'); }
-document.getElementById('btnLogin').onclick = () => openGoogleSheet('login');
-document.getElementById('btnCreate').onclick = () => openGoogleSheet('create');
-document.getElementById('skipAuth').onclick = () => { document.getElementById('authOverlay').classList.remove('show'); window.showToast('Demo mode — rides won\'t be saved'); };
-document.getElementById('gsClose').onclick = closeGoogleSheet;
-document.getElementById('googleSheetBg').addEventListener('click', e => { if (e.target === document.getElementById('googleSheetBg')) closeGoogleSheet(); });
-document.getElementById('gsGoogleBtn').onclick = () => { closeGoogleSheet(); signInWithPopup(auth, gp).catch(() => window.showToast('Sign-in cancelled')); };
+function closeGoogleSheet(){document.getElementById('googleSheetBg').classList.remove('show');}
+document.getElementById('btnLogin').onclick=()=>openGoogleSheet('login');
+document.getElementById('btnCreate').onclick=()=>openGoogleSheet('create');
+document.getElementById('skipAuth').onclick=()=>{document.getElementById('authOverlay').classList.remove('show');window.showToast('Demo mode — rides won\'t be saved');};
+document.getElementById('gsClose').onclick=closeGoogleSheet;
+document.getElementById('googleSheetBg').addEventListener('click',e=>{if(e.target===document.getElementById('googleSheetBg'))closeGoogleSheet();});
+document.getElementById('gsGoogleBtn').onclick=()=>{closeGoogleSheet();signInWithPopup(auth,gp).catch(()=>window.showToast('Sign-in cancelled'));};
 
-window.openNotifModal = function() {
-  const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
-  ['ride','arriving','promo','weekly','wallet'].forEach(k => { const el = document.getElementById(`notif-${k}`); if(el && prefs[k] !== undefined) el.checked = prefs[k]; });
-  document.getElementById('notifModal').classList.add('show');
-};
-window.closeNotifModal = function() { document.getElementById('notifModal').classList.remove('show'); };
-window.saveNotifPrefs = function() {
-  const prefs = {};
-  ['ride','arriving','promo','weekly','wallet'].forEach(k => { const el = document.getElementById(`notif-${k}`); if(el) prefs[k] = el.checked; });
-  localStorage.setItem('vx_notif_prefs', JSON.stringify(prefs));
-  updateNotifSummary(prefs);
-  window.closeNotifModal();
-  window.showToast('Notification preferences saved');
-};
-function updateNotifSummary(prefs) {
-  const labels = {ride:'Ride updates', arriving:'Driver alerts', promo:'Offers', weekly:'Weekly digest', wallet:'Wallet activity'};
-  const active = Object.entries(prefs).filter(([,v])=>v).map(([k])=>labels[k]||k);
-  const el = document.getElementById('notifSummary');
-  if(el) el.textContent = active.length ? active.join(' · ') : 'All notifications off';
-}
-(function(){ const prefs = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{"ride":true,"arriving":true,"wallet":true}'); updateNotifSummary(prefs); })();
-
-window.openPayModal = function() {
-  const walBal = document.getElementById('walletBal');
-  const payBal = document.getElementById('payModalWalletBal');
-  const payStatus = document.getElementById('payModalWalletStatus');
-  if(walBal && payBal) {
-    payBal.textContent = 'Balance: ' + walBal.textContent;
-    const balNum = parseFloat((walBal.textContent||'0').replace('R','').trim());
-    if(payStatus) {
-      if(balNum > 0) { payStatus.textContent = 'Funded'; payStatus.className = 'pm-badge'; }
-      else { payStatus.textContent = 'Empty'; payStatus.style.background='rgba(229,53,53,.08)'; payStatus.style.color='var(--red)'; }
-    }
-  }
-  document.getElementById('payModal').classList.add('show');
-};
-window.closePayModal = function() { document.getElementById('payModal').classList.remove('show'); };
-
-window.openPlacesModal = function() {
-  const load = (data) => { document.getElementById('sp-home').value = data.home || ''; document.getElementById('sp-work').value = data.work || ''; document.getElementById('sp-fav').value = data.fav || ''; };
-  if(cu) { get(ref(db, `users/${cu.uid}/savedPlaces`)).then(snap => { load(snap.val() || {}); }).catch(()=>{ load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); }); } else { load(JSON.parse(localStorage.getItem('vx_saved_places')||'{}')); }
-  document.getElementById('placesModal').classList.add('show');
-};
-window.closePlacesModal = function() { document.getElementById('placesModal').classList.remove('show'); };
-window.savePlaces = async function() {
-  const data = { home: document.getElementById('sp-home').value.trim(), work: document.getElementById('sp-work').value.trim(), fav: document.getElementById('sp-fav').value.trim() };
-  localStorage.setItem('vx_saved_places', JSON.stringify(data));
-  if(cu) { try { await set(ref(db, `users/${cu.uid}/savedPlaces`), data); } catch(e){} }
-  const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean);
-  const sumEl = document.getElementById('savedPlacesSummary');
-  if(sumEl) sumEl.textContent = filled.length ? filled.join(' · ') : 'No places saved yet';
-  window.closePlacesModal();
-  window.showToast('Saved places updated');
-};
-(function(){ const data = JSON.parse(localStorage.getItem('vx_saved_places')||'{}'); const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean); const sumEl = document.getElementById('savedPlacesSummary'); if(sumEl && filled.length) sumEl.textContent = filled.join(' · '); })();
-
-window.triggerYocoPayment = function(amount, description, onSuccessCallback, restoreModalId) {
-  if (typeof window.YocoSDK === 'undefined') { window.showToast("Payment system currently unavailable."); return; }
-  if (restoreModalId) document.getElementById(restoreModalId).classList.remove('show');
-  document.body.classList.add('yoco-active');
-  const isMobile = window.innerWidth < 900;
-  const bookPanel = document.getElementById('bookPanel');
-  const activePanel = document.getElementById('activeRidePanel');
-  let bookPanelWasVisible = false, activePanelWasVisible = false;
-  if (isMobile) {
-    if (bookPanel && bookPanel.style.display !== 'none') { bookPanelWasVisible = true; bookPanel.style.transition = 'transform 0.3s ease, opacity 0.3s ease'; bookPanel.style.transform = 'translateY(110%)'; bookPanel.style.opacity = '0'; }
-    if (activePanel && activePanel.classList.contains('show')) { activePanelWasVisible = true; activePanel.classList.remove('show'); }
-  }
-  const restoreSheets = () => {
-    document.body.classList.remove('yoco-active');
-    if (isMobile) { if (bookPanelWasVisible && bookPanel) { bookPanel.style.transform = ''; bookPanel.style.opacity = ''; } if (activePanelWasVisible && activePanel) activePanel.classList.add('show'); }
-  };
-  const yoco = new window.YocoSDK({ publicKey: yocoPublicKey });
-  yoco.showPopup({
-    amountInCents: Math.round(amount * 100), currency: 'ZAR', name: 'VynixRide', description,
-    callback: function (result) {
-      restoreSheets();
-      if (result.error) { if (restoreModalId) document.getElementById(restoreModalId).classList.add('show'); window.showToast("Payment failed: " + result.error.message); } else { onSuccessCallback(result.id); }
-    }
-  });
-  if (window.innerWidth >= 900) { setTimeout(() => { const yocoContainers = document.querySelectorAll('div[class*="yoco"], div[id*="yoco"], .yoco-popup, .yoco-modal, iframe[src*="yoco"], body > div[style*="position: fixed"]'); yocoContainers.forEach(el => { el.style.setProperty('z-index', '2147483647', 'important'); if (el.style.position === 'fixed' || getComputedStyle(el).position === 'fixed') { el.style.setProperty('left', 'auto', 'important'); el.style.setProperty('right', '40px', 'important'); el.style.setProperty('transform', 'none', 'important'); } }); }, 120); }
-};
-function s(id,v){const e=document.getElementById(id);if(e)e.textContent=v;}
-function updateUI(u){
-  cu=u;
-  const n=u?(u.displayName||'Rider'):'Guest',e=u?u.email:'Not signed in',i=window.ini2(n);
-  ['sbAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=i;});
-  s('sbName',n);s('sbEmail',e);s('profName',n);s('profEmail',e);
-  const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
-  if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';} else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
-}
+/* ── AUTH STATE ── */
 onAuthStateChanged(auth,async u=>{
   document.getElementById('initLoader').classList.add('hide');
-  updateUI(u);
-  if(!u){ document.getElementById('authOverlay').classList.add('show'); return; }
+  cu=u; updateUI(u);
+  if(!u){document.getElementById('authOverlay').classList.add('show');return;}
   document.getElementById('authOverlay').classList.remove('show');
   closeGoogleSheet();
   const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
-  if(!ws.exists()) await set(ref(db,`users/${u.uid}/wallet/balance`), 0);
-  onValue(ref(db,`users/${u.uid}/trips`),snap=>{ renderTrips(Object.values(snap.val()||{}).reverse()); });
-  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{ const d=snap.val()||{balance:0}; document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`; renderTx(d.transactions||{}); });
-  get(ref(db,`users/${u.uid}/savedPlaces`)).then(snap=>{ const data = snap.val()||{}; const filled = [data.home && 'Home', data.work && 'Work', data.fav && 'Fav'].filter(Boolean); const sumEl = document.getElementById('savedPlacesSummary'); if(sumEl && filled.length) sumEl.textContent = filled.join(' · '); }).catch(()=>{});
+  if(!ws.exists())await set(ref(db,`users/${u.uid}/wallet/balance`),0);
+  onValue(ref(db,`users/${u.uid}/trips`),snap=>renderTrips(Object.values(snap.val()||{}).reverse()));
+  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{const d=snap.val()||{balance:0};document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;renderTx(d.transactions||{});});
+  // Restore active ride if exists
+  const arSnap=await get(ref(db,`users/${u.uid}/activeRideId`));
+  if(arSnap.exists()&&arSnap.val()){
+    activeRideReqId=arSnap.val();
+    listenToActiveRide(activeRideReqId);
+  }
 });
+
+function updateUI(u){
+  const n=u?(u.displayName||'Rider'):'Guest',e=u?u.email:'Not signed in',i=ini2(n);
+  ['sbAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=i;});
+  document.getElementById('sbName').textContent=n;
+  document.getElementById('sbEmail').textContent=e;
+  document.getElementById('profName').textContent=n;
+  document.getElementById('profEmail').textContent=e;
+  const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
+  if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';}
+  else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
+}
+
+/* ── LISTEN ACTIVE RIDE ── */
+function listenToActiveRide(rideId){
+  if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
+  rideReqUnsub=onValue(ref(db,`ride_requests/${rideId}`),snap=>{
+    const data=snap.val();
+    if(!data){
+      // Ride was deleted — check if driver canceled
+      if(activeRideReqId){
+        handleRideCanceled('driver');
+      }
+      return;
+    }
+    if(data.status==='accepted'&&!document.getElementById('activeRidePanel').classList.contains('show')){
+      // Driver just accepted
+      showDriverAccepted(data);
+      document.getElementById('searchOverlay').classList.remove('show');
+      document.getElementById('bookPanel').style.display='none';
+      clearInterval(window._searchInterval);
+      clearTimeout(window._searchTimeout);
+    }
+    if(data.status==='accepted'){
+      // Update driver info live
+      if(data.driverName)document.getElementById('adName').textContent=data.driverName;
+      if(data.driverAv)document.getElementById('adAv').textContent=ini2(data.driverName||'D');
+      if(data.driverCar)document.getElementById('adCar').textContent=data.driverCar;
+      if(data.driverPlate)document.getElementById('adPlate').textContent=data.driverPlate;
+      if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
+      if(data.arrivedPin){window._driverPin=data.arrivedPin;}
+      if(data.arrived){document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';}
+      // Track driver location
+      if(data.driverId){
+        get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{
+          const dd=dSnap.val();
+          if(dd&&dd.lat&&dd.lng&&window._mapInstance){
+            updateCarMarker(dd.lat,dd.lng);
+            const dist=haversine(window._wULat,window._wULng,dd.lat,dd.lng);
+            document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
+            document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
+          }
+        });
+        // Realtime driver location
+        onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{
+          const dd=dSnap.val();
+          if(dd&&dd.lat&&dd.lng&&window._mapInstance){
+            updateCarMarker(dd.lat,dd.lng);
+            const dist=haversine(window._wULat||(-24.1991),window._wULng||(28.9934),dd.lat,dd.lng);
+            document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
+            document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
+          }
+        });
+      }
+    }
+    if(data.status==='canceled_by_driver'){
+      handleRideCanceled('driver');
+    }
+    if(data.status==='completed'){
+      resetToBooking();
+      window.showToast('🎉 Ride completed! Thanks for riding with VynixRide.');
+    }
+  });
+  // Listen chat
+  listenChat(rideId);
+}
+
+function showDriverAccepted(data){
+  document.getElementById('adName').textContent=data.driverName||'Driver';
+  document.getElementById('adAv').textContent=ini2(data.driverName||'D');
+  document.getElementById('adCar').textContent=data.driverCar||'Vehicle';
+  document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
+  document.getElementById('adPin').textContent=data.securityPin||'----';
+  window._riderPin=data.securityPin;
+  document.getElementById('activeRidePanel').style.display='flex';
+  requestAnimationFrame(()=>document.getElementById('activeRidePanel').classList.add('show'));
+  document.getElementById('rideStatusText').textContent='Driver on the way to pickup…';
+  // Fit map to show driver
+  if(window._mapInstance&&data.driverId){
+    get(ref(db,`active_drivers/${data.driverId}`)).then(s=>{
+      const d=s.val();
+      if(d&&d.lat&&d.lng){
+        updateCarMarker(d.lat,d.lng);
+        const bounds=new mapboxgl.LngLatBounds();
+        bounds.extend([window._wULng||28.9934,window._wULat||-24.1991]);
+        bounds.extend([d.lng,d.lat]);
+        window._mapInstance.fitBounds(bounds,{padding:{top:80,bottom:getMobilePad(),left:40,right:40},duration:1200,pitch:55,bearing:0});
+      }
+    });
+  }
+  window.showToast('🎉 Driver accepted! Track them on the map.');
+}
+
+function handleRideCanceled(by){
+  if(!activeRideReqId)return;
+  if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
+  if(chatUnsub){chatUnsub();chatUnsub=null;}
+  if(cu)set(ref(db,`users/${cu.uid}/activeRideId`),null).catch(()=>{});
+  activeRideReqId=null;
+  resetToBooking();
+  if(by==='driver'){
+    const b=document.getElementById('driverCanceledBanner');
+    b.classList.add('show');
+    setTimeout(()=>b.classList.remove('show'),6000);
+  }
+}
+
+function resetToBooking(){
+  document.getElementById('activeRidePanel').classList.remove('show');
+  setTimeout(()=>{document.getElementById('activeRidePanel').style.display='none';},450);
+  document.getElementById('bookPanel').style.display='flex';
+  if(window._carMarkerEl){window._carMarkerEl.remove();window._carMarkerEl=null;}
+  chatMsgs=[];chatUnread=0;
+  document.getElementById('chatMessages').innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>';
+}
+
+/* ── CHAT ── */
+function listenChat(rideId){
+  if(chatUnsub){chatUnsub();chatUnsub=null;}
+  chatUnsub=onValue(ref(db,`ride_requests/${rideId}/chat`),snap=>{
+    const msgs=Object.entries(snap.val()||{}).map(([k,v])=>({...v,_key:k})).sort((a,b)=>a.ts-b.ts);
+    const prev=chatMsgs.length;chatMsgs=msgs;
+    renderChatMsgs();
+    const chatOpen=document.getElementById('chatBg').classList.contains('show');
+    const newDriverMsgs=msgs.filter(m=>m.sender==='driver'&&!m.readByRider).length;
+    if(chatOpen){markRead(rideId);chatUnread=0;}
+    else if(newDriverMsgs>0){chatUnread=newDriverMsgs;updateChatBadge();}
+    if(chatOpen)scrollChatBottom();
+    // typing indicator
+    if(msgs.length>prev&&msgs[msgs.length-1].sender==='driver'&&!chatOpen){
+      showTyping();
+    }
+  });
+}
+function markRead(rideId){
+  chatMsgs.filter(m=>m.sender==='driver'&&!m.readByRider).forEach(m=>{
+    update(ref(db,`ride_requests/${rideId}/chat/${m._key}`),{readByRider:true}).catch(()=>{});
+  });
+}
+let typingTimer=null;
+function showTyping(){
+  const el=document.getElementById('typingIndicator');if(!el)return;
+  el.classList.add('show');clearTimeout(typingTimer);
+  typingTimer=setTimeout(()=>el.classList.remove('show'),2500);
+}
+function renderChatMsgs(){
+  const el=document.getElementById('chatMessages');
+  if(!chatMsgs.length){el.innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>';return;}
+  el.innerHTML=chatMsgs.map(m=>{
+    const mine=m.sender==='rider';
+    const time=m.ts?new Date(m.ts).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'}):'';
+    const tick=mine?(m.readByDriver?'✓✓':'✓'):'';
+    return `<div class="chat-msg ${mine?'mine':'theirs'}"><div class="chat-bubble">${escHtml(m.text)}</div><div class="chat-meta">${time} ${tick}</div></div>`;
+  }).join('');
+}
+function scrollChatBottom(){const el=document.getElementById('chatMessages');if(el)setTimeout(()=>el.scrollTop=el.scrollHeight,60);}
+function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function updateChatBadge(){
+  const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;
+  if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}
+  else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}
+}
+window.openChat=function(){
+  if(!activeRideReqId){window.showToast('No active ride');return;}
+  const data=window._activeRideData||{};
+  document.getElementById('chatAv').textContent=ini2(data.driverName||'D');
+  document.getElementById('chatDriverName').textContent=data.driverName||'Driver';
+  document.getElementById('chatBg').classList.add('show');
+  chatUnread=0;updateChatBadge();
+  markRead(activeRideReqId);
+  renderChatMsgs();scrollChatBottom();
+};
+window.closeChat=()=>document.getElementById('chatBg').classList.remove('show');
+window.sendChatMsg=async function(){
+  const inp=document.getElementById('chatInput');const text=inp.value.trim();
+  if(!text||!activeRideReqId)return;
+  inp.value='';inp.style.height='';
+  await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));
+  scrollChatBottom();
+};
+window.sendQR=async function(text){
+  if(!activeRideReqId){window.showToast('No active ride');return;}
+  await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});
+  scrollChatBottom();
+};
+window.chatKeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMsg();}};
+window.autoResize=function(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';};
+
+/* ── CALL DRIVER ── */
+window.callDriver=function(){window.showToast('📞 Calling driver… (demo)');};
+
+/* ── PIN OVERLAY ── */
+window.showPinOverlay=function(){
+  const rPin=window._riderPin||'----';
+  const display=document.getElementById('riderPinDisplay');
+  display.innerHTML=String(rPin).split('').map(d=>`<div class="pin-digit-box">${d}</div>`).join('');
+  const row=document.getElementById('pinInputRow');
+  row.innerHTML=Array.from({length:4},(_,i)=>`<input class="pin-input-digit" id="pdi${i}" maxlength="1" type="text" inputmode="numeric" pattern="[0-9]" oninput="pinNext(event,${i})">`).join('');
+  document.getElementById('pinError').style.display='none';
+  document.getElementById('pinOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('pdi0')?.focus(),250);
+};
+window.closePinOverlay=()=>document.getElementById('pinOverlay').classList.remove('show');
+window.pinNext=function(e,i){
+  e.target.value=e.target.value.replace(/\D/,'');
+  if(e.target.value&&i<3)document.getElementById(`pdi${i+1}`)?.focus();
+};
+window.verifyDriverPin=function(){
+  const entered=[0,1,2,3].map(i=>document.getElementById(`pdi${i}`)?.value||'').join('');
+  const expected=window._driverPin||'';
+  if(!expected){window.showToast('Driver has not arrived yet');return;}
+  if(entered===expected){
+    document.getElementById('pinOverlay').classList.remove('show');
+    document.getElementById('rideStatusText').textContent='🚗 Ride in progress!';
+    window.showToast('✅ PIN verified — enjoy your ride!');
+  }else{
+    document.getElementById('pinError').style.display='block';
+    [0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el){el.value='';el.style.borderColor='var(--red)';}});
+    setTimeout(()=>{document.getElementById('pinError').style.display='none';[0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el)el.style.borderColor='';});},2000);
+    document.getElementById('pdi0')?.focus();
+  }
+};
+
+/* ── BOOKING ── */
+window.initiateRidePayment=async function(method='card'){
+  if(!cu){window.showToast('Please sign in first');return;}
+  const r=window._rides.find(x=>x.id===window._selId);
+  const processBooking=async(payType)=>{
+    try{
+      const dest=window._destName.split(',').slice(0,2).join(',');
+      const secPin=Math.floor(1000+Math.random()*9000).toString();
+      const rideReqRef=await push(ref(db,'ride_requests'),{
+        status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',
+        rideType:r.type,fare:r.price,pickup:document.getElementById('originLabel').textContent||'Current Location',
+        destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,
+        capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now()
+      });
+      activeRideReqId=rideReqRef.key;
+      window._riderPin=secPin;
+      await set(ref(db,`users/${cu.uid}/activeRideId`),activeRideReqId);
+      document.getElementById('confirmModal').classList.remove('show');
+      document.getElementById('bookPanel').style.display='none';
+      window.startSearchTimer();
+      listenToActiveRide(activeRideReqId);
+    }catch(e){window.showToast('Error creating ride request');}
+  };
+  if(method==='card'){
+    window.triggerYocoPayment(r.price,`Ride: ${r.type}`,async()=>{
+      await processBooking('Card');
+      if(cu){
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card'});
+        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ride (Card)`,amount:r.price,type:'dr',date:Date.now()});
+      }
+    },'confirmModal');
+  }else{
+    await processBooking('Cash');
+    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash'});
+  }
+};
+
+window.cancelActiveRide=async function(){
+  if(!activeRideReqId||!cu){window.showToast('No active ride');return;}
+  if(!confirm('Cancel your ride?'))return;
+  try{
+    const snap=await get(ref(db,`ride_requests/${activeRideReqId}`));
+    const d=snap.val();
+    if(d&&(d.status==='pending'||d.status==='accepted')){
+      await update(ref(db,`ride_requests/${activeRideReqId}`),{status:'canceled_by_rider',canceledAt:Date.now()});
+      // Log canceled trip
+      await push(ref(db,`users/${cu.uid}/trips`),{type:d.rideType||'—',driver:d.driverName||'—',fare:d.fare||0,destination:d.destination||'—',status:'Canceled',date:Date.now(),paymentMethod:d.paymentMethod||'—'});
+    }
+    if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
+    if(chatUnsub){chatUnsub();chatUnsub=null;}
+    await set(ref(db,`users/${cu.uid}/activeRideId`),null);
+    activeRideReqId=null;
+    resetToBooking();
+    window.showToast('Ride cancelled');
+  }catch(e){window.showToast('Error cancelling ride');}
+};
+
+/* ── YOCO ── */
+window.triggerYocoPayment=function(amount,description,onSuccess,restoreModalId){
+  if(typeof window.YocoSDK==='undefined'){window.showToast('Payment unavailable');return;}
+  if(restoreModalId)document.getElementById(restoreModalId)?.classList.remove('show');
+  const yoco=new window.YocoSDK({publicKey:yocoPublicKey});
+  yoco.showPopup({amountInCents:Math.round(amount*100),currency:'ZAR',name:'VynixRide',description,callback:function(result){
+    if(result.error){if(restoreModalId)document.getElementById(restoreModalId)?.classList.add('show');window.showToast('Payment failed: '+result.error.message);}
+    else{onSuccess(result.id);}
+  }});
+};
+
+window.executeYocoTopUp=async function(){
+  if(!cu){window.showToast('Sign in first');return;}
+  const amt=parseFloat(document.getElementById('yocoAmount').value);
+  if(isNaN(amt)||amt<10){window.showToast('Min R10');return;}
+  window.triggerYocoPayment(amt,'Wallet Top-Up',async()=>{
+    const wRef=ref(db,`users/${cu.uid}/wallet/balance`);
+    const snap=await get(wRef);const curr=snap.val()||0;
+    await update(ref(db,`users/${cu.uid}/wallet`),{balance:curr+amt});
+    await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
+    document.getElementById('yocoAmount').value='';
+    window.showToast(`Added R${amt.toFixed(2)}`);
+  },'topUpModal');
+};
+
+window.executeVoucher=async function(){
+  if(!cu){window.showToast('Sign in first');return;}
+  const code=document.getElementById('voucherCode').value.trim().toUpperCase();
+  if(!code){window.showToast('Enter a code');return;}
+  try{
+    const vRef=ref(db,`vouchers/${code}`);const snap=await get(vRef);
+    if(snap.exists()){
+      const data=snap.val();
+      if(data.used){window.showToast('Already used');return;}
+      const amt=parseFloat(data.amount);if(isNaN(amt)){window.showToast('Invalid voucher');return;}
+      const wSnap=await get(ref(db,`users/${cu.uid}/wallet/balance`));const curr=wSnap.val()||0;
+      const updates={};
+      updates[`users/${cu.uid}/wallet/balance`]=curr+amt;updates[`vouchers/${code}/used`]=true;updates[`vouchers/${code}/redeemedBy`]=cu.uid;
+      await update(ref(db),updates);
+      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
+      window.closeTopUpModal();window.showToast(`R${amt.toFixed(2)} added!`);
+      document.getElementById('voucherCode').value='';
+    }else{window.showToast('Invalid voucher code');}
+  }catch(e){window.showToast('Error processing voucher');}
+};
+
+/* ── TRIPS / TX ── */
 function renderTrips(list){
   const el=document.getElementById('tripsList');
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips yet.<br>Book your first ride!</p></div>';return;}
-  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px; font-weight:600; padding:2px 6px; border-radius:10px; background:rgba(0,0,0,0.05);">${t.paymentMethod || 'Card'}</span></div><div class="tc-meta">${t.destination} · ${t.driver}</div></div><div class="tc-fare">R ${parseFloat(t.fare).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge">✓ ${t.status||'Completed'}</span></div>`).join('');
+  el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,.05)">${t.paymentMethod||'Card'}</span></div><div class="tc-meta">${t.destination||'—'} · ${t.driver||'—'}</div></div><div class="tc-fare">R ${parseFloat(t.fare||0).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge ${t.status==='Canceled'?'canceled':''}">${t.status==='Canceled'?'✕ Canceled':'✓ '+( t.status||'Completed')}</span></div>`).join('');
 }
 function renderTx(obj){
   const el=document.getElementById('txList'),list=Object.values(obj).reverse();
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
-window.initiateRidePayment = async function(method = 'card') {
-  if(!cu) { window.showToast('Please sign in first'); return; }
-  const r = window._rides.find(x => x.id === window._selId);
-  
-  const processBooking = async (paymentType) => {
-    try {
-      const dest = window._destName.split(',').slice(0,2).join(',');
-      await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:r.price,destination:dest,status:'Completed',date:Date.now(), paymentMethod: paymentType});
-      if (paymentType === 'Card') { await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} to ${dest} (Paid with Card)`,amount:r.price,type:'dr',date:Date.now()}); }
 
-      const secPin = Math.floor(1000 + Math.random() * 9000).toString();
-      const rideReqRef = await push(ref(db,'ride_requests'),{
-        status:'pending', riderUid: cu.uid, riderName: cu.displayName || 'Rider', rideType: r.type, fare: r.price, pickup: document.getElementById('originLabel').textContent || 'Current Location', destination: window._destName, distKm: window._distKm || 0, tripMins: window._tripDurationMins || 0, capacity: r.capacity || 4, securityPin: secPin, paymentMethod: paymentType, createdAt: Date.now()
-      });
-      window._activeRideReqId = rideReqRef.key;
-      
-      document.getElementById('confirmModal').classList.remove('show');
-      document.getElementById('bookPanel').style.display = 'none';
-      if(window._mapFly) window._mapFly();
-      window.startSearchTimer();
-
-      // NEW: Listen for Driver Acceptance
-      const reqListenerRef = ref(db, `ride_requests/${window._activeRideReqId}`);
-      onValue(reqListenerRef, (snap) => {
-        const data = snap.val();
-        if (!data) return;
-        if (data.status === 'accepted') {
-          clearInterval(searchInterval); 
-          clearTimeout(searchTimeout);
-          document.getElementById('searchOverlay').classList.remove('show');
-          document.getElementById('bookPanel').style.display = 'none';
-          document.getElementById('activeRidePanel').classList.add('show');
-          document.getElementById('adName').textContent = data.driverName || 'Driver';
-          document.getElementById('adAv').textContent = window.ini2(data.driverName);
-          document.getElementById('adCar').textContent = data.driverCar || 'Vehicle';
-          document.getElementById('adPlate').textContent = data.driverPlate || '---';
-          document.getElementById('adPin').textContent = data.securityPin || '----';
-          window._activeDriverId = data.driverId;
-        }
-      });
-    } catch(e) { window.showToast('Database error after payment.'); }
-  };
-
-  if (method === 'card') { window.triggerYocoPayment( r.price, `Ride: ${r.type}`, async (token) => { await processBooking('Card'); }, 'confirmModal' ); } 
-  else if (method === 'cash') { await processBooking('Cash'); }
-};
-window.executeYocoTopUp = async function() {
-  if(!cu) { window.showToast("Sign in first."); return; }
-  const amt = parseFloat(document.getElementById('yocoAmount').value);
-  if(isNaN(amt) || amt < 10) { window.showToast("Enter a valid amount (Min R10)"); return; }
-  window.triggerYocoPayment(amt, 'Wallet Top-Up', async (token) => {
-    try {
-      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
-      const snap = await get(wRef); const curr = snap.val() || 0;
-      await update(ref(db, `users/${cu.uid}/wallet`), { balance: curr + amt });
-      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
-      document.getElementById('yocoAmount').value = '';
-      window.showToast(`Successfully added R${amt.toFixed(2)}`);
-    } catch(e) { window.showToast("Database error saving top-up."); }
-  }, 'topUpModal');
-};
-window.executeVoucher = async function() {
-  if(!cu) { window.showToast("Sign in first."); return; }
-  const code = document.getElementById('voucherCode').value.trim().toUpperCase();
-  if(!code) { window.showToast("Please enter a code"); return; }
-  try {
-    const vRef = ref(db, `vouchers/${code}`);
-    const snap = await get(vRef);
-    if(snap.exists()) {
-      const data = snap.val();
-      if(data.used) { window.showToast("Voucher has already been used."); return; }
-      const amt = parseFloat(data.amount);
-      if(isNaN(amt)) { window.showToast("Invalid voucher data."); return; }
-      const wRef = ref(db, `users/${cu.uid}/wallet/balance`);
-      const wSnap = await get(wRef); const curr = wSnap.val() || 0;
-      const updates = {};
-      updates[`users/${cu.uid}/wallet/balance`] = curr + amt; updates[`vouchers/${code}/used`] = true; updates[`vouchers/${code}/redeemedBy`] = cu.uid;
-      await update(ref(db), updates);
-      await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Redeemed Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
-      window.closeTopUpModal();
-      window.showToast(`R${amt.toFixed(2)} added from voucher!`);
-      document.getElementById('voucherCode').value = '';
-    } else { window.showToast("Invalid voucher code."); }
-  } catch(e) { window.showToast("Error processing voucher."); }
-};
-window.handleAuthAction=()=>{ if(cu)return; openGoogleSheet('login'); };
+/* ── ACCOUNT ── */
+window.handleAuthAction=()=>{if(cu)return;openGoogleSheet('login');};
 window.doSignOut=async()=>{
   await fbOut(auth);
   document.getElementById('tripsList').innerHTML='';
@@ -967,175 +1246,315 @@ window.doSignOut=async()=>{
   window.showToast('Signed out');
   document.getElementById('authOverlay').classList.add('show');
 };
+window.saveNotifPrefs=function(){const prefs={};['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});localStorage.setItem('vx_notif_prefs',JSON.stringify(prefs));document.getElementById('notifModal').classList.remove('show');window.showToast('Preferences saved');};
+window.openPayModal=function(){const b=document.getElementById('walletBal');document.getElementById('payModalWalletBal').textContent='Balance: '+(b?b.textContent:'R 0.00');document.getElementById('payModal').classList.add('show');};
+window.savePlaces=async function(){
+  const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};
+  localStorage.setItem('vx_saved_places',JSON.stringify(data));
+  if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});
+  document.getElementById('placesModal').classList.remove('show');window.showToast('Saved places updated');
+};
 
-let realDrivers = {}, driverMarkersObj = {}, noDriverToastShown = false;
-import { onValue as rtdbOnValue, ref as rtdbRef } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-setTimeout(() => {
-  if (window.db) {
-    rtdbOnValue(rtdbRef(window.db, 'active_drivers'), snap => { realDrivers = snap.val() || {}; });
-    setInterval(() => {
-      const driverIds = Object.keys(realDrivers);
-      if (driverIds.length === 0) {
-        if (!noDriverToastShown && !window._activeDriverId) { window.showToast('No drivers currently available nearby.'); noDriverToastShown = true; }
-      } else { noDriverToastShown = false; }
-      Object.keys(driverMarkersObj).forEach(id => {
-        if(!realDrivers[id]) { driverMarkersObj[id].remove(); delete driverMarkersObj[id]; }
-      });
-      driverIds.forEach(id => {
-        const d = realDrivers[id];
-        if(d.lat && d.lng && window.mapboxgl) {
-          if(driverMarkersObj[id]) { driverMarkersObj[id].setLngLat([d.lng, d.lat]); }
-          else {
-            const el = document.createElement('div'); el.className = 'car-marker'; el.innerHTML = '🚕';
-            driverMarkersObj[id] = new window.mapboxgl.Marker({element: el}).setLngLat([d.lng, d.lat]).addTo(window._mapInstance);
-          }
-          // NEW: Tracing specific driver
-          if (window._activeDriverId === id && window.haversine) {
-             const dist = window.haversine(window._wULat, window._wULng, d.lat, d.lng);
-             document.getElementById('adDist').textContent = dist.toFixed(1) + ' km';
-             document.getElementById('adTime').textContent = Math.ceil(dist * 1.5) + ' min'; 
-             window._mapInstance.flyTo({ center: [d.lng, d.lat], speed: 0.3 });
-          }
+/* ── REAL DRIVERS ON MAP ── */
+setTimeout(()=>{
+  if(window.db){
+    onValue(ref(db,'active_drivers'),snap=>{
+      const drivers=snap.val()||{};
+      Object.entries(drivers).forEach(([id,d])=>{
+        if(d.lat&&d.lng&&window._mapInstance&&id!==window._trackingDriverId){
+          // Show ghost markers for other drivers
         }
       });
-    }, 5000);
+    });
   }
-}, 2000);
+},2000);
+
+function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
+window.ini2=ini2;
 </script>
+
 <script>
-window.ini2 = function(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
 mapboxgl.accessToken=TK;
-const DLNG=28.9934,DLAT=-24.1991;
-const DEFAULT_ZOOM = 15.5;
-const map=new mapboxgl.Map({ container:'map', style:'mapbox://styles/mapbox/light-v11', center:[DLNG,DLAT],zoom:DEFAULT_ZOOM, attributionControl:false, logoPosition:'bottom-right' });
-window._mapInstance = map;
+const DLNG=28.9934,DLAT=-24.1991,DEFAULT_ZOOM=15.5;
+
+/* ── 3D ENHANCED MAP ── */
+const map=new mapboxgl.Map({
+  container:'map',
+  style:'mapbox://styles/mapbox/light-v11',
+  center:[DLNG,DLAT],zoom:DEFAULT_ZOOM,
+  pitch:55,bearing:0,
+  antialias:true,
+  attributionControl:false,
+  logoPosition:'bottom-right',
+  maxPitch:70
+});
+window._mapInstance=map;
 map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
-map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
-const oEl=document.createElement('div'); oEl.className='cmarker';
+
+map.on('load',()=>{
+  // 3D terrain
+  map.addSource('mapbox-dem',{type:'raster-dem',url:'mapbox://mapbox.mapbox-terrain-dem-v1',tileSize:512,maxzoom:14});
+  map.setTerrain({source:'mapbox-dem',exaggeration:1.2});
+  // Sky layer for atmosphere
+  map.addLayer({id:'sky',type:'sky',paint:{'sky-type':'atmosphere','sky-atmosphere-sun':[0,0],'sky-atmosphere-sun-intensity':15,'sky-atmosphere-color':'rgba(135, 206, 235, 1.0)','sky-atmosphere-halo-color':'rgba(255, 255, 255, 0.5)','sky-atmosphere-horizon-blend':0.1}});
+  // 3D buildings
+  const layers=map.getStyle().layers;
+  const labelLayerId=layers.find(l=>l.type==='symbol'&&l.layout['text-field'])?.id;
+  map.addLayer({
+    id:'3d-buildings',source:'composite','source-layer':'building',
+    filter:['==','extrude','true'],type:'fill-extrusion',minzoom:14,
+    paint:{'fill-extrusion-color':['interpolate',['linear'],['get','height'],0,'#dde4f0',100,'#b8c4e0',300,'#8fa0c8'],'fill-extrusion-height':['interpolate',['linear'],['zoom'],14,0,14.05,['get','height']],'fill-extrusion-base':['interpolate',['linear'],['zoom'],14,0,14.05,['get','min_height']],'fill-extrusion-opacity':.75,'fill-extrusion-ambient-occlusion-intensity':0.7,'fill-extrusion-ambient-occlusion-radius':2}
+  },labelLayerId);
+  // Subtle traffic layer feeling - road pulse
+  map.setPaintProperty('road-primary','line-color','#1A3BFF');
+  map.setPaintProperty('road-primary','line-opacity',0.15);
+});
+
+// Fog / atmosphere for cinematic effect
+map.on('style.load',()=>{
+  map.setFog({'color':'rgba(220, 225, 245, 1)','high-color':'rgba(180, 195, 240, 1)','horizon-blend':0.06,'space-color':'rgba(100, 130, 200, 1)','star-intensity':0.06});
+});
+
+window._mapInstance=map;
+const oEl=document.createElement('div');oEl.className='cmarker';
 const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
-let dMk=null,wULng=DLNG,wULat=DLAT,destName='';
-window._wULat = wULat; window._wULng = wULng;
-let searchInterval = null, searchTimeout = null;
-function getMobilePadding() { return window.innerWidth < 900 ? window.innerHeight * 0.40 : 55; }
-window._mapFly = () => map.flyTo({ center: [wULng, wULat], zoom: DEFAULT_ZOOM, padding: {bottom: 0} });
-window.zoomToCurrent = function() { if(wULng && wULat) { map.flyTo({center: [wULng, wULat], zoom: DEFAULT_ZOOM, speed: 1.2, padding: {bottom: getMobilePadding()}}); } }
-window.requestLocation = function() {
+let dMk=null,wULng=DLNG,wULat=DLAT;
+window._wULat=DLAT;window._wULng=DLNG;
+window._carMarkerEl=null;
+
+function getMobilePad(){return window.innerWidth<900?window.innerHeight*.38:55;}
+
+/* ── CAR MARKER ── */
+function updateCarMarker(lat,lng){
+  if(window._carMarkerEl){window._carMarkerEl.setLngLat([lng,lat]);return;}
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:relative;width:34px;height:34px';
+  const pulse=document.createElement('div');pulse.className='car-pulse';
+  const car=document.createElement('div');car.className='car-marker';car.textContent='🚕';
+  wrap.appendChild(pulse);wrap.appendChild(car);
+  window._carMarkerEl=new mapboxgl.Marker({element:wrap,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
+}
+
+/* ── LOCATE ── */
+window.requestLocation=function(){
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
       document.getElementById('locModal').classList.remove('show');
       const{latitude:la,longitude:lo}=pos.coords;
-      wULng=lo; wULat=la; oMk.setLngLat([lo,la]);
-      window._wULat = wULat; window._wULng = wULng;
-      map.flyTo({center:[lo,la],zoom:DEFAULT_ZOOM,speed:1.2, padding:{bottom: getMobilePadding()}});
+      wULng=lo;wULat=la;oMk.setLngLat([lo,la]);
+      window._wULat=la;window._wULng=lo;
+      map.flyTo({center:[lo,la],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
       fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lo},${la}.json?access_token=${TK}&types=place,neighborhood,address&limit=1`)
         .then(r=>r.json()).then(d=>{
           const lbl=d.features?.[0]?.place_name||`${la.toFixed(4)},${lo.toFixed(4)}`;
           document.getElementById('originLabel').textContent=lbl.split(',').slice(0,2).join(',');
         });
-    }, err => {
+    },()=>{
       document.getElementById('locModal').classList.add('show');
       document.getElementById('originLabel').textContent='Mokopane, Limpopo (Default)';
     });
-  } else { window.showToast("Geolocation not supported."); document.getElementById('originLabel').textContent='Mokopane, Limpopo'; }
-}
+  }
+};
 window.requestLocation();
-const geocoder=new MapboxGeocoder({ accessToken:TK,mapboxgl:mapboxgl, placeholder:'Search destination…', countries:'ZA', proximity:{longitude:DLNG,latitude:DLAT}, types:'poi,address,place,neighborhood,locality', flyTo:false,marker:false, });
+window.zoomToCurrent=function(){if(wULng&&wULat)map.flyTo({center:[wULng,wULat],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});};
+
+/* ── GEOCODER ── */
+const geocoder=new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search destination…',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
 document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
-function clearRoute(){ if(map.getLayer('route'))map.removeLayer('route'); if(map.getSource('route'))map.removeSource('route'); }
+
+function clearRoute(){if(map.getLayer('route'))map.removeLayer('route');if(map.getSource('route'))map.removeSource('route');}
 function drawRoute(o,d){
   fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${o[0]},${o[1]};${d[0]},${d[1]}?geometries=geojson&access_token=${TK}`)
     .then(r=>r.json()).then(data=>{
       if(!data.routes?.length)return;
-      const geom=data.routes[0].geometry;
       window._distKm=data.routes[0].distance/1000;
       window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
       clearRoute();
-      map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:geom}});
-      map.addLayer({id:'route',type:'line',source:'route', layout:{'line-join':'round','line-cap':'round'}, paint:{'line-color':'#1A3BFF','line-width':4.5,'line-opacity':.72} });
+      map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});
+      map.addLayer({id:'route-bg',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#1A3BFF','line-width':10,'line-opacity':.15}});
+      map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#1A3BFF','line-width':5,'line-opacity':.82}});
       updatePrices();
-    }).catch(()=>{ window._distKm=window.haversine(wULat,wULng,d[1],d[0]); window._tripDurationMins=0; updatePrices(); });
+    }).catch(()=>{window._distKm=haversine(wULat,wULng,d[1],d[0]);window._tripDurationMins=0;updatePrices();});
 }
+
 geocoder.on('result',e=>{
-  const[lng,lat]=e.result.geometry.coordinates; destName=e.result.place_name||e.result.text; window._destName=destName;
-  if(dMk)dMk.remove(); const de=document.createElement('div'); de.className='dmarker';
+  const[lng,lat]=e.result.geometry.coordinates;
+  const destName=e.result.place_name||e.result.text;
+  window._destName=destName;
+  if(dMk)dMk.remove();
+  const de=document.createElement('div');de.className='dmarker';
   dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
-  map.fitBounds([[Math.min(wULng,lng)-.008,Math.min(wULat,lat)-.008],[Math.max(wULng,lng)+.008,Math.max(wULat,lat)+.008]], {padding:{top:55,bottom:getMobilePadding(),left:55,right:55},duration:850,essential:true});
+  map.fitBounds([[Math.min(wULng,lng)-.01,Math.min(wULat,lat)-.01],[Math.max(wULng,lng)+.01,Math.max(wULat,lat)+.01]],{padding:{top:60,bottom:getMobilePad(),left:55,right:55},duration:900,pitch:50});
   drawRoute([wULng,wULat],[lng,lat]);
-  const r=window._rides.find(x=>x.id===window._selId); const btn = document.getElementById('confirmBtn'); btn.style.display = 'block'; btn.textContent = `Book ${r.type}`;
+  // Expand panel
+  expandPanel();
+  document.getElementById('ridesLabel').style.display='block';
+  const r=window._rides.find(x=>x.id===window._selId);
+  const btn=document.getElementById('confirmBtn');btn.style.display='block';btn.textContent=`Book ${r.type}`;
+  // Disable map click zone while route is shown
+  document.getElementById('mapClickZone').classList.remove('active');
 });
 geocoder.on('clear',()=>{
-  if(dMk){dMk.remove();dMk=null;} clearRoute(); destName=''; window._destName='';
-  document.getElementById('confirmBtn').style.display = 'none'; window._distKm=0; window._tripDurationMins=0; renderRides();
-  map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}});
+  if(dMk){dMk.remove();dMk=null;}
+  clearRoute();window._destName='';
+  document.getElementById('confirmBtn').style.display='none';
+  document.getElementById('ridesLabel').style.display='none';
+  window._distKm=0;window._tripDurationMins=0;
+  renderRides(false);
+  map.flyTo({center:[wULng,wULat],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
 });
+
+/* ── RIDE DATA ── */
 const BASE=[
-  {id:1,type:'VynixGo', baseFare:20,perKm:5.5, capacity:4, driver:'Kabelo P.', specs:'Compact · Economy'},
-  {id:2,type:'VynixComfort',baseFare:30,perKm:8, capacity:4, driver:'Thabo M.', specs:'Newer cars · Legroom'},
-  {id:3,type:'VynixXL', baseFare:45,perKm:12, capacity:6, driver:'Lesego R.', specs:'SUVs & Vans · 6 seats'}
+  {id:1,type:'VynixGo',baseFare:20,perKm:5.5,capacity:4,driver:'Kabelo P.',specs:'Compact · Economy'},
+  {id:2,type:'VynixComfort',baseFare:30,perKm:8,capacity:4,driver:'Thabo M.',specs:'Newer cars · Legroom'},
+  {id:3,type:'VynixXL',baseFare:45,perKm:12,capacity:6,driver:'Lesego R.',specs:'SUVs & Vans · 6 seats'}
 ];
-window._rides=BASE.map(r=>({...r,price:r.baseFare, time: '3 min'}));
-window._selId=1; window._distKm=0; window._destName=''; window._tripDurationMins=0;
-window.haversine = function(la1,lo1,la2,lo2){
+window._rides=BASE.map(r=>({...r,price:r.baseFare,time:'3 min'}));
+window._selId=1;window._distKm=0;window._destName='';window._tripDurationMins=0;
+
+function haversine(la1,lo1,la2,lo2){
   const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;
   const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
+window.haversine=haversine;
+
 function updatePrices(){
   const km=window._distKm||0;
-  window._rides=BASE.map(r=>({ ...r, price:Math.round((r.baseFare+r.perKm*km)*10)/10, time: `${3 + (r.id - 1)} min`, tripTime: window._tripDurationMins ? `${window._tripDurationMins} min` : 'N/A' })); renderRides();
+  window._rides=BASE.map(r=>({...r,price:Math.round((r.baseFare+r.perKm*km)*10)/10,time:`${3+(r.id-1)} min`,tripTime:window._tripDurationMins?`${window._tripDurationMins} min`:'N/A'}));
+  renderRides(true);
 }
-function renderRides(){
-  document.getElementById('rideList').innerHTML=window._rides.map(r=>`
+function renderRides(withDest=false){
+  const list=document.getElementById('rideList');
+  if(!withDest){list.innerHTML='';return;}
+  list.innerHTML=window._rides.map(r=>`
     <div class="rcard ${r.id===window._selId?'sel':''}" onclick="selRide(${r.id})">
       <div class="rinfo">
-        <div class="rav">${ini2(r.driver)}</div>
+        <div class="rav">${window.ini2(r.driver)}</div>
         <div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">👤${r.capacity}</span></div><div class="rmeta">${r.specs}</div></div>
       </div>
       <div style="text-align:right;flex-shrink:0"><div class="rprice">R ${r.price.toFixed(2)}</div><div class="rtbadge">${r.time}</div></div>
     </div>`).join('');
 }
-window.selRide=function(id){ window._selId=id; renderRides(); const r=window._rides.find(x=>x.id===id); if(window._destName) { document.getElementById('confirmBtn').textContent=`Book ${r.type}`; } };
+window.selRide=function(id){
+  window._selId=id;renderRides(!!window._destName);
+  const r=window._rides.find(x=>x.id===id);
+  if(window._destName){const btn=document.getElementById('confirmBtn');btn.textContent=`Book ${r.type}`;}
+};
 window.openModal=function(){
   if(!window._destName){window.showToast('Search for a destination first');return;}
   const r=window._rides.find(x=>x.id===window._selId);
-  document.getElementById('m-type').textContent=r.type; document.getElementById('m-driver').textContent=r.driver; document.getElementById('m-eta').textContent=r.time; document.getElementById('m-trip-time').textContent=r.tripTime || 'N/A'; document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(','); document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`; document.getElementById('confirmModal').classList.add('show');
+  document.getElementById('m-type').textContent=r.type;
+  document.getElementById('m-driver').textContent=r.driver;
+  document.getElementById('m-eta').textContent=r.time;
+  document.getElementById('m-trip-time').textContent=r.tripTime||'N/A';
+  document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
+  document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+  document.getElementById('confirmModal').classList.add('show');
 };
 window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
-window.openTopUpModal = () => document.getElementById('topUpModal').classList.add('show');
-window.closeTopUpModal = () => document.getElementById('topUpModal').classList.remove('show');
-window.cancelSearch = function(msg = 'Search cancelled.') {
-  clearInterval(searchInterval); clearTimeout(searchTimeout);
-  document.getElementById('searchOverlay').classList.remove('show'); document.getElementById('bookPanel').style.display = 'flex';
+window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
+window.closeTopUpModal=()=>document.getElementById('topUpModal').classList.remove('show');
+
+/* ── SEARCH TIMER ── */
+window.startSearchTimer=function(){
+  const overlay=document.getElementById('searchOverlay');overlay.classList.add('show');
+  let t=60;const circle=document.getElementById('searchProgress'),txt=document.getElementById('searchTimerTxt');
+  circle.style.strokeDashoffset='0';txt.textContent='60s';
+  clearInterval(window._searchInterval);clearTimeout(window._searchTimeout);
+  window._searchInterval=setInterval(()=>{t--;txt.textContent=t+'s';circle.style.strokeDashoffset=(283-(t/60)*283);if(t<=0)clearInterval(window._searchInterval);},1000);
+  window._searchTimeout=setTimeout(()=>window.cancelSearch('No drivers found. Please try again.'),60000);
+};
+window.cancelSearch=async function(msg='Search cancelled'){
+  clearInterval(window._searchInterval);clearTimeout(window._searchTimeout);
+  document.getElementById('searchOverlay').classList.remove('show');
+  document.getElementById('bookPanel').style.display='flex';
   window.showToast(msg);
-  if(window._activeRideReqId) {
-    import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js").then(({ref:fbRef,get:fbGet,remove:fbRemove})=>{ const reqRef = fbRef(window.db,'ride_requests/'+window._activeRideReqId); fbGet(reqRef).then(snap=>{ if(snap.exists()&&snap.val().status==='pending') fbRemove(reqRef); }); }); window._activeRideReqId=null;
+  if(window.activeRideReqId&&window.db){
+    try{
+      const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
+      const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);
+      const s=await fbGet(r);
+      if(s.exists()&&s.val().status==='pending')await fbRemove(r);
+    }catch(e){}
+    window.activeRideReqId=null;
   }
-  if(dMk) { map.fitBounds([ [Math.min(wULng, dMk.getLngLat().lng)-.008, Math.min(wULat, dMk.getLngLat().lat)-.008], [Math.max(wULng, dMk.getLngLat().lng)+.008, Math.max(wULat, dMk.getLngLat().lat)+.008] ], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}}); }
 };
-window.startSearchTimer = function() {
-  const overlay = document.getElementById('searchOverlay'); overlay.classList.add('show');
-  let timeLeft = 60; const circle = document.getElementById('searchProgress'); const text = document.getElementById('searchTimerTxt');
-  circle.style.strokeDashoffset = "0"; text.textContent = "60s";
-  clearInterval(searchInterval); clearTimeout(searchTimeout);
-  searchInterval = setInterval(() => { timeLeft--; text.textContent = timeLeft + "s"; const offset = 283 - (timeLeft / 60) * 283; circle.style.strokeDashoffset = offset; if(timeLeft <= 0) clearInterval(searchInterval); }, 1000);
-  searchTimeout = setTimeout(() => { window.cancelSearch('No drivers accepted. Payment will be refunded.'); }, 60000);
-};
-window.cancelActiveRide = function() {
-  const ap = document.getElementById('activeRidePanel'); ap.classList.remove('show');
-  setTimeout(() => { ap.style.display = 'none'; document.getElementById('bookPanel').style.display = 'flex'; if(dMk) { map.fitBounds([[Math.min(wULng, dMk.getLngLat().lng)-.008, Math.min(wULat, dMk.getLngLat().lat)-.008],[Math.max(wULng, dMk.getLngLat().lng)+.008, Math.max(wULat, dMk.getLngLat().lat)+.008]], {padding:{top:55, bottom: getMobilePadding(), left:55, right:55}}); } else { map.flyTo({center:[wULng,wULat], zoom:DEFAULT_ZOOM, speed:1.2, padding:{bottom: getMobilePadding()}}); } }, 400);
-  window.showToast('Ride cancelled');
-};
+
+/* ── PANEL DRAG (mobile) ── */
+let panelState='mid',isDragging=false,dragStartY=0,dragStartT=0,currentT=0;
+const panel=document.getElementById('bookPanel');
+
+function getPanelFullPx(){return window.innerHeight*.8;}
+function getCollapsedT(){return getPanelFullPx()-110;}
+function getMidT(){
+  // mid: show ~55% of screen height
+  const navH=72+parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sb'))||0;
+  return Math.max(0,panel.offsetHeight-(window.innerHeight*.55-navH));
+}
+function getExpandedT(){return 10;}
+
+function setPanelState(state,animate=true){
+  if(window.innerWidth>=900)return;
+  panelState=state;
+  const h=document.getElementById('panelDragHandle');
+  if(h)h.querySelector('.drag-handle').style.width=state==='expanded'?'52px':'38px';
+  panel.style.transition=animate?'transform .42s var(--ease-smooth)':'none';
+  panel.classList.remove('collapsed','mid');
+  if(state==='collapsed')panel.classList.add('collapsed');
+  else if(state==='mid')panel.classList.add('mid');
+  // Enable map click zone when collapsed
+  document.getElementById('mapClickZone').classList.toggle('active',state==='collapsed');
+  setTimeout(()=>map.resize(),450);
+}
+window.collapsePanel=function(){if(panelState!=='collapsed')setPanelState('collapsed');};
+function expandPanel(){setPanelState('mid');}
+
+// Touch drag on handle
+const dh=document.getElementById('panelDragHandle');
+dh.addEventListener('touchstart',e=>{
+  if(window.innerWidth>=900)return;
+  isDragging=true;dragStartY=e.touches[0].clientY;
+  dragStartT=parseFloat(panel.style.transform?.match(/translateY\(([-\d.]+)/)?.[1])||0;
+  panel.style.transition='none';
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(!isDragging)return;
+  const dy=e.touches[0].clientY-dragStartY;
+  const full=getPanelFullPx(),maxT=full-80,minT=getExpandedT();
+  currentT=Math.max(minT,Math.min(maxT,dragStartT+dy));
+  panel.style.transform=`translateY(${currentT}px)`;
+},{passive:true});
+document.addEventListener('touchend',()=>{
+  if(!isDragging)return;
+  isDragging=false;
+  panel.style.transform='';
+  const ratio=currentT/getPanelFullPx();
+  if(ratio>0.65)setPanelState('collapsed');
+  else if(ratio>0.2)setPanelState('mid');
+  else setPanelState('expanded');
+});
+// Initial state
+setTimeout(()=>setPanelState('mid',false),100);
+
+/* ── TABS ── */
 const TABS=['ride','trips','wallet','account'];
 window.switchTab=function(name){
-  TABS.forEach(t=>{ const p=document.getElementById(`tab-${t}`);if(!p)return; if(t==='ride') p.style.display=t===name?'block':'none'; else p.classList.toggle('show',t===name); const bn=document.getElementById(`bn-${t}`);if(bn)bn.classList.toggle('act',t===name); });
+  TABS.forEach(t=>{
+    const p=document.getElementById(`tab-${t}`);if(!p)return;
+    if(t==='ride')p.style.display=t===name?'block':'none';
+    else p.classList.toggle('show',t===name);
+    const bn=document.getElementById(`bn-${t}`);if(bn)bn.classList.toggle('act',t===name);
+  });
   document.querySelectorAll('.nl[data-tab]').forEach(el=>el.classList.toggle('act',el.dataset.tab===name));
-  if(name==='ride') setTimeout(()=>map.resize(),40);
+  if(name==='ride')setTimeout(()=>map.resize(),40);
 };
-window.showToast=function(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); };
-const mapWrap = document.getElementById('tab-ride');
-if(window.ResizeObserver) { new ResizeObserver(() => { if(map) map.resize(); }).observe(mapWrap); }
-renderRides();
+window.showToast=function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);};
+
+const mapWrap=document.getElementById('tab-ride');
+if(window.ResizeObserver)new ResizeObserver(()=>map&&map.resize()).observe(mapWrap);
 document.getElementById('tab-ride').style.display='block';
 </script>
 </body>
