@@ -12,9 +12,19 @@
 <script src="https://js.yoco.com/sdk/v1/yoco-sdk-web.js"></script>
 <style>
 :root{
-  --blue:#1A3BFF;--blue2:#4A6CFF;--glow:rgba(26,59,255,.22);
-  --ink:#0C0C14;--bg:#EEF0FA;--card:#fff;--muted:#7C7C96;
-  --border:#E2E4F0;--green:#17A85A;--red:#E53535;--orange:#F59E0B;
+  /* Updated Blue and White Theme */
+  --blue: #0052FF; 
+  --blue2: #3377FF; 
+  --glow: rgba(0, 82, 255, 0.25);
+  --ink: #001A4D; /* Dark navy for text */
+  --bg: #F4F7FF; /* Very light icy blue/white background */
+  --card: #FFFFFF;
+  --muted: #667A99; /* Blueish grey for muted text */
+  --border: #DDE5F5; /* Light blue-tinted border */
+  --green: #17A85A;
+  --red: #E53535;
+  --orange: #F59E0B;
+  
   --nav-h:72px;--sb:env(safe-area-inset-bottom,0px);--st:env(safe-area-inset-top,0px);
   --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
   --ease-smooth:cubic-bezier(0.4,0,0.2,1);
@@ -43,13 +53,13 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .sidebar:hover .l-txt{opacity:1}
 .nl{display:flex;align-items:center;gap:16px;padding:13px 11px;border-radius:12px;color:var(--muted);font-size:15px;font-weight:500;cursor:pointer;transition:.17s;margin-bottom:4px;min-width:240px}
 .nl svg{flex-shrink:0;width:22px;height:22px}
-.nl:hover{background:rgba(26,59,255,.05);color:var(--blue)}
-.nl.act{background:rgba(26,59,255,.09);color:var(--blue);font-weight:600}
+.nl:hover{background:rgba(0,82,255,.05);color:var(--blue)}
+.nl.act{background:rgba(0,82,255,.09);color:var(--blue);font-weight:600}
 .n-txt{opacity:0;transition:opacity .18s .1s;font-size:15px}
 .sidebar:hover .n-txt{opacity:1}
 .nav-spacer{flex:1}
 .user-mini{display:flex;align-items:center;gap:14px;padding:11px;background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer;transition:.17s;min-width:240px}
-.user-mini:hover{background:rgba(26,59,255,.07)}
+.user-mini:hover{background:rgba(0,82,255,.07)}
 .av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
 .user-txt{opacity:0;transition:opacity .18s .1s;display:flex;flex-direction:column;overflow:hidden}
 .sidebar:hover .user-txt{opacity:1}
@@ -64,7 +74,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .cmarker{width:18px;height:18px;background:var(--blue);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 12px var(--glow)}
 .dmarker{width:16px;height:16px;background:var(--blue2);border:3px solid #fff;border-radius:50%;box-shadow:0 2px 10px var(--glow)}
 .car-marker{width:34px;height:34px;background:#fff;border:2.5px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:transform .4s var(--ease-smooth)}
-.car-pulse{width:52px;height:52px;border-radius:50%;position:absolute;top:-9px;left:-9px;background:rgba(26,59,255,.15);animation:carPulse 2.2s infinite}
+.car-pulse{width:52px;height:52px;border-radius:50%;position:absolute;top:-9px;left:-9px;background:rgba(0,82,255,.15);animation:carPulse 2.2s infinite}
 @keyframes carPulse{0%,100%{transform:scale(.8);opacity:.8}50%{transform:scale(1.4);opacity:0}}
 
 /* LOCATE BTN */
@@ -124,13 +134,13 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ride-list::-webkit-scrollbar{display:none}
 .rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;border-radius:15px;border:2px solid var(--border);cursor:pointer;transition:all .17s var(--ease-smooth);background:#fff;position:relative;flex-shrink:0}
 .rcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.06)}
-.rcard.sel{border-color:var(--blue);background:rgba(26,59,255,.04);box-shadow:0 4px 16px var(--glow)}
+.rcard.sel{border-color:var(--blue);background:rgba(0,82,255,.04);box-shadow:0 4px 16px var(--glow)}
 .rinfo{display:flex;align-items:center;gap:11px}
 .rav{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
 .rname{font-size:14px;font-weight:700;margin-bottom:1px}
 .rmeta{font-size:11px;color:var(--muted)}
 .rprice{font-size:15px;font-weight:700}
-.rtbadge{font-size:10px;font-weight:600;color:var(--blue);background:rgba(26,59,255,.09);padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
+.rtbadge{font-size:10px;font-weight:600;color:var(--blue);background:rgba(0,82,255,.09);padding:2px 8px;border-radius:20px;margin-top:4px;display:inline-block}
 
 /* SEARCH OVERLAY */
 .search-overlay{position:fixed;inset:0;z-index:100;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);display:none;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .35s var(--ease-smooth)}
@@ -191,16 +201,16 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ad-m-val{font-size:17px;font-weight:800;color:var(--blue)}
 .ad-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;flex-shrink:0}
 .ad-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 8px;border-radius:13px;border:1.5px solid var(--border);cursor:pointer;transition:all .18s var(--ease-smooth);background:#fff;font-size:10px;font-weight:700;color:var(--muted)}
-.ad-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(26,59,255,.04)}
+.ad-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(0,82,255,.04)}
 .ad-btn:active{transform:scale(.94)}
 .ad-btn svg{width:20px;height:20px}
 .ad-btn.chat-btn.has-unread{border-color:var(--blue);color:var(--blue);position:relative}
 .ad-btn.chat-btn.has-unread::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:9px;font-weight:800;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
 .cancel-ride-btn{width:100%;padding:13px;border:1.5px solid rgba(229,53,53,.25);background:rgba(229,53,53,.06);border-radius:13px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;flex-shrink:0}
 .cancel-ride-btn:active{background:rgba(229,53,53,.14)}
-.ride-status-bar{background:linear-gradient(130deg,rgba(26,59,255,.08),rgba(74,108,255,.12));border:1px solid rgba(26,59,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ride-status-bar{background:linear-gradient(130deg,rgba(0,82,255,.08),rgba(51,119,255,.12));border:1px solid rgba(0,82,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
 .rsb-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulseDot 1.8s infinite;flex-shrink:0}
-@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(26,59,255,.4)}50%{box-shadow:0 0 0 6px rgba(26,59,255,0)}}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
 .rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
 
 /* BOTTOM NAV */
@@ -225,11 +235,11 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .tc-type{font-size:15px;font-weight:700}
 .tc-fare{font-size:15px;font-weight:700;color:var(--blue)}
 .tc-meta{font-size:12px;color:var(--muted);margin-top:4px}
-.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(26,59,255,.08);color:var(--blue)}
+.tc-badge{display:inline-flex;align-items:center;gap:4px;margin-top:9px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(0,82,255,.08);color:var(--blue)}
 .tc-badge.canceled{background:rgba(229,53,53,.08);color:var(--red)}
 
 /* WALLET PAGE */
-.w-hero{background:linear-gradient(135deg,#1E40FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden}
+.w-hero{background:linear-gradient(135deg,#0044FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden}
 .w-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%}
 .w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px;width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%}
 .wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500}
@@ -245,7 +255,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .txa.cr{color:var(--green)}.txa.dr{color:var(--red)}
 
 /* ACCOUNT PAGE */
-.prof-banner{background:linear-gradient(135deg,#1638ee,#3a5bff,#5e7bff);border-radius:20px;padding:22px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden}
+.prof-banner{background:linear-gradient(135deg,#0033CC,#0052FF,#3377FF);border-radius:20px;padding:22px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden}
 .prof-banner::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
 .prof-av-lg{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.35);box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .prof-name{font-size:19px;font-weight:700;letter-spacing:-.2px}
@@ -254,10 +264,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ss{background:var(--card);border-radius:18px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04)}
 .sr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none}
 .sr:last-child{border:none}
-.sr:hover{background:rgba(26,59,255,.03)}
-.sr:active{background:rgba(26,59,255,.06)}
+.sr:hover{background:rgba(0,82,255,.03)}
+.sr:active{background:rgba(0,82,255,.06)}
 .srl{display:flex;align-items:center;gap:12px}
-.sri{width:34px;height:34px;border-radius:10px;background:rgba(26,59,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sri{width:34px;height:34px;border-radius:10px;background:rgba(0,82,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .srt{font-size:15px;font-weight:500;color:var(--ink)}
 .sra{color:var(--muted);font-size:16px}
 .ts{position:relative;width:44px;height:26px;flex-shrink:0}
@@ -304,14 +314,14 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .pin-section{background:var(--bg);border-radius:16px;padding:16px;margin-bottom:16px}
 .pin-section-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left}
 .pin-display-row{display:flex;gap:10px;justify-content:center;margin-bottom:6px}
-.pin-digit-box{width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,rgba(26,59,255,.1),rgba(74,108,255,.18));border:2px solid rgba(26,59,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--blue);animation:pinIn .3s var(--ease-spring) both}
+.pin-digit-box{width:52px;height:58px;border-radius:14px;background:linear-gradient(135deg,rgba(0,82,255,.1),rgba(51,119,255,.18));border:2px solid rgba(0,82,255,.2);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--blue);animation:pinIn .3s var(--ease-spring) both}
 .pin-digit-box:nth-child(1){animation-delay:.05s}
 .pin-digit-box:nth-child(2){animation-delay:.1s}
 .pin-digit-box:nth-child(3){animation-delay:.15s}
 .pin-digit-box:nth-child(4){animation-delay:.2s}
 @keyframes pinIn{from{transform:translateY(8px) scale(.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
 .pin-hint{font-size:11px;color:var(--muted);font-weight:500}
-.pin-input-section{background:rgba(26,59,255,.04);border-radius:16px;padding:16px;margin-bottom:16px}
+.pin-input-section{background:rgba(0,82,255,.04);border-radius:16px;padding:16px;margin-bottom:16px}
 .pin-input-row{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
 .pin-input-digit{width:56px;height:58px;border-radius:12px;border:2px solid var(--border);background:#fff;font-size:24px;font-weight:800;text-align:center;font-family:'Outfit',sans-serif;color:var(--ink);outline:none;transition:border-color .2s,transform .2s var(--ease-spring)}
 .pin-input-digit:focus{border-color:var(--blue);transform:scale(1.06)}
@@ -344,8 +354,8 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .chat-meta{font-size:10px;color:var(--muted);font-weight:600}
 .quick-replies{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:7px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
 .quick-replies::-webkit-scrollbar{display:none}
-.qr-btn{white-space:nowrap;padding:7px 13px;border-radius:18px;background:rgba(26,59,255,.06);border:1px solid rgba(26,59,255,.18);color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s,transform .18s var(--ease-spring);flex-shrink:0}
-.qr-btn:active{background:rgba(26,59,255,.14);transform:scale(.94)}
+.qr-btn{white-space:nowrap;padding:7px 13px;border-radius:18px;background:rgba(0,82,255,.06);border:1px solid rgba(0,82,255,.18);color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .18s,transform .18s var(--ease-spring);flex-shrink:0}
+.qr-btn:active{background:rgba(0,82,255,.14);transform:scale(.94)}
 .chat-input-row{display:flex;gap:8px;padding:10px 14px calc(14px + var(--sb));border-top:1px solid var(--border);flex-shrink:0;align-items:flex-end}
 .chat-text-input{flex:1;border:1.5px solid var(--border);border-radius:22px;padding:10px 15px;font-family:'Outfit',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);outline:none;resize:none;max-height:90px;line-height:1.4;transition:border-color .2s}
 .chat-text-input:focus{border-color:var(--blue2);background:#fff}
@@ -363,7 +373,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .auth-overlay.show{display:flex;opacity:1}
 .auth-bg{position:absolute;inset:0;background:url('https://i.postimg.cc/FHXNkL7D/c-SZtc.jpg') center center/cover no-repeat;transform:scale(1.04);animation:authZoom 18s ease-in-out infinite alternate}
 @keyframes authZoom{from{transform:scale(1.04)}to{transform:scale(1.12)}}
-.auth-scrim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.18) 0%,rgba(0,0,0,.05) 30%,rgba(0,0,0,.45) 65%,rgba(0,0,0,.88) 100%)}
+.auth-scrim{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,26,77,.2) 0%,rgba(0,26,77,.4) 30%,rgba(0,26,77,.7) 65%,rgba(0,26,77,.95) 100%)}
 .auth-topbar{position:relative;z-index:2;display:flex;align-items:center;gap:12px;padding:56px 28px 0}
 .auth-logo-dot{width:44px;height:44px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--blue);flex-shrink:0;box-shadow:0 4px 18px rgba(0,0,0,.28)}
 .auth-logo-name{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px;text-shadow:0 2px 12px rgba(0,0,0,.35)}
@@ -424,12 +434,12 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 /* PAYMENT MODAL */
 .pm-card{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
 .pm-card:last-child{border:none}
-.pm-card:hover{background:rgba(26,59,255,.03)}
+.pm-card:hover{background:rgba(0,82,255,.03)}
 .pm-icon{width:40px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1.5px solid var(--border);background:#fff}
 .pm-label{font-size:14px;font-weight:600}
 .pm-sub{font-size:12px;color:var(--muted);margin-top:1px}
 .pm-badge{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(23,168,90,.1);color:var(--green)}
-.pm-default-badge{background:rgba(26,59,255,.08);color:var(--blue)}
+.pm-default-badge{background:rgba(0,82,255,.08);color:var(--blue)}
 
 /* SAVED PLACES */
 .sp-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border)}
@@ -587,7 +597,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="mh">Saved Places</div>
     <div class="ss" style="margin-bottom:14px;border-radius:14px">
       <div class="sp-row"><div class="sp-icon" style="background:rgba(255,174,0,.12)">🏠</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Home</div><input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…"></div></div>
-      <div class="sp-row"><div class="sp-icon" style="background:rgba(26,59,255,.09)">🏢</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div><input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…"></div></div>
+      <div class="sp-row"><div class="sp-icon" style="background:rgba(0,82,255,.09)">🏢</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div><input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…"></div></div>
       <div class="sp-row" style="border:none"><div class="sp-icon" style="background:rgba(229,53,53,.09)">⭐</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Favourite</div><input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…"></div></div>
     </div>
     <div class="mbtns">
@@ -889,7 +899,7 @@ onAuthStateChanged(auth,async u=>{
   if(!ws.exists())await set(ref(db,`users/${u.uid}/wallet/balance`),0);
   onValue(ref(db,`users/${u.uid}/trips`),snap=>renderTrips(Object.values(snap.val()||{}).reverse()));
   onValue(ref(db,`users/${u.uid}/wallet`),snap=>{const d=snap.val()||{balance:0};document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;renderTx(d.transactions||{});});
-  // Restore active ride if exists
+  
   const arSnap=await get(ref(db,`users/${u.uid}/activeRideId`));
   if(arSnap.exists()&&arSnap.val()){
     activeRideReqId=arSnap.val();
@@ -910,6 +920,9 @@ function updateUI(u){
 }
 
 /* ── LISTEN ACTIVE RIDE ── */
+window._drawnPhase = null;
+window._activeRideData = null;
+
 function listenToActiveRide(rideId){
   if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
   rideReqUnsub=onValue(ref(db,`ride_requests/${rideId}`),snap=>{
@@ -919,7 +932,8 @@ function listenToActiveRide(rideId){
       return;
     }
     
-    // FIX: Check if the panel is actually rendered in the DOM, rather than checking the mobile drag state variable.
+    window._activeRideData = data;
+    
     const isPanelActive = document.getElementById('activeRidePanel').style.display === 'flex';
 
     if(data.status==='accepted' && !isPanelActive){
@@ -930,7 +944,7 @@ function listenToActiveRide(rideId){
       clearTimeout(window._searchTimeout);
     }
     
-    if(data.status==='accepted'){
+    if(data.status==='accepted' || data.status==='in_progress'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
       if(data.driverAv)document.getElementById('adAv').textContent=ini2(data.driverName||'D');
       if(data.driverCar)document.getElementById('adCar').textContent=data.driverCar;
@@ -939,12 +953,34 @@ function listenToActiveRide(rideId){
       if(data.arrivedPin){window._driverPin=data.arrivedPin;}
       if(data.arrived){document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';}
       
+      // Determine routing phase
+      let currentPhase = 'accepted';
+      if (data.arrived || data.status === 'in_progress') currentPhase = 'arrived';
+      
+      if (window._drawnPhase !== currentPhase) {
+          window._drawnPhase = currentPhase;
+          if (currentPhase === 'accepted' && data.driverId) {
+              get(ref(db, `active_drivers/${data.driverId}`)).then(dSnap => {
+                  const dd = dSnap.val();
+                  if (dd && dd.lat && dd.lng) {
+                      drawRoute([dd.lng, dd.lat], [data.pickupLng || window._wULng, data.pickupLat || window._wULat], false);
+                  }
+              });
+          } else if (currentPhase === 'arrived') {
+              if (data.destLng && data.destLat) {
+                  drawRoute([data.pickupLng || window._wULng, data.pickupLat || window._wULat], [data.destLng, data.destLat], false);
+              }
+          }
+      }
+
       if(data.driverId){
         get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{
           const dd=dSnap.val();
           if(dd&&dd.lat&&dd.lng&&window._mapInstance){
             updateCarMarker(dd.lat,dd.lng);
-            const dist=haversine(window._wULat,window._wULng,dd.lat,dd.lng);
+            const targetLat = currentPhase === 'accepted' ? (data.pickupLat || window._wULat) : (data.destLat || window._wULat);
+            const targetLng = currentPhase === 'accepted' ? (data.pickupLng || window._wULng) : (data.destLng || window._wULng);
+            const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);
             document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
             document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
           }
@@ -953,7 +989,9 @@ function listenToActiveRide(rideId){
           const dd=dSnap.val();
           if(dd&&dd.lat&&dd.lng&&window._mapInstance){
             updateCarMarker(dd.lat,dd.lng);
-            const dist=haversine(window._wULat||(-24.1991),window._wULng||(28.9934),dd.lat,dd.lng);
+            const targetLat = currentPhase === 'accepted' ? (data.pickupLat || window._wULat) : (data.destLat || window._wULat);
+            const targetLng = currentPhase === 'accepted' ? (data.pickupLng || window._wULng) : (data.destLng || window._wULng);
+            const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);
             document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
             document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
           }
@@ -986,18 +1024,6 @@ function showDriverAccepted(data){
   });
   
   document.getElementById('rideStatusText').textContent='Driver on the way to pickup…';
-  if(window._mapInstance&&data.driverId){
-    get(ref(db,`active_drivers/${data.driverId}`)).then(s=>{
-      const d=s.val();
-      if(d&&d.lat&&d.lng){
-        updateCarMarker(d.lat,d.lng);
-        const bounds=new mapboxgl.LngLatBounds();
-        bounds.extend([window._wULng||28.9934,window._wULat||-24.1991]);
-        bounds.extend([d.lng,d.lat]);
-        window._mapInstance.fitBounds(bounds,{padding:{top:80,bottom:getMobilePad(),left:40,right:40},duration:1200,pitch:55,bearing:0});
-      }
-    });
-  }
   window.showToast('🎉 Driver accepted! Track them on the map.');
 }
 
@@ -1016,6 +1042,7 @@ function handleRideCanceled(by){
 }
 
 function resetToBooking(){
+  window._drawnPhase = null;
   document.getElementById('activeRidePanel').classList.remove('show');
   if(window.setActivePanelState) window.setActivePanelState('collapsed');
   setTimeout(()=>{document.getElementById('activeRidePanel').style.display='none';},450);
@@ -1023,6 +1050,12 @@ function resetToBooking(){
   if(window._carMarkerEl){window._carMarkerEl.remove();window._carMarkerEl=null;}
   chatMsgs=[];chatUnread=0;
   document.getElementById('chatMessages').innerHTML='<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;font-weight:600">Your driver is on the way 🚗</div>';
+  
+  if (window._destLng && window._destLat) {
+      drawRoute([window._wULng, window._wULat], [window._destLng, window._destLat], true);
+  } else {
+      clearRoute();
+  }
 }
 
 /* ── CHAT ── */
@@ -1123,6 +1156,11 @@ window.verifyDriverPin=function(){
     document.getElementById('pinOverlay').classList.remove('show');
     document.getElementById('rideStatusText').textContent='🚗 Ride in progress!';
     window.showToast('✅ PIN verified — enjoy your ride!');
+    
+    if (window._activeRideData && window._activeRideData.destLng) {
+        drawRoute([window._activeRideData.pickupLng || window._wULng, window._activeRideData.pickupLat || window._wULat], [window._activeRideData.destLng, window._activeRideData.destLat], false);
+        window._drawnPhase = 'arrived';
+    }
   }else{
     document.getElementById('pinError').style.display='block';
     [0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el){el.value='';el.style.borderColor='var(--red)';}});
@@ -1143,6 +1181,7 @@ window.initiateRidePayment=async function(method='card'){
         status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',
         rideType:r.type,fare:r.price,pickup:document.getElementById('originLabel').textContent||'Current Location',
         destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,
+        destLng: window._destLng, destLat: window._destLat, pickupLng: window._wULng, pickupLat: window._wULat,
         capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now()
       });
       activeRideReqId=rideReqRef.key;
@@ -1264,7 +1303,6 @@ window.savePlaces=async function(){
   document.getElementById('placesModal').classList.remove('show');window.showToast('Saved places updated');
 };
 
-/* ── REAL DRIVERS ON MAP ── */
 setTimeout(()=>{
   if(window.db){
     onValue(ref(db,'active_drivers'),snap=>{
@@ -1312,7 +1350,7 @@ map.on('load',()=>{
     filter:['==','extrude','true'],type:'fill-extrusion',minzoom:14,
     paint:{'fill-extrusion-color':['interpolate',['linear'],['get','height'],0,'#dde4f0',100,'#b8c4e0',300,'#8fa0c8'],'fill-extrusion-height':['interpolate',['linear'],['zoom'],14,0,14.05,['get','height']],'fill-extrusion-base':['interpolate',['linear'],['zoom'],14,0,14.05,['get','min_height']],'fill-extrusion-opacity':.75,'fill-extrusion-ambient-occlusion-intensity':0.7,'fill-extrusion-ambient-occlusion-radius':2}
   },labelLayerId);
-  map.setPaintProperty('road-primary','line-color','#1A3BFF');
+  map.setPaintProperty('road-primary','line-color','#0052FF');
   map.setPaintProperty('road-primary','line-opacity',0.15);
 });
 
@@ -1367,30 +1405,49 @@ window.zoomToCurrent=function(){if(wULng&&wULat)map.flyTo({center:[wULng,wULat],
 const geocoder=new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search destination…',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
 document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
 
-function clearRoute(){if(map.getLayer('route'))map.removeLayer('route');if(map.getSource('route'))map.removeSource('route');}
-function drawRoute(o,d){
+function clearRoute(){if(map.getLayer('route'))map.removeLayer('route');if(map.getLayer('route-bg'))map.removeLayer('route-bg');if(map.getSource('route'))map.removeSource('route');}
+
+function drawRoute(o, d, isBooking = false){
   fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${o[0]},${o[1]};${d[0]},${d[1]}?geometries=geojson&access_token=${TK}`)
     .then(r=>r.json()).then(data=>{
       if(!data.routes?.length)return;
-      window._distKm=data.routes[0].distance/1000;
-      window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
+      
+      if(isBooking){
+        window._distKm=data.routes[0].distance/1000;
+        window._tripDurationMins=Math.ceil(data.routes[0].duration/60);
+        updatePrices();
+      }
+      
       clearRoute();
       map.addSource('route',{type:'geojson',data:{type:'Feature',geometry:data.routes[0].geometry}});
-      map.addLayer({id:'route-bg',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#1A3BFF','line-width':10,'line-opacity':.15}});
-      map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#1A3BFF','line-width':5,'line-opacity':.82}});
-      updatePrices();
-    }).catch(()=>{window._distKm=haversine(wULat,wULng,d[1],d[0]);window._tripDurationMins=0;updatePrices();});
+      map.addLayer({id:'route-bg',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0052FF','line-width':10,'line-opacity':.15}});
+      map.addLayer({id:'route',type:'line',source:'route',layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#0052FF','line-width':5,'line-opacity':.82}});
+      
+      const bounds = new mapboxgl.LngLatBounds(o, o);
+      bounds.extend(d);
+      data.routes[0].geometry.coordinates.forEach(c => bounds.extend(c));
+      map.fitBounds(bounds, {padding: {top: 80, bottom: getMobilePad(), left: 40, right: 40}, duration: 1200, pitch: 50});
+    }).catch(()=>{
+      if(isBooking){
+        window._distKm=haversine(o[1],o[0],d[1],d[0]);
+        window._tripDurationMins=0;
+        updatePrices();
+      }
+    });
 }
 
 geocoder.on('result',e=>{
   const[lng,lat]=e.result.geometry.coordinates;
   const destName=e.result.place_name||e.result.text;
   window._destName=destName;
+  window._destLng=lng;
+  window._destLat=lat;
+  
   if(dMk)dMk.remove();
   const de=document.createElement('div');de.className='dmarker';
   dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
-  map.fitBounds([[Math.min(wULng,lng)-.01,Math.min(wULat,lat)-.01],[Math.max(wULng,lng)+.01,Math.max(wULat,lat)+.01]],{padding:{top:60,bottom:getMobilePad(),left:55,right:55},duration:900,pitch:50});
-  drawRoute([wULng,wULat],[lng,lat]);
+  
+  drawRoute([wULng,wULat],[lng,lat], true);
   
   setPanelState('expanded');
   document.getElementById('ridesLabel').style.display='block';
@@ -1399,7 +1456,10 @@ geocoder.on('result',e=>{
 });
 geocoder.on('clear',()=>{
   if(dMk){dMk.remove();dMk=null;}
-  clearRoute();window._destName='';
+  clearRoute();
+  window._destName='';
+  window._destLng=null;
+  window._destLat=null;
   document.getElementById('confirmBtn').style.display='none';
   document.getElementById('ridesLabel').style.display='none';
   window._distKm=0;window._tripDurationMins=0;
