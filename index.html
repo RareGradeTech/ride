@@ -80,8 +80,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 
 /* ══════════════════════════════════════════
    PANEL SYSTEM
-   Key: drag-handle is touch target only.
-   Panel inner is separately scrollable.
 ══════════════════════════════════════════ */
 .panel{
   position:absolute;background:rgba(255,255,255,.97);
@@ -112,6 +110,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   .panel.snap-mid{transform:translateY(calc(var(--panel-full) - 54vh)) translateZ(0)}
   .panel.snap-expanded{transform:translateY(0) translateZ(0)}
   .panel.animating{transition:transform .44s var(--ease-decel)}
+  
+  /* Scroll Spacers for partial states */
+  .panel.snap-collapsed .panel-scroll-area::after { height: calc(var(--panel-full) - 92px); }
+  .panel.snap-mid .panel-scroll-area::after { height: calc(var(--panel-full) - 54vh); }
 }
 
 /* ══ DRAG HANDLE ══ */
@@ -123,16 +125,21 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .panel.snap-expanded .drag-handle,.panel.snap-mid .drag-handle{width:52px;background:var(--blue2)}
 
 /* ══ PANEL SCROLLABLE CONTENT ══ */
-/* This is the KEY fix: all panel content except the drag handle goes in here */
 .panel-scroll-area{
   flex:1;overflow-y:auto;overflow-x:hidden;
   padding:0 20px 20px;
   display:flex;flex-direction:column;
   -webkit-overflow-scrolling:touch;
-  /* Smooth momentum scroll */
   scroll-behavior:smooth;
 }
 .panel-scroll-area::-webkit-scrollbar{display:none}
+
+/* Spacer pseudo element ensures content is scrollable past the translated cutoff */
+.panel-scroll-area::after, .active-panel-inner::after {
+  content: ''; display: block; width: 100%; flex-shrink: 0;
+  height: 0; transition: height .44s var(--ease-decel);
+}
+
 @media(min-width:900px){.panel-scroll-area{padding:0 24px 24px}}
 
 /* ══ PANEL HEADER ══ */
@@ -158,7 +165,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .o-sub{font-size:11px;color:var(--muted)}
 .slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;flex-shrink:0}
 
-/* ══ RIDE LIST — scrollable within panel ══ */
+/* ══ RIDE LIST ══ */
 .ride-list{display:flex;flex-direction:column;gap:8px;flex-shrink:0}
 
 /* ══ RECENT SEARCHES ══ */
@@ -168,7 +175,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .recent-clear-btn:hover{opacity:1}
 .recent-list{display:flex;flex-direction:column;gap:6px}
 
-/* Stagger animation for recent items */
 .recent-item{
   display:flex;align-items:center;gap:11px;padding:10px 13px;
   border-radius:13px;border:1.5px solid var(--border);background:#fff;
@@ -237,7 +243,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   color:var(--green);
 }
 
-/* ══ RIDE CARDS — with promo animation ══ */
+/* ══ RIDE CARDS ══ */
 .rcard{
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 13px;border-radius:15px;border:2px solid var(--border);
@@ -310,6 +316,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 44vh)) translateZ(0)}
   .active-panel.snap-expanded{transform:translateY(0) translateZ(0)}
   .active-panel.animating{transition:transform .44s var(--ease-decel)}
+  
+  /* Scroll Spacers for partial states */
+  .active-panel.snap-collapsed .active-panel-inner::after { height: calc(var(--panel-full) - 118px); }
+  .active-panel.snap-mid .active-panel-inner::after { height: calc(var(--panel-full) - 44vh); }
 }
 @media(min-width:900px){
   .active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0;box-shadow:0 20px 50px rgba(0,0,0,.12);transform:none!important;transition:none!important;display:flex;flex-direction:column}
@@ -561,7 +571,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .driver-canceled-banner{position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--red);color:#fff;padding:14px 22px;border-radius:20px;font-size:14px;font-weight:700;opacity:0;transition:opacity .35s var(--ease-smooth),transform .35s var(--ease-spring);z-index:600;pointer-events:none;text-align:center;box-shadow:0 6px 24px rgba(229,53,53,.4);max-width:90vw}
 .driver-canceled-banner.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ══ TOAST — enhanced ══ */
+/* ══ TOAST ══ */
 .toast{
   position:fixed;bottom:calc(var(--nav-h) + var(--sb) + 12px);left:50%;
   transform:translateX(-50%) translateY(16px) scale(.92);
@@ -662,7 +672,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </div>
 </div>
 
-<!-- Modals -->
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="modal-pill"></div>
@@ -840,7 +849,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 <div class="driver-canceled-banner" id="driverCanceledBanner">🚗 Your driver cancelled. Please rebook your ride.</div>
 <div class="toast" id="toast"></div>
 
-<!-- ══ MAIN SHELL ══ -->
 <div class="shell">
   <aside class="sidebar" id="mainSidebar">
     <div class="logo"><div class="logo-mark">VX</div><span class="l-txt">VynixRide</span></div>
@@ -871,19 +879,15 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div id="map"></div>
     <div class="map-click-zone" id="mapClickZone" onclick="collapsePanel()"></div>
 
-    <!-- BOOKING PANEL -->
     <div class="panel snap-mid" id="bookPanel">
-      <!-- Drag handle: touch-only target, not part of scroll -->
       <div class="drag-handle-wrap" id="panelDragHandle">
         <div class="drag-handle" id="dragHandleBar"></div>
       </div>
 
-      <!-- Locate button lives outside scroll area -->
       <div class="locate-btn" style="position:absolute;right:16px;top:14px;z-index:3;" onclick="zoomToCurrent()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       </div>
 
-      <!-- ALL scrollable content goes here -->
       <div class="panel-scroll-area" id="panelScrollArea">
         <div class="panel-header">
           <div class="ptitle">Where to?</div>
@@ -898,7 +902,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
         </div>
         <div class="geo-wrap" id="geoWrap"></div>
 
-        <!-- PROMO BANNER -->
         <div class="promo-banner" id="promoBanner" onclick="applyPromo()">
           <div class="promo-badge">20% OFF</div>
           <div class="promo-text-wrap">
@@ -908,7 +911,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="promo-code-pill" id="promoCodePill">RIDE20</div>
         </div>
 
-        <!-- RECENT SEARCHES -->
         <div class="recent-section" id="recentSection" style="display:none">
           <div class="recent-section-header">
             <div class="slabel" style="margin-bottom:0">Recent</div>
@@ -917,7 +919,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="recent-list" id="recentList"></div>
         </div>
 
-        <!-- RIDES SECTION -->
         <div id="ridesSection" style="display:none">
           <div class="slabel">Available Rides</div>
           <div class="ride-list" id="rideList"></div>
@@ -925,7 +926,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
       </div>
     </div>
 
-    <!-- ACTIVE RIDE PANEL -->
     <div class="active-panel" id="activeRidePanel">
       <div class="active-drag-wrap" id="activeDragHandle"><div class="active-drag" id="activeDragBar"></div></div>
       <div class="active-panel-inner">
@@ -1031,7 +1031,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </nav>
 </div>
 
-<!-- ══ FIREBASE + APP LOGIC ══ -->
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as fbOut}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -1343,7 +1342,6 @@ function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).
 window.ini2=ini2;
 </script>
 
-<!-- ══ MAP + PANEL DRAG ENGINE ══ -->
 <script>
 const TK='pk.eyJ1Ijoia2F0bGVnb3BoYXNoYSIsImEiOiJjbTlpOTdzbmYwMGNsMmpzYWJtZzN4d3pqIn0.Zt-aSMEoahrV3zkiVVHbOw';
 mapboxgl.accessToken=TK;
@@ -1429,7 +1427,7 @@ geocoder.on('clear',()=>{
   clearDestination();
 });
 
-/* ── SET / CLEAR DESTINATION ── (unified function used by geocoder AND recent search) ── */
+/* ── SET / CLEAR DESTINATION ── */
 function setDestination(destName,lng,lat,fromGeocoder=false){
   window._destName=destName;window._destLng=lng;window._destLat=lat;
 
@@ -1470,10 +1468,7 @@ function clearDestination(){
 }
 
 /* ══════════════════════════════════
-   PROMO LOGIC — Fixed & Enhanced
-   Promo can be applied before OR after destination.
-   When applied, updates prices immediately if dest is set.
-   Banner reflects applied state persistently.
+   PROMO LOGIC
 ══════════════════════════════════ */
 window._promoApplied=false;
 
@@ -1485,9 +1480,8 @@ window.applyPromo=function(){
   window._promoApplied=true;
   updatePromoBannerState();
 
-  // If destination already set, recalculate prices immediately with animation
   if(window._destName){
-    updatePrices(); // this will re-render cards with new promo prices + animations
+    updatePrices(); 
     window.showToast('🎉 RIDE20 applied — 20% off your ride!');
   }else{
     window.showToast('🎉 RIDE20 applied! Now search for a destination.');
@@ -1544,19 +1538,14 @@ window.clearRecentSearches=function(){
   window.showToast('Recent searches cleared');
 };
 
-/* FIX: selectRecentSearch now uses unified setDestination AND also populates geocoder input */
 window.selectRecentSearch=function(name,lng,lat){
-  // Populate geocoder input with the name so it feels like a real search
   const input=document.querySelector('.mapboxgl-ctrl-geocoder--input');
   if(input){
     input.value=name.split(',').slice(0,2).join(',');
-    // Trigger visual feedback on geocoder
     input.style.borderColor='rgba(0,82,255,.4)';
     setTimeout(()=>input.style.borderColor='',1200);
   }
-  // Call unified destination setter
   setDestination(name,lng,lat,false);
-  // Also save as most recent
   saveRecentSearch(name,lng,lat);
 };
 
@@ -1655,9 +1644,6 @@ window.cancelSearch=async function(msg='Search cancelled'){clearInterval(window.
 
 /* ══════════════════════════════════════════════════
    ULTRA-SMOOTH DRAG ENGINE
-   Key improvement: scroll area uses passive touch events
-   while drag handle uses active capture to prevent
-   conflicts between scroll and drag gestures.
 ══════════════════════════════════════════════════ */
 
 function getSnapPositions(panelFullPx){
@@ -1720,8 +1706,9 @@ function applyTransform(el,y){
     panel.classList.add(`snap-${name}`);
     bar.style.width=name==='collapsed'?'40px':'52px';
     bar.style.background=name==='collapsed'?'var(--border)':'var(--blue2)';
-    // Enable/disable scroll in the content area
-    if(scrollArea)scrollArea.style.overflowY=name==='expanded'?'auto':'auto';
+    
+    if(scrollArea)scrollArea.style.overflowY='auto';
+    
     updateMapClickZone();
     setTimeout(()=>map.resize(),460);
   }
@@ -1735,7 +1722,6 @@ function applyTransform(el,y){
     return(newest.y-oldest.y)/(newest.t-oldest.t);
   }
 
-  // Only drag handle triggers panel drag
   function onHandleTouchStart(e){
     if(window.innerWidth>=900)return;
     dragging=true;
@@ -1777,13 +1763,11 @@ function applyTransform(el,y){
     setStateDirect(snap,true);
   }
 
-  // Handle drag: use capture to prevent map events
   handle.addEventListener('touchstart',onHandleTouchStart,{passive:false});
   handle.addEventListener('touchmove',onHandleTouchMove,{passive:false});
   handle.addEventListener('touchend',onHandleTouchEnd,{passive:true});
   handle.addEventListener('touchcancel',onHandleTouchEnd,{passive:true});
 
-  // Prevent scroll area touches from leaking to map when panel is up
   if(scrollArea){
     scrollArea.addEventListener('touchstart',e=>{
       if(state==='expanded'||state==='mid'){
@@ -1920,7 +1904,7 @@ window.showToast=function(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;
   t.classList.remove('show');
-  void t.offsetWidth; // force reflow for re-animation
+  void t.offsetWidth;
   t.classList.add('show');
   clearTimeout(window._toastTimer);
   window._toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
