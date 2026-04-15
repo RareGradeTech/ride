@@ -1067,6 +1067,7 @@ function listenToActiveRide(rideId){
       }
     }
     if(data.status==='canceled_by_driver'){
+      // Passes the cancelReason explicitly saved by the driver to the handler
       handleRideCanceled('driver', data.cancelReason);
     }
     if(data.status==='completed'){
@@ -1116,11 +1117,14 @@ function handleRideCanceled(by, reason = ''){
 
   if(by==='driver'){
     const b=document.getElementById('driverCanceledBanner');
+    
+    // Update banner text dynamically with reason if available
     if (reason) {
       b.innerHTML = `🚗 Driver cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`;
     } else {
       b.textContent = `🚗 Your driver cancelled. Please rebook your ride.`;
     }
+    
     b.classList.add('show');
     setTimeout(()=>b.classList.remove('show'),7000);
   }
@@ -1272,6 +1276,7 @@ window.initiateRidePayment=async function(method='card'){
       document.getElementById('confirmModal').classList.remove('show');
       document.getElementById('bookPanel').style.display='none';
       window.startSearchTimer();
+      listenToActiveRide(activeRideReqId); // FIX: Ensure we start listening for the "accepted" status immediately!
     }catch(e){window.showToast('Error creating ride request');}
   };
   if(method==='card'){
