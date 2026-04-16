@@ -111,7 +111,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   .panel.snap-expanded{transform:translateY(0) translateZ(0)}
   .panel.animating{transition:transform .44s var(--ease-decel)}
   
-  /* Scroll Spacers for partial states */
   .panel.snap-collapsed .panel-scroll-area::after { height: calc(var(--panel-full) - 92px); }
   .panel.snap-mid .panel-scroll-area::after { height: calc(var(--panel-full) - 54vh); }
 }
@@ -247,11 +246,11 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 @media(max-width:899px){
   .active-panel{bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;border-radius:28px 28px 0 0;padding:0;box-shadow:0 -8px 40px rgba(0,0,0,.13);height:var(--panel-full);}
   .active-panel.snap-collapsed{transform:translateY(calc(var(--panel-full) - 118px)) translateZ(0)}
-  .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 44vh)) translateZ(0)}
+  .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 48vh)) translateZ(0)}
   .active-panel.snap-expanded{transform:translateY(0) translateZ(0)}
   .active-panel.animating{transition:transform .44s var(--ease-decel)}
   .active-panel.snap-collapsed .active-panel-inner::after { height: calc(var(--panel-full) - 118px); }
-  .active-panel.snap-mid .active-panel-inner::after { height: calc(var(--panel-full) - 44vh); }
+  .active-panel.snap-mid .active-panel-inner::after { height: calc(var(--panel-full) - 48vh); }
 }
 @media(min-width:900px){
   .active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0;box-shadow:0 20px 50px rgba(0,0,0,.12);transform:none!important;transition:none!important;display:flex;flex-direction:column}
@@ -267,11 +266,36 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .active-panel-inner::-webkit-scrollbar{display:none}
 @media(min-width:900px){.active-panel-inner{padding:0 24px 24px}}
 
+.ride-status-bar{background:linear-gradient(130deg,rgba(0,82,255,.08),rgba(51,119,255,.12));border:1px solid rgba(0,82,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.rsb-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulseDot 1.8s infinite;flex-shrink:0}
+@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
+.rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
+
+/* ══ DRIVER & CAR SHOWCASE ══ */
 .ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0}
 .ad-info{display:flex;align-items:center;gap:14px}
-.ad-av{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--bg),#E2E4F0);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:var(--blue);border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.ad-av-small{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .ad-car-info{text-align:right}
-.ad-plate{background:var(--border);color:var(--ink);padding:4px 10px;border-radius:8px;font-weight:800;font-size:15px;letter-spacing:1px;margin-top:4px;display:inline-block}
+
+.driver-showcase {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: linear-gradient(to bottom, rgba(0,82,255,0.02), rgba(0,82,255,0.07));
+  border: 1px solid rgba(0,82,255,0.12);
+  border-radius: 16px; padding: 16px 10px; margin-bottom: 14px;
+  position: relative; overflow: hidden; flex-shrink: 0;
+}
+.ds-ride-type {
+  position: absolute; top: 12px; left: 14px;
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
+  background: rgba(0,82,255,0.1); color: var(--blue); padding: 4px 10px; border-radius: 8px;
+}
+.ds-car-wrap { position: relative; z-index: 1; animation: carBounce 1.8s infinite alternate ease-in-out; margin-top: 10px; }
+.ds-car-svg { width: 150px; height: auto; filter: drop-shadow(0 8px 16px rgba(0,26,77,0.15)); }
+.ds-shadow { width: 110px; height: 8px; background: rgba(0,0,0,0.15); border-radius: 50%; margin: 4px auto 0; filter: blur(3px); animation: shadowPulse 1.8s infinite alternate ease-in-out; }
+@keyframes carBounce { 0% { transform: translateY(0); } 100% { transform: translateY(-5px); } }
+@keyframes shadowPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(0.9); opacity: 0.4; } }
+
+.ad-plate { background: #FFD700; color: #000; padding: 4px 12px; border-radius: 6px; font-weight: 900; font-size: 14px; letter-spacing: 1px; border: 1px solid #E6C200; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4); font-family: monospace; display: inline-block; margin-top: 4px; }
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
 .ad-m-item{display:flex;flex-direction:column}
 .ad-m-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
@@ -282,10 +306,8 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ad-btn:active{transform:scale(.92)}
 .ad-btn svg{width:20px;height:20px}
 .cancel-ride-btn{width:100%;padding:13px;border:1.5px solid rgba(229,53,53,.25);background:rgba(229,53,53,.06);border-radius:13px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;flex-shrink:0}
-.ride-status-bar{background:linear-gradient(130deg,rgba(0,82,255,.08),rgba(51,119,255,.12));border:1px solid rgba(0,82,255,.15);border-radius:12px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
-.rsb-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);animation:pulseDot 1.8s infinite;flex-shrink:0}
-@keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
-.rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
+.cancel-ride-btn:hover{background:rgba(229,53,53,.1);border-color:rgba(229,53,53,.4)}
+.cancel-ride-btn:active{transform:scale(.95)}
 
 /* ══ BOTTOM NAV ══ */
 .bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + var(--sb));background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:flex-start;padding-top:10px;z-index:50}
@@ -859,19 +881,36 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="rsb-dot"></div>
           <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
         </div>
-        <div class="ad-header">
-          <div class="ad-info">
-            <div class="ad-av" id="adAv">K</div>
-            <div>
-              <div style="font-weight:800;font-size:17px;margin-bottom:2px" id="adName">Driver</div>
-              <div style="font-size:13px;color:var(--muted);font-weight:500">⭐ 4.9 · 1,240 rides</div>
-            </div>
+        
+        <div class="driver-showcase">
+          <div class="ds-ride-type" id="adRideType">VynixGo</div>
+          <div class="ds-car-wrap">
+            <svg class="ds-car-svg" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="60" r="14" fill="#001A4D"/>
+              <circle cx="150" cy="60" r="14" fill="#001A4D"/>
+              <path d="M20 60 C15 60, 10 55, 12 45 L20 30 C25 20, 35 15, 50 15 L120 15 C135 15, 145 18, 155 25 L175 45 C180 50, 185 55, 180 60 Z" fill="#0052FF"/>
+              <path d="M45 18 C50 10, 60 5, 80 5 L110 5 C130 5, 140 10, 148 18 L155 28 L120 28 L80 28 L45 28 Z" fill="#001A4D" opacity="0.8"/>
+              <path d="M50 25 L58 10 L95 10 L95 25 Z" fill="#F4F7FF" opacity="0.9"/>
+              <path d="M100 25 L100 10 L135 10 L145 25 Z" fill="#F4F7FF" opacity="0.9"/>
+              <path d="M170 35 L175 40 L180 40 L175 35 Z" fill="#F59E0B"/>
+              <path d="M15 35 L20 35 L18 40 L12 40 Z" fill="#E53535"/>
+              <circle cx="50" cy="60" r="6" fill="#DDE5F5"/>
+              <circle cx="150" cy="60" r="6" fill="#DDE5F5"/>
+            </svg>
+            <div class="ds-shadow"></div>
           </div>
-          <div class="ad-car-info">
-            <div style="font-size:14px;font-weight:600" id="adCar">—</div>
-            <div class="ad-plate" id="adPlate">— — —</div>
-          </div>
+          <div class="ad-av-small" id="adAv" style="position:absolute; bottom:12px; right:16px;">?</div>
         </div>
+
+        <div style="text-align:center; margin-bottom:16px;">
+          <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:4px;">
+            <div style="font-size:18px; font-weight:900; color:var(--ink);" id="adName">Driver</div>
+            <div style="font-size:12px; font-weight:700; background:rgba(245,158,11,0.1); color:var(--orange); padding:3px 8px; border-radius:10px;">⭐ 4.9</div>
+          </div>
+          <div style="font-size:14px; font-weight:700; color:var(--muted); margin-bottom:6px;" id="adCar">—</div>
+          <div class="ad-plate" id="adPlate">— — —</div>
+        </div>
+
         <div class="ad-meta-grid">
           <div class="ad-m-item"><span class="ad-m-lbl">Arriving in</span><span class="ad-m-val" id="adTime">-- min</span></div>
           <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
@@ -1044,8 +1083,11 @@ function listenToActiveRide(rideId){
     if(data.status==='accepted'||data.status==='in_progress'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
       if(data.driverAv)document.getElementById('adAv').textContent=window.ini2(data.driverName||'D');
-      if(data.driverCar)document.getElementById('adCar').textContent=data.driverCar;
-      if(data.driverPlate)document.getElementById('adPlate').textContent=data.driverPlate;
+      
+      document.getElementById('adCar').textContent=data.driverVehicle||data.driverCar||'Vehicle';
+      document.getElementById('adRideType').textContent=data.rideType||'VynixGo';
+      document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
+
       if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
       if(data.arrivedPin)window._driverPin=data.arrivedPin;
       
@@ -1115,7 +1157,8 @@ function listenToActiveRide(rideId){
 function showDriverAccepted(data){
   document.getElementById('adName').textContent=data.driverName||'Driver';
   document.getElementById('adAv').textContent=window.ini2(data.driverName||'D');
-  document.getElementById('adCar').textContent=data.driverCar||'Vehicle';
+  document.getElementById('adCar').textContent=data.driverVehicle||data.driverCar||'Vehicle';
+  document.getElementById('adRideType').textContent=data.rideType||'VynixGo';
   document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
   document.getElementById('adPin').textContent=data.securityPin||'----';
   window._riderPin=data.securityPin;
@@ -1381,7 +1424,8 @@ window.submitRating = async function() {
   
   if(window._lastCompletedDriverId && window.db) {
     try {
-      await push(ref(window.db, `drivers/${window._lastCompletedDriverId}/ratings`), {
+      const { ref: fbRef, push: fbPush } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");
+      await fbPush(fbRef(window.db, `drivers/${window._lastCompletedDriverId}/ratings`), {
         rating: window.currentRating,
         comment: document.getElementById('ratingComment').value.trim(),
         date: Date.now(),
@@ -1708,8 +1752,8 @@ function getSnapPositions(panelFullPx){
 }
 function getActiveSnapPositions(panelFullPx){
   return{
-    collapsed:panelFullPx-118,
-    mid:panelFullPx-(window.innerHeight*0.44),
+    collapsed:panelFullPx-140, // Slightly taller for the new driver showcase
+    mid:panelFullPx-(window.innerHeight*0.48),
     expanded:0
   };
 }
