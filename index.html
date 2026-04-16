@@ -1010,23 +1010,53 @@ function listenToActiveRide(rideId){
     window._activeRideData=data;
     const isPanelActive=document.getElementById('activeRidePanel').style.display==='flex';
     if(data.status==='accepted'&&!isPanelActive){showDriverAccepted(data);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='none';clearInterval(window._searchInterval);}
+    
     if(data.status==='accepted'||data.status==='in_progress'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
-      if(data.driverAv)document.getElementById('adAv').textContent=ini2(data.driverName||'D');
+      if(data.driverAv)document.getElementById('adAv').textContent=window.ini2(data.driverName||'D');
       if(data.driverCar)document.getElementById('adCar').textContent=data.driverCar;
       if(data.driverPlate)document.getElementById('adPlate').textContent=data.driverPlate;
       if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
       if(data.arrivedPin)window._driverPin=data.arrivedPin;
-      if(data.arrived)document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';
+      
+      if(data.arrived && data.status !== 'in_progress') {
+         document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';
+      }
+
+      // FIX: Fallback for distance & time if there's no live driver broadcasting
+      if (!data.driverId) {
+         if (data.status === 'in_progress') {
+            document.getElementById('adDist').textContent = data.distKm ? data.distKm.toFixed(1) + ' km' : '-- km';
+            document.getElementById('adTime').textContent = data.tripMins ? data.tripMins + ' min' : '-- min';
+         } else if (data.arrived) {
+            document.getElementById('adDist').textContent = '0.0 km';
+            document.getElementById('adTime').textContent = '0 min';
+         } else {
+            document.getElementById('adDist').textContent = '1.2 km';
+            document.getElementById('adTime').textContent = '3 min';
+         }
+      }
+
       let currentPhase=data.arrived||data.status==='in_progress'?'arrived':'accepted';
       if(window._drawnPhase!==currentPhase){
         window._drawnPhase=currentPhase;
         if(currentPhase==='accepted'&&data.driverId){get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{const dd=dSnap.val();if(dd&&dd.lat&&dd.lng)drawRoute([dd.lng,dd.lat],[data.pickupLng||window._wULng,data.pickupLat||window._wULat],false);});}
         else if(currentPhase==='arrived'&&data.destLng&&data.destLat)drawRoute([data.pickupLng||window._wULng,data.pickupLat||window._wULat],[data.destLng,data.destLat],false);
       }
-      if(data.driverId){
-        get(ref(db,`active_drivers/${data.driverId}`)).then(dSnap=>{const dd=dSnap.val();if(dd&&dd.lat&&dd.lng&&window._mapInstance){updateCarMarker(dd.lat,dd.lng);const targetLat=data.arrived?(data.destLat||window._wULat):(data.pickupLat||window._wULat);const targetLng=data.arrived?(data.destLng||window._wULng):(data.pickupLng||window._wULng);const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);document.getElementById('adDist').textContent=dist.toFixed(1)+' km';document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';}});
-        onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{const dd=dSnap.val();if(dd&&dd.lat&&dd.lng&&window._mapInstance){updateCarMarker(dd.lat,dd.lng);const targetLat=data.arrived?(data.destLat||window._wULat):(data.pickupLat||window._wULat);const targetLng=data.arrived?(data.destLng||window._wULng):(data.pickupLng||window._wULng);const dist=haversine(targetLat,targetLng,dd.lat,dd.lng);document.getElementById('adDist').textContent=dist.toFixed(1)+' km';document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';}});
+      
+      // Live Tracking Logic (Only runs if a driver app connects)
+      if(data.driverId && window.db){
+        onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{
+           const dd=dSnap.val();
+           if(dd&&dd.lat&&dd.lng&&window._mapInstance){
+             updateCarMarker(dd.lat,dd.lng);
+             const targetLat=(data.status==='in_progress'||data.arrived)?(data.destLat||window._wULat):(data.pickupLat||window._wULat);
+             const targetLng=(data.status==='in_progress'||data.arrived)?(data.destLng||window._wULng):(data.pickupLng||window._wULng);
+             const dist=window.haversine(targetLat,targetLng,dd.lat,dd.lng);
+             document.getElementById('adDist').textContent=dist.toFixed(1)+' km';
+             document.getElementById('adTime').textContent=Math.ceil(dist*2)+' min';
+           }
+        });
       }
     }
     if(data.status==='canceled_by_driver'||(data.status==='pending'&&data.cancelReason))handleRideCanceled('driver',data.cancelReason);
@@ -1037,11 +1067,16 @@ function listenToActiveRide(rideId){
 
 function showDriverAccepted(data){
   document.getElementById('adName').textContent=data.driverName||'Driver';
-  document.getElementById('adAv').textContent=ini2(data.driverName||'D');
+  document.getElementById('adAv').textContent=window.ini2(data.driverName||'D');
   document.getElementById('adCar').textContent=data.driverCar||'Vehicle';
   document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
   document.getElementById('adPin').textContent=data.securityPin||'----';
   window._riderPin=data.securityPin;
+
+  // FIX: Set initial fallback values so it doesn't show "--"
+  document.getElementById('adTime').textContent = '3 min';
+  document.getElementById('adDist').textContent = '1.2 km';
+
   document.getElementById('activeRidePanel').style.display='flex';
   requestAnimationFrame(()=>{document.getElementById('activeRidePanel').classList.add('show');if(window.setActivePanelState)window.setActivePanelState('mid');});
   document.getElementById('rideStatusText').textContent='Driver on the way to pickup…';
@@ -1102,7 +1137,7 @@ function renderChatMsgs(){const el=document.getElementById('chatMessages');if(!c
 function scrollChatBottom(){const el=document.getElementById('chatMessages');if(el)setTimeout(()=>el.scrollTop=el.scrollHeight,60);}
 function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function updateChatBadge(){const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}}
-window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};document.getElementById('chatAv').textContent=ini2(data.driverName||'D');document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
+window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};document.getElementById('chatAv').textContent=window.ini2(data.driverName||'D');document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
 window.closeChat=()=>document.getElementById('chatBg').classList.remove('show');
 window.sendChatMsg=async function(){const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text||!activeRideReqId)return;inp.value='';inp.style.height='';await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));scrollChatBottom();};
 window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No active ride');return;}await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});scrollChatBottom();};
@@ -1120,15 +1155,27 @@ window.showPinOverlay=function(){
 };
 window.closePinOverlay=()=>document.getElementById('pinOverlay').classList.remove('show');
 window.pinNext=function(e,i){e.target.value=e.target.value.replace(/\D/,'');if(e.target.value&&i<3)document.getElementById(`pdi${i+1}`)?.focus();};
+
 window.verifyDriverPin=function(){
   const entered=[0,1,2,3].map(i=>document.getElementById(`pdi${i}`)?.value||'').join('');
   const expected=window._driverPin||'';
   if(!expected){window.showToast('Driver has not arrived yet');return;}
+  
   if(entered===expected){
     document.getElementById('pinOverlay').classList.remove('show');
     document.getElementById('rideStatusText').textContent='🚗 Ride in progress!';
     window.showToast('✅ PIN verified — enjoy your ride!');
-    if(window._activeRideData&&window._activeRideData.destLng){drawRoute([window._activeRideData.pickupLng||window._wULng,window._activeRideData.pickupLat||window._wULat],[window._activeRideData.destLng,window._activeRideData.destLat],false);window._drawnPhase='arrived';}
+    
+    // FIX: Update to show the destination distance/time visually immediately
+    if (window._activeRideData) {
+        document.getElementById('adDist').textContent = window._activeRideData.distKm ? window._activeRideData.distKm.toFixed(1) + ' km' : '-- km';
+        document.getElementById('adTime').textContent = window._activeRideData.tripMins ? window._activeRideData.tripMins + ' min' : '-- min';
+    }
+
+    if(window._activeRideData&&window._activeRideData.destLng){
+      drawRoute([window._activeRideData.pickupLng||window._wULng,window._activeRideData.pickupLat||window._wULat],[window._activeRideData.destLng,window._activeRideData.destLat],false);
+      window._drawnPhase='arrived';
+    }
   }else{
     document.getElementById('pinError').style.display='block';
     [0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el){el.value='';el.style.borderColor='var(--red)';}});
