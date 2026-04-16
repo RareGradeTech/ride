@@ -95,9 +95,9 @@ html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; 
 .auth-bg {
   position: absolute;
   inset: 0;
-  /* Blurred background image similar to the screenshot */
-  background: url('https://images.unsplash.com/photo-1543622748-5bc85474a3ee?q=80&w=800&auto=format&fit=crop') center top/cover no-repeat;
-  filter: blur(8px) brightness(0.8);
+  /* Updated Background: Bokeh city street from a car perspective */
+  background: url('https://images.unsplash.com/photo-1514316454349-750a7fd3da3a?q=80&w=800&auto=format&fit=crop') center top/cover no-repeat;
+  filter: blur(8px) brightness(0.7);
   transform: scale(1.1);
   z-index: 1;
 }
@@ -135,11 +135,7 @@ html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; 
   color: #fff;
   text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
-.topbar-title span {
-  font-weight: 500;
-  opacity: 0.8;
-  font-size: 18px;
-}
+
 .theme-toggle {
   width: 44px;
   height: 24px;
@@ -201,7 +197,7 @@ html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; 
 .chip-dot {
   width: 6px;
   height: 6px;
-  background: #00FFA3; /* Bright green dot for contrast */
+  background: #00FFA3;
   border-radius: 50%;
 }
 
@@ -304,7 +300,7 @@ html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; 
   <div class="auth-topbar">
     <div class="topbar-left">
       <div class="topbar-logo">VX</div>
-      <div class="topbar-title">VynixRide <span>Driver</span></div>
+      <div class="topbar-title">VynixRide</div>
     </div>
     <div class="theme-toggle"></div>
   </div>
@@ -313,12 +309,12 @@ html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; 
 
   <div class="auth-bottom-sheet">
     <div class="chip-container">
-      <div class="chip"><div class="chip-dot"></div> Earn Daily</div>
-      <div class="chip"><div class="chip-dot"></div> Flexible Hours</div>
+      <div class="chip"><div class="chip-dot"></div> Fast Pickups</div>
+      <div class="chip"><div class="chip-dot"></div> Safe & Secure</div>
     </div>
     
-    <div class="sheet-headline">Drive & earn,<br>on your terms.</div>
-    <div class="sheet-subline">Sign in to access your driver dashboard, manage live requests, and track your earnings.</div>
+    <div class="sheet-headline">Your city,<br>your ride.</div>
+    <div class="sheet-subline">Sign in to book rides, track your driver, and get to your destination safely.</div>
     
     <button class="btn-google" id="btnGoogleSignIn">
       <svg class="google-icon" viewBox="0 0 48 48">
@@ -332,7 +328,7 @@ html, body { height: 100%; overflow: hidden; font-family: 'Outfit', sans-serif; 
     
     <div class="secure-footer">
       <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-      Secure Driver Portal
+      Secure Rider Login
     </div>
   </div>
 </div>
