@@ -345,7 +345,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .srt{font-size:15px;font-weight:500;color:var(--ink)}
 .sra{color:var(--muted);font-size:16px}
 
-/* ══ MODALS / PIN / CHAT ... kept same styling */
+/* ══ MODALS / PIN / CHAT ══ */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
 @media(min-width:900px){.mbg{align-items:center}}
 .mbg.show{display:flex}
@@ -367,7 +367,12 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .t-input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s;color:var(--ink)}
 .input-wrap{margin-bottom:14px;text-align:left}
 
-/* ══ PIN OVERLAY / CHAT / AUTH / GSHEET ... Rest left styled for brevity */
+/* ══ RATING MODAL ══ */
+.rating-stars { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; font-size: 38px; cursor: pointer; user-select: none; }
+.r-star { color: var(--border); transition: color 0.2s, transform 0.2s var(--ease-spring); }
+.r-star.active { color: var(--orange); transform: scale(1.15); }
+.r-star:active { transform: scale(0.9); }
+
 .pin-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}
 .pin-overlay.show{display:flex}
 .pin-card{background:#fff;border-radius:28px 28px 0 0;padding:24px 24px calc(32px + var(--sb));width:100%;max-width:440px;animation:slideUp .38s var(--ease-spring);position:relative;text-align:center}
@@ -694,6 +699,31 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </div>
 </div>
 
+<div class="mbg" id="ratingModal">
+  <div class="modal" style="text-align:center">
+    <div class="modal-pill"></div>
+    <div class="mh">You've Reached Your Destination!</div>
+    <p style="font-size:14px;color:var(--muted);margin-bottom:20px;">How was your ride with <span id="ratingDriverName" style="font-weight:700;color:var(--ink)">your driver</span>?</p>
+    
+    <div class="rating-stars" id="starRatingContainer">
+      <span class="r-star" data-val="1">★</span>
+      <span class="r-star" data-val="2">★</span>
+      <span class="r-star" data-val="3">★</span>
+      <span class="r-star" data-val="4">★</span>
+      <span class="r-star" data-val="5">★</span>
+    </div>
+    
+    <div class="input-wrap">
+      <textarea id="ratingComment" class="t-input" placeholder="Leave a compliment or feedback (optional)..." rows="2" style="margin-bottom:8px;resize:none"></textarea>
+    </div>
+    
+    <div class="mbtns">
+      <button class="mcancel" onclick="skipRating()">Skip</button>
+      <button class="mok" onclick="submitRating()">Submit Rating</button>
+    </div>
+  </div>
+</div>
+
 <div class="chat-bg" id="chatBg">
   <div class="chat-sheet">
     <div class="chat-header">
@@ -950,7 +980,7 @@ window.db=db;
 let cu=null,yocoPublicKey='pk_test_ed3c54a6gOol69qa7f45';
 let activeRideReqId=null,chatUnsub=null,rideReqUnsub=null;
 let chatMsgs=[],chatUnread=0;
-window._allTrips = []; // Track trips for filtering
+window._allTrips = []; 
 
 const rc=getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis=3600000;
@@ -1023,7 +1053,6 @@ function listenToActiveRide(rideId){
          document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';
       }
 
-      // FIX: Fallback for distance & time if there's no live driver broadcasting
       if (!data.driverId) {
          if (data.status === 'in_progress') {
             document.getElementById('adDist').textContent = data.distKm ? data.distKm.toFixed(1) + ' km' : '-- km';
@@ -1044,7 +1073,6 @@ function listenToActiveRide(rideId){
         else if(currentPhase==='arrived'&&data.destLng&&data.destLat)drawRoute([data.pickupLng||window._wULng,data.pickupLat||window._wULat],[data.destLng,data.destLat],false);
       }
       
-      // Live Tracking Logic (Only runs if a driver app connects)
       if(data.driverId && window.db){
         onValue(ref(db,`active_drivers/${data.driverId}`),dSnap=>{
            const dd=dSnap.val();
@@ -1059,8 +1087,27 @@ function listenToActiveRide(rideId){
         });
       }
     }
-    if(data.status==='canceled_by_driver'||(data.status==='pending'&&data.cancelReason))handleRideCanceled('driver',data.cancelReason);
-    if(data.status==='completed'){resetToBooking();window.showToast('🎉 Ride completed! Thanks for riding with VynixRide.');}
+    
+    if(data.status==='canceled_by_driver'||(data.status==='pending'&&data.cancelReason)){
+      handleRideCanceled('driver',data.cancelReason);
+    }
+    
+    if(data.status==='completed'){
+      window._lastCompletedDriverId = data.driverId;
+      document.getElementById('ratingDriverName').textContent = data.driverName || 'your driver';
+      
+      resetToBooking();
+      document.getElementById('ratingModal').classList.add('show');
+      window.showToast('🎉 You have reached your destination!');
+      
+      if (activeRideReqId) {
+         remove(ref(db, `ride_requests/${activeRideReqId}`)).catch(()=>{});
+         if (chatUnsub) { chatUnsub(); chatUnsub = null; }
+         set(ref(db,`users/${cu.uid}/activeRideId`),null).catch(()=>{});
+         activeRideReqId = null;
+         window._activeRideData = null;
+      }
+    }
   });
   listenChat(rideId);
 }
@@ -1073,7 +1120,6 @@ function showDriverAccepted(data){
   document.getElementById('adPin').textContent=data.securityPin||'----';
   window._riderPin=data.securityPin;
 
-  // FIX: Set initial fallback values so it doesn't show "--"
   document.getElementById('adTime').textContent = '3 min';
   document.getElementById('adDist').textContent = '1.2 km';
 
@@ -1095,7 +1141,6 @@ function handleRideCanceled(by,reason=''){
   if(window._geocoder)window._geocoder.clear();
   loadRecentSearches();
   if(by==='driver'){
-    if(window.db&&rideIdToCancel)update(ref(window.db,`ride_requests/${rideIdToCancel}`),{status:'canceled_by_driver'}).catch(()=>{});
     const b=document.getElementById('driverCanceledBanner');
     b.innerHTML=reason?`🚗 Driver cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`:'🚗 Your driver cancelled. Please rebook your ride.';
     b.classList.add('show');setTimeout(()=>b.classList.remove('show'),7000);
@@ -1166,7 +1211,6 @@ window.verifyDriverPin=function(){
     document.getElementById('rideStatusText').textContent='🚗 Ride in progress!';
     window.showToast('✅ PIN verified — enjoy your ride!');
     
-    // FIX: Update to show the destination distance/time visually immediately
     if (window._activeRideData) {
         document.getElementById('adDist').textContent = window._activeRideData.distKm ? window._activeRideData.distKm.toFixed(1) + ' km' : '-- km';
         document.getElementById('adTime').textContent = window._activeRideData.tripMins ? window._activeRideData.tripMins + ' min' : '-- min';
@@ -1309,6 +1353,48 @@ window.savePlaces=async function(){const data={home:document.getElementById('sp-
 
 function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 window.ini2=ini2;
+
+/* ── RATING LOGIC ── */
+window.currentRating = 0;
+document.querySelectorAll('.r-star').forEach(star => {
+  star.addEventListener('click', function() {
+    window.currentRating = parseInt(this.getAttribute('data-val'));
+    document.querySelectorAll('.r-star').forEach(s => {
+      if(parseInt(s.getAttribute('data-val')) <= window.currentRating) {
+        s.classList.add('active');
+      } else {
+        s.classList.remove('active');
+      }
+    });
+  });
+});
+
+window.skipRating = function() {
+  document.getElementById('ratingModal').classList.remove('show');
+  window.currentRating = 0;
+  document.querySelectorAll('.r-star').forEach(s => s.classList.remove('active'));
+  document.getElementById('ratingComment').value = '';
+};
+
+window.submitRating = async function() {
+  if(!window.currentRating) { window.showToast('Please select a star rating'); return; }
+  
+  if(window._lastCompletedDriverId && window.db) {
+    try {
+      await push(ref(window.db, `drivers/${window._lastCompletedDriverId}/ratings`), {
+        rating: window.currentRating,
+        comment: document.getElementById('ratingComment').value.trim(),
+        date: Date.now(),
+        riderName: cu?.displayName || 'Rider'
+      });
+      window.showToast('Thanks for your feedback!');
+    } catch(e) {
+      window.showToast('Could not send rating at this time');
+    }
+  }
+  window.skipRating();
+};
+
 </script>
 
 <script>
@@ -1317,7 +1403,6 @@ mapboxgl.accessToken=TK;
 const DLNG=28.9934,DLAT=-24.1991,DEFAULT_ZOOM=15.5;
 
 /* ── MAP INIT ── */
-// Updated Style URL to Navigation Day for modern color schemes
 const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/mapbox/navigation-day-v1',center:[DLNG,DLAT],zoom:DEFAULT_ZOOM,pitch:55,bearing:0,antialias:true,attributionControl:false,logoPosition:'bottom-right',maxPitch:70});
 window._mapInstance=map;
 map.addControl(new mapboxgl.AttributionControl({compact:true}),'bottom-right');
@@ -1401,26 +1486,21 @@ geocoder.on('clear',()=>{
 function setDestination(destName,lng,lat,fromGeocoder=false){
   window._destName=destName;window._destLng=lng;window._destLat=lat;
 
-  // Place dest marker
   if(window._dMk)window._dMk.remove();
   const de=document.createElement('div');de.className='dmarker';
   window._dMk=new mapboxgl.Marker({element:de,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
 
-  // Instant pre-calculation before mapbox API resolves to immediately display ride options
-  window._distKm=haversine(wULat, wULng, lat, lng) * 1.3; // Approx route routing multiplier
-  window._tripDurationMins=Math.ceil(window._distKm*2); // Basic estimation
+  window._distKm=haversine(wULat, wULng, lat, lng) * 1.3; 
+  window._tripDurationMins=Math.ceil(window._distKm*2);
   updatePrices();
 
-  // Draw actual route
   drawRoute([wULng,wULat],[lng,lat],true);
 
-  // Update panel state
   setPanelState('expanded');
   document.getElementById('ridesSection').style.display='block';
   document.getElementById('recentSection').style.display='none';
   document.getElementById('promoBanner').style.display='flex';
 
-  // Update book button
   const r=window._rides.find(x=>x.id===window._selId);
   const btn=document.getElementById('confirmBtn');
   btn.style.display='block';
@@ -1881,12 +1961,12 @@ function handleGlobalSwipe() {
 const appShell = document.getElementById('appShell');
 appShell.addEventListener('touchstart', e => {
     // Prevent swipe conflicts with map panning, bottom sheet dragging, and modals
-    if(e.target.closest('#map') || e.target.closest('.drag-handle-wrap') || e.target.closest('.active-drag-wrap') || e.target.closest('.mapboxgl-ctrl') || e.target.closest('.mbg') || e.target.closest('.auth-overlay')) return;
+    if(e.target.closest('#map') || e.target.closest('.drag-handle-wrap') || e.target.closest('.active-drag-wrap') || e.target.closest('.mapboxgl-ctrl') || e.target.closest('.mbg') || e.target.closest('.auth-overlay') || e.target.closest('.rating-stars')) return;
     touchstartX = e.changedTouches[0].screenX;
 }, {passive: true});
 
 appShell.addEventListener('touchend', e => {
-    if(e.target.closest('#map') || e.target.closest('.drag-handle-wrap') || e.target.closest('.active-drag-wrap') || e.target.closest('.mapboxgl-ctrl') || e.target.closest('.mbg') || e.target.closest('.auth-overlay')) return;
+    if(e.target.closest('#map') || e.target.closest('.drag-handle-wrap') || e.target.closest('.active-drag-wrap') || e.target.closest('.mapboxgl-ctrl') || e.target.closest('.mbg') || e.target.closest('.auth-overlay') || e.target.closest('.rating-stars')) return;
     touchendX = e.changedTouches[0].screenX;
     handleGlobalSwipe();
 }, {passive: true});
