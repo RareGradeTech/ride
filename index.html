@@ -105,43 +105,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .shimmer-bnav-label{width:28px;height:8px;border-radius:4px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 .shimmer-bnav-icon::after,.shimmer-bnav-label::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 
-/* Brand pill that pulses (visible on map area) */
-.shimmer-brand-pill{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  z-index:2;
-}
-.shimmer-brand-mark{
-  width:56px;height:56px;background:var(--blue);border-radius:16px;
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:20px;font-weight:800;
-  box-shadow:0 8px 24px var(--glow);
-  animation:brandPop .5s var(--ease-spring) both;
-}
-@keyframes brandPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
-.shimmer-brand-name{
-  font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;
-  animation:brandPop .5s var(--ease-spring) .1s both;
-}
-.shimmer-brand-sub{
-  font-size:13px;color:var(--muted);font-weight:500;
-  animation:brandPop .5s var(--ease-spring) .2s both;
-}
-/* Ripple under brand */
-.shimmer-ripple{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:80px;height:80px;border-radius:50%;
-  border:2px solid rgba(0,82,255,.2);
-  animation:rippleOut 2s ease-out infinite;
-  z-index:1;
-}
-.shimmer-ripple:nth-child(2){animation-delay:.6s}
-.shimmer-ripple:nth-child(3){animation-delay:1.2s}
-@keyframes rippleOut{
-  0%{transform:translate(-50%,-50%) scale(1);opacity:.6}
-  100%{transform:translate(-50%,-50%) scale(4);opacity:0}
-}
-
 /* ══ SHELL ══ */
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative}
 
@@ -661,9 +624,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 </head>
 <body>
 
-<!-- ══ SHIMMER LOADER ══ -->
 <div class="init-loader" id="initLoader">
-  <!-- fake sidebar (desktop) -->
   <div class="shimmer-sidebar">
     <div class="shimmer-logo"></div>
     <div class="shimmer-nav-item"></div>
@@ -671,24 +632,12 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="shimmer-nav-item"></div>
   </div>
 
-  <!-- fake map area -->
   <div class="shimmer-map" style="flex:1;position:relative;">
-    <!-- decorative fake roads -->
     <div class="shimmer-road" style="width:60%;height:6px;top:38%;left:20%;transform:rotate(-8deg)"></div>
     <div class="shimmer-road" style="width:4px;height:45%;top:10%;left:48%;transform:rotate(5deg)"></div>
     <div class="shimmer-road" style="width:40%;height:4px;top:62%;left:30%;transform:rotate(3deg)"></div>
-    <!-- brand mark centered on map -->
-    <div class="shimmer-brand-pill">
-      <div class="shimmer-ripple"></div>
-      <div class="shimmer-ripple"></div>
-      <div class="shimmer-ripple"></div>
-      <div class="shimmer-brand-mark">VX</div>
-      <div class="shimmer-brand-name">VynixRide</div>
-      <div class="shimmer-brand-sub">Loading your map…</div>
-    </div>
   </div>
 
-  <!-- fake bottom sheet -->
   <div class="shimmer-panel">
     <div class="shimmer-handle"></div>
     <div class="shimmer-block title"></div>
@@ -700,7 +649,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="shimmer-block card"></div>
   </div>
 
-  <!-- fake bottom nav -->
   <div class="shimmer-bnav">
     <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
     <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
@@ -999,13 +947,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
       </div>
     </div>
 
-    <!-- ══ ACTIVE RIDE PANEL — scrollable inner ══ -->
     <div class="active-panel" id="activeRidePanel">
-      <!-- Drag handle always visible, never scrolls -->
       <div class="active-drag-wrap" id="activeDragHandle">
         <div class="active-drag" id="activeDragBar"></div>
       </div>
-      <!-- Everything below scrolls -->
       <div class="active-panel-inner" id="activePanelInner">
         <div class="ride-status-bar" id="rideStatusBar">
           <div class="rsb-dot"></div>
@@ -1713,133 +1658,150 @@ window.cancelSearch=async function(msg='Search cancelled'){clearInterval(window.
 function getSnapPositions(panelFullPx){return{collapsed:panelFullPx-92,mid:panelFullPx-(window.innerHeight*0.54),expanded:0};}
 function getActiveSnapPositions(panelFullPx){return{collapsed:panelFullPx-170,mid:panelFullPx-(window.innerHeight*0.52),expanded:0};}
 function getPanelFullPx(){return window.innerHeight*0.85;}
-function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
-function findSnap(pos,vel,snapPos){const projected=pos+vel*0.15;const names=Object.keys(snapPos);let best=names[0],bestDist=Infinity;for(const name of names){const dist=Math.abs(snapPos[name]-projected);if(dist<bestDist){bestDist=dist;best=name;}}return best;}
 function applyTransform(el,y){el.style.transform=`translateY(${y}px) translateZ(0)`;}
 
-/* ══ UNIFIED BOTTOM SHEET ENGINE ══ */
+/* ══ UNIFIED BOTTOM SHEET ENGINE (SCROLLING FIXED) ══ */
 function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn, globalSetStateName) {
-    const panel = document.getElementById(panelId);
-    const handle = document.getElementById(handleWrapId);
-    const scrollArea = document.getElementById(scrollAreaId);
-    if (!panel || !handle) return;
+  const panel = document.getElementById(panelId);
+  const handle = document.getElementById(handleWrapId);
+  const scrollArea = document.getElementById(scrollAreaId);
+  if (!panel || !handle) return;
 
-    let state = 'mid', dragging = false, isPanelDrag = false, startY = 0, curY = 0, velHistory = [];
-    const bar = handle.querySelector('div');
+  let state = 'mid', dragging = false, isPanelDrag = false, startY = 0, curY = 0, velHistory = [];
+  const bar = handle.querySelector('div');
 
-    function setStateDirect(name, animate = true) {
-        if (window.innerWidth >= 900) return;
-        state = name;
-        const snapPos = getSnapPositionsFn(getPanelFullPx());
-        const targetY = snapPos[name];
-        if (animate) {
-            panel.classList.add('animating');
-            setTimeout(() => panel.classList.remove('animating'), 460);
-        }
-        applyTransform(panel, targetY);
-        panel.className = panel.className.replace(/snap-\w+/g, '').trim();
-        panel.classList.add(`snap-${name}`);
-
-        if (bar) {
-            bar.style.width = name === 'collapsed' ? '40px' : '52px';
-            bar.style.background = name === 'collapsed' ? 'var(--border)' : 'var(--blue2)';
-        }
-        if (scrollArea) {
-            // Enable scroll only when fully expanded
-            scrollArea.style.overflowY = name === 'expanded' ? 'auto' : 'hidden';
-        }
-        updateMapClickZone();
-        setTimeout(() => map.resize(), 460);
+  function setStateDirect(name, animate = true) {
+    if (window.innerWidth >= 900) return;
+    state = name;
+    const snapPos = getSnapPositionsFn(getPanelFullPx());
+    const targetY = snapPos[name];
+    if (animate) {
+      panel.classList.add('animating');
+      setTimeout(() => panel.classList.remove('animating'), 460);
     }
-    window[globalSetStateName] = setStateDirect;
+    applyTransform(panel, targetY);
+    panel.className = panel.className.replace(/snap-\w+/g, '').trim();
+    panel.classList.add(`snap-${name}`);
 
-    function getVelocity() {
-        const now = performance.now();
-        const recent = velHistory.filter(e => now - e.t < 80);
-        if (recent.length < 2) return 0;
-        const oldest = recent[0], newest = recent[recent.length - 1];
-        return (newest.y - oldest.y) / (newest.t - oldest.t);
+    if (bar) {
+      bar.style.width = name === 'collapsed' ? '40px' : '52px';
+      bar.style.background = name === 'collapsed' ? 'var(--border)' : 'var(--blue2)';
+    }
+    if (scrollArea) {
+      // Enable scroll only when fully expanded
+      scrollArea.style.overflowY = name === 'expanded' ? 'auto' : 'hidden';
+    }
+    updateMapClickZone();
+    setTimeout(() => map.resize(), 460);
+  }
+  window[globalSetStateName] = setStateDirect;
+
+  function getVelocity() {
+    const now = performance.now();
+    const recent = velHistory.filter(e => now - e.t < 80);
+    if (recent.length < 2) return 0;
+    const oldest = recent[0], newest = recent[recent.length - 1];
+    return (newest.y - oldest.y) / (newest.t - oldest.t);
+  }
+
+  function findSnap(pos, vel, snapPos) {
+    const projected = pos + vel * 0.15;
+    const names = Object.keys(snapPos);
+    let best = names[0], bestDist = Infinity;
+    for (const name of names) {
+      const dist = Math.abs(snapPos[name] - projected);
+      if (dist < bestDist) {
+        bestDist = dist;
+        best = name;
+      }
+    }
+    return best;
+  }
+
+  panel.addEventListener('touchstart', e => {
+    if (window.innerWidth >= 900) return;
+    const isScrollArea = scrollArea && scrollArea.contains(e.target);
+
+    // Let native scroll happen immediately if we are expanded and already scrolled down
+    if (isScrollArea && state === 'expanded' && scrollArea.scrollTop > 0) {
+      isPanelDrag = false;
+      return;
     }
 
-    panel.addEventListener('touchstart', e => {
-        if (window.innerWidth >= 900) return;
-        const isScrollArea = scrollArea && scrollArea.contains(e.target);
-        const isHandle = handle.contains(e.target);
+    isPanelDrag = true;
+    dragging = true;
+    startY = e.touches[0].clientY;
+    velHistory = [];
+    const snapPos = getSnapPositionsFn(getPanelFullPx());
+    curY = snapPos[state] || 0;
+    panel.classList.remove('animating');
+    if (bar) bar.classList.add('active');
+  }, { passive: true });
 
-        const isInput = e.target.closest('button, input, textarea, .promo-banner, .rcard, .recent-item');
-        if (isInput && state !== 'expanded') { }
+  panel.addEventListener('touchmove', e => {
+    if (!dragging || window.innerWidth >= 900) return;
 
-        // If scrollArea is scrolled down and we're in expanded state, don't intercept
-        if (isScrollArea && state === 'expanded' && scrollArea.scrollTop > 0) {
-            isPanelDrag = false;
-            return;
+    const clientY = e.touches[0].clientY;
+    const deltaY = clientY - startY;
+    const isScrollArea = scrollArea && scrollArea.contains(e.target);
+
+    if (isScrollArea && state === 'expanded') {
+      if (scrollArea.scrollTop <= 0) {
+        if (deltaY < 0) {
+          // Dragging UP at top -> Let it scroll natively!
+          isPanelDrag = false;
+        } else if (deltaY > 0 && !isPanelDrag) {
+          // Reached top while pulling DOWN -> Switch to drag the panel
+          isPanelDrag = true;
+          startY = clientY; // Reset to prevent jumps
+          const snapPos = getSnapPositionsFn(getPanelFullPx());
+          curY = snapPos[state] || 0;
+          panel.classList.remove('animating');
+          if (bar) bar.classList.add('active');
         }
+      }
+    }
 
-        isPanelDrag = true;
-        dragging = true;
-        startY = e.touches[0].clientY;
-        velHistory = [];
-        const snapPos = getSnapPositionsFn(getPanelFullPx());
-        curY = snapPos[state] || 0;
-        panel.classList.remove('animating');
-        if (bar) bar.classList.add('active');
-    }, { passive: true });
+    if (!isPanelDrag) return;
 
-    panel.addEventListener('touchmove', e => {
-        if (!dragging || window.innerWidth >= 900) return;
+    // We are dragging the panel — prevent default so the page doesn't scroll natively
+    if (e.cancelable) e.preventDefault();
 
-        const clientY = e.touches[0].clientY;
-        const deltaY = clientY - startY;
+    const snapPos = getSnapPositionsFn(getPanelFullPx());
+    const minY = 0, maxY = snapPos.collapsed;
+    const raw = curY + deltaY;
+    let y;
+    if (raw < minY) {
+      y = minY - (minY - raw) * 0.2;
+    } else if (raw > maxY) {
+      y = maxY + (raw - maxY) * 0.25;
+    } else {
+      y = raw;
+    }
+    applyTransform(panel, y);
+    velHistory.push({ t: performance.now(), y: clientY });
+    if (velHistory.length > 20) velHistory.shift();
+  }, { passive: false });
 
-        // Switch to drag when scrollArea is at top and user drags down
-        if (isPanelDrag === false && scrollArea && state === 'expanded' && scrollArea.scrollTop <= 0 && deltaY > 0) {
-            isPanelDrag = true;
-            startY = clientY;
-            const snapPos = getSnapPositionsFn(getPanelFullPx());
-            curY = snapPos[state] || 0;
-            panel.classList.remove('animating');
-            if (bar) bar.classList.add('active');
-        }
+  const onEnd = () => {
+    if (!dragging) return;
+    dragging = false;
+    isPanelDrag = false;
+    if (bar) bar.classList.remove('active');
 
-        if (!isPanelDrag) return;
+    const style = window.getComputedStyle(panel);
+    const matrix = new DOMMatrixReadOnly(style.transform);
+    const currentY = matrix.m42 || 0;
+    const vel = getVelocity();
+    const snapPos = getSnapPositionsFn(getPanelFullPx());
+    const snap = findSnap(currentY, vel * 120, snapPos);
+    setStateDirect(snap, true);
+  };
 
-        if (e.cancelable) e.preventDefault();
+  panel.addEventListener('touchend', onEnd, { passive: true });
+  panel.addEventListener('touchcancel', onEnd, { passive: true });
 
-        const snapPos = getSnapPositionsFn(getPanelFullPx());
-        const minY = 0, maxY = snapPos.collapsed;
-        const raw = curY + (clientY - startY);
-        let y;
-        if (raw < minY) {
-            y = minY - (minY - raw) * 0.2;
-        } else if (raw > maxY) {
-            y = maxY + (raw - maxY) * 0.25;
-        } else {
-            y = raw;
-        }
-        applyTransform(panel, y);
-        velHistory.push({ t: performance.now(), y: clientY });
-        if (velHistory.length > 20) velHistory.shift();
-    }, { passive: false });
-
-    const onEnd = () => {
-        if (!dragging) return;
-        dragging = false;
-        isPanelDrag = false;
-        if (bar) bar.classList.remove('active');
-
-        const style = window.getComputedStyle(panel);
-        const matrix = new DOMMatrixReadOnly(style.transform);
-        const currentY = matrix.m42 || 0;
-        const vel = getVelocity();
-        const snapPos = getSnapPositionsFn(getPanelFullPx());
-        const snap = findSnap(currentY, vel * 120, snapPos);
-        setStateDirect(snap, true);
-    };
-
-    panel.addEventListener('touchend', onEnd, { passive: true });
-    panel.addEventListener('touchcancel', onEnd, { passive: true });
-
-    setTimeout(() => setStateDirect('mid', false), 120);
+  setTimeout(() => setStateDirect('mid', false), 120);
 }
 
 initBottomSheet('bookPanel', 'panelDragHandle', 'panelScrollArea', getSnapPositions, 'setPanelState');
