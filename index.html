@@ -22,15 +22,125 @@
   --ease-decel:cubic-bezier(0.05,0.7,0.1,1.0);
   --ease-bounce:cubic-bezier(0.34,1.4,0.64,1);
   --panel-full:85vh;
+  --shimmer-base:#e8edf8;
+  --shimmer-highlight:#f4f7ff;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg)}
 
-/* ══ INIT LOADER ══ */
-.init-loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s var(--ease-smooth)}
+/* ══ SHIMMER LOADER ══ */
+.init-loader{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;
+  transition:opacity .6s var(--ease-smooth);
+  overflow:hidden;
+}
 .init-loader.hide{opacity:0;pointer-events:none}
-.loader-ring{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:14px}
-@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Fake map shimmer */
+.shimmer-map{
+  flex:1;background:var(--shimmer-base);position:relative;overflow:hidden;
+}
+/* Shimmer animation sweep */
+@keyframes shimmerSweep{
+  0%{transform:translateX(-100%)}
+  100%{transform:translateX(200%)}
+}
+.shimmer-map::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);
+  animation:shimmerSweep 1.6s ease-in-out infinite;
+}
+/* Fake map road lines */
+.shimmer-road{
+  position:absolute;border-radius:4px;background:rgba(255,255,255,.35);
+}
+
+/* Fake sidebar shimmer (desktop) */
+.shimmer-sidebar{
+  width:80px;background:rgba(255,255,255,.7);border-right:1px solid var(--border);
+  display:none;flex-direction:column;padding:26px 14px;gap:18px;flex-shrink:0;
+}
+@media(min-width:900px){.shimmer-sidebar{display:flex}}
+.shimmer-logo{width:38px;height:38px;border-radius:10px;background:var(--shimmer-base);margin-bottom:10px;position:relative;overflow:hidden;}
+.shimmer-logo::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
+.shimmer-nav-item{width:38px;height:38px;border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;}
+.shimmer-nav-item::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite .1s;}
+
+/* Fake bottom sheet shimmer */
+.shimmer-panel{
+  position:absolute;bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;
+  background:#fff;border-radius:28px 28px 0 0;
+  padding:14px 20px 20px;
+  box-shadow:0 -8px 40px rgba(0,0,0,.1);
+  overflow:hidden;
+}
+@media(min-width:900px){
+  .shimmer-panel{
+    top:22px;left:22px;bottom:auto;width:385px;
+    border-radius:22px;padding:24px;
+    box-shadow:0 20px 50px rgba(0,0,0,.1);
+  }
+}
+.shimmer-handle{width:40px;height:5px;border-radius:5px;background:var(--shimmer-base);margin:0 auto 18px;position:relative;overflow:hidden;}
+.shimmer-handle::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
+.shimmer-block{border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;margin-bottom:12px;}
+.shimmer-block::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
+.shimmer-block.title{height:28px;width:55%;}
+.shimmer-block.origin{height:52px;}
+.shimmer-block.search{height:48px;}
+.shimmer-block.promo{height:58px;border-radius:14px;}
+.shimmer-block.card{height:64px;margin-bottom:8px;}
+
+/* Fake bottom nav shimmer */
+.shimmer-bnav{
+  position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + var(--sb));
+  background:rgba(255,255,255,.97);border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;align-items:flex-start;padding-top:14px;
+  z-index:50;
+}
+@media(min-width:900px){.shimmer-bnav{display:none}}
+.shimmer-bnav-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.shimmer-bnav-icon{width:24px;height:24px;border-radius:6px;background:var(--shimmer-base);position:relative;overflow:hidden;}
+.shimmer-bnav-label{width:28px;height:8px;border-radius:4px;background:var(--shimmer-base);position:relative;overflow:hidden;}
+.shimmer-bnav-icon::after,.shimmer-bnav-label::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
+
+/* Brand pill that pulses (visible on map area) */
+.shimmer-brand-pill{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  z-index:2;
+}
+.shimmer-brand-mark{
+  width:56px;height:56px;background:var(--blue);border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:20px;font-weight:800;
+  box-shadow:0 8px 24px var(--glow);
+  animation:brandPop .5s var(--ease-spring) both;
+}
+@keyframes brandPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.shimmer-brand-name{
+  font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;
+  animation:brandPop .5s var(--ease-spring) .1s both;
+}
+.shimmer-brand-sub{
+  font-size:13px;color:var(--muted);font-weight:500;
+  animation:brandPop .5s var(--ease-spring) .2s both;
+}
+/* Ripple under brand */
+.shimmer-ripple{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:80px;height:80px;border-radius:50%;
+  border:2px solid rgba(0,82,255,.2);
+  animation:rippleOut 2s ease-out infinite;
+  z-index:1;
+}
+.shimmer-ripple:nth-child(2){animation-delay:.6s}
+.shimmer-ripple:nth-child(3){animation-delay:1.2s}
+@keyframes rippleOut{
+  0%{transform:translate(-50%,-50%) scale(1);opacity:.6}
+  100%{transform:translate(-50%,-50%) scale(4);opacity:0}
+}
 
 /* ══ SHELL ══ */
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative}
@@ -232,7 +342,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .search-actions{display:flex;flex-direction:column;gap:12px;margin-top:32px;width:100%;max-width:280px}
 .retry-btn{width:100%;padding:16px;border-radius:20px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;box-shadow:0 6px 20px var(--glow);font-family:'Outfit',sans-serif}
 
-/* ══ ACTIVE RIDE PANEL ══ */
+/* ══ ACTIVE RIDE PANEL — FIXED SCROLL ══ */
 .active-panel{
   position:absolute;background:rgba(255,255,255,.97);
   backdrop-filter:blur(28px);display:none;flex-direction:column;
@@ -244,8 +354,9 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;
     border-radius:28px 28px 0 0;padding:0;
     box-shadow:0 -8px 40px rgba(0,0,0,.13);
+    /* Fixed height so inner content can scroll */
     height:var(--panel-full);
-    overflow:hidden; 
+    overflow:hidden;
   }
   .active-panel.snap-collapsed{transform:translateY(calc(var(--panel-full) - 170px)) translateZ(0)}
   .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 52vh)) translateZ(0)}
@@ -253,20 +364,43 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   .active-panel.animating{transition:transform .44s var(--ease-decel)}
 }
 @media(min-width:900px){
-  .active-panel{top:22px;left:22px;width:385px;border-radius:22px;padding:0;box-shadow:0 20px 50px rgba(0,0,0,.12);transform:none!important;transition:none!important;display:flex;flex-direction:column}
+  .active-panel{
+    top:22px;left:22px;width:385px;border-radius:22px;padding:0;
+    box-shadow:0 20px 50px rgba(0,0,0,.12);
+    transform:none!important;transition:none!important;
+    display:flex;flex-direction:column;
+    height:calc(100vh - 44px);max-height:860px;
+    overflow:hidden;
+  }
 }
-.active-drag-wrap{display:flex;align-items:center;justify-content:center;padding:12px 16px 8px;flex-shrink:0;cursor:grab;touch-action:none;user-select:none}
+
+.active-drag-wrap{
+  display:flex;align-items:center;justify-content:center;
+  padding:12px 16px 8px;flex-shrink:0;
+  cursor:grab;touch-action:none;user-select:none;
+  /* Never shrinks — always visible */
+  min-height:32px;
+}
 .active-drag-wrap:active{cursor:grabbing}
 @media(min-width:900px){.active-drag-wrap{display:none}}
 .active-drag{width:40px;height:5px;background:var(--border);border-radius:5px;transition:width .25s var(--ease-spring),background .25s,transform .2s var(--ease-spring)}
 .active-drag.dragging-active{width:56px;background:var(--blue2);transform:scaleY(1.3)}
 .active-panel.snap-expanded .active-drag,.active-panel.snap-mid .active-drag{width:52px;background:var(--blue2)}
 
+/* ── The key fix: scrollable inner area ── */
 .active-panel-inner{
-  flex:1;overflow-y:auto;overflow-x:hidden;min-height:0;
-  padding:0 20px calc(32px + var(--sb));
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  min-height:0;
+  /* Smooth iOS scroll */
   -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  /* Padding at bottom so cancel btn isn't cut off */
+  padding:0 20px calc(32px + var(--sb));
   display:flex;flex-direction:column;
+  /* Enable scrollbar only when panel is expanded */
+  scrollbar-width:none;
 }
 .active-panel-inner::-webkit-scrollbar{display:none}
 @media(min-width:900px){.active-panel-inner{padding:0 24px calc(28px + var(--sb))}}
@@ -527,9 +661,52 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 </head>
 <body>
 
+<!-- ══ SHIMMER LOADER ══ -->
 <div class="init-loader" id="initLoader">
-  <div class="loader-ring"></div>
-  <div style="font-family:'Outfit',sans-serif;font-weight:800;color:var(--blue);font-size:18px">VynixRide</div>
+  <!-- fake sidebar (desktop) -->
+  <div class="shimmer-sidebar">
+    <div class="shimmer-logo"></div>
+    <div class="shimmer-nav-item"></div>
+    <div class="shimmer-nav-item"></div>
+    <div class="shimmer-nav-item"></div>
+  </div>
+
+  <!-- fake map area -->
+  <div class="shimmer-map" style="flex:1;position:relative;">
+    <!-- decorative fake roads -->
+    <div class="shimmer-road" style="width:60%;height:6px;top:38%;left:20%;transform:rotate(-8deg)"></div>
+    <div class="shimmer-road" style="width:4px;height:45%;top:10%;left:48%;transform:rotate(5deg)"></div>
+    <div class="shimmer-road" style="width:40%;height:4px;top:62%;left:30%;transform:rotate(3deg)"></div>
+    <!-- brand mark centered on map -->
+    <div class="shimmer-brand-pill">
+      <div class="shimmer-ripple"></div>
+      <div class="shimmer-ripple"></div>
+      <div class="shimmer-ripple"></div>
+      <div class="shimmer-brand-mark">VX</div>
+      <div class="shimmer-brand-name">VynixRide</div>
+      <div class="shimmer-brand-sub">Loading your map…</div>
+    </div>
+  </div>
+
+  <!-- fake bottom sheet -->
+  <div class="shimmer-panel">
+    <div class="shimmer-handle"></div>
+    <div class="shimmer-block title"></div>
+    <div class="shimmer-block origin" style="margin-top:4px"></div>
+    <div class="shimmer-block search"></div>
+    <div class="shimmer-block promo"></div>
+    <div style="height:8px"></div>
+    <div class="shimmer-block card"></div>
+    <div class="shimmer-block card"></div>
+  </div>
+
+  <!-- fake bottom nav -->
+  <div class="shimmer-bnav">
+    <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
+    <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
+    <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
+    <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
+  </div>
 </div>
 
 <div class="gsheet-bg" id="googleSheetBg">
@@ -822,8 +999,13 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
       </div>
     </div>
 
+    <!-- ══ ACTIVE RIDE PANEL — scrollable inner ══ -->
     <div class="active-panel" id="activeRidePanel">
-      <div class="active-drag-wrap" id="activeDragHandle"><div class="active-drag" id="activeDragBar"></div></div>
+      <!-- Drag handle always visible, never scrolls -->
+      <div class="active-drag-wrap" id="activeDragHandle">
+        <div class="active-drag" id="activeDragBar"></div>
+      </div>
+      <!-- Everything below scrolls -->
       <div class="active-panel-inner" id="activePanelInner">
         <div class="ride-status-bar" id="rideStatusBar">
           <div class="rsb-dot"></div>
@@ -1527,7 +1709,7 @@ window.showSearchTimeout=function(){document.getElementById('searchTitle').textC
 window.retrySearch=async function(){if(window.activeRideReqId&&window.db){try{const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId),{createdAt:Date.now()});}catch(e){}}window.startSearchTimer();};
 window.cancelSearch=async function(msg='Search cancelled'){clearInterval(window._searchInterval);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='flex';window.showToast(msg);if(window.activeRideReqId&&window.db){try{const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);const s=await fbGet(r);if(s.exists()&&s.val().status==='pending')await fbRemove(r);}catch(e){}window.activeRideReqId=null;}};
 
-/* ── DRAG ENGINE ── */
+/* ══ DRAG ENGINE ══ */
 function getSnapPositions(panelFullPx){return{collapsed:panelFullPx-92,mid:panelFullPx-(window.innerHeight*0.54),expanded:0};}
 function getActiveSnapPositions(panelFullPx){return{collapsed:panelFullPx-170,mid:panelFullPx-(window.innerHeight*0.52),expanded:0};}
 function getPanelFullPx(){return window.innerHeight*0.85;}
@@ -1535,7 +1717,7 @@ function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
 function findSnap(pos,vel,snapPos){const projected=pos+vel*0.15;const names=Object.keys(snapPos);let best=names[0],bestDist=Infinity;for(const name of names){const dist=Math.abs(snapPos[name]-projected);if(dist<bestDist){bestDist=dist;best=name;}}return best;}
 function applyTransform(el,y){el.style.transform=`translateY(${y}px) translateZ(0)`;}
 
-/* ── UNIFIED BOTTOM SHEET ENGINE ── */
+/* ══ UNIFIED BOTTOM SHEET ENGINE ══ */
 function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn, globalSetStateName) {
     const panel = document.getElementById(panelId);
     const handle = document.getElementById(handleWrapId);
@@ -1563,6 +1745,7 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
             bar.style.background = name === 'collapsed' ? 'var(--border)' : 'var(--blue2)';
         }
         if (scrollArea) {
+            // Enable scroll only when fully expanded
             scrollArea.style.overflowY = name === 'expanded' ? 'auto' : 'hidden';
         }
         updateMapClickZone();
@@ -1582,12 +1765,11 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
         if (window.innerWidth >= 900) return;
         const isScrollArea = scrollArea && scrollArea.contains(e.target);
         const isHandle = handle.contains(e.target);
-        
-        const isInput = e.target.closest('button, input, textarea, .promo-banner, .rcard, .recent-item');
-        if (isInput && state !== 'expanded') {
-            // allow interaction
-        }
 
+        const isInput = e.target.closest('button, input, textarea, .promo-banner, .rcard, .recent-item');
+        if (isInput && state !== 'expanded') { }
+
+        // If scrollArea is scrolled down and we're in expanded state, don't intercept
         if (isScrollArea && state === 'expanded' && scrollArea.scrollTop > 0) {
             isPanelDrag = false;
             return;
@@ -1609,6 +1791,7 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
         const clientY = e.touches[0].clientY;
         const deltaY = clientY - startY;
 
+        // Switch to drag when scrollArea is at top and user drags down
         if (isPanelDrag === false && scrollArea && state === 'expanded' && scrollArea.scrollTop <= 0 && deltaY > 0) {
             isPanelDrag = true;
             startY = clientY;
@@ -1620,7 +1803,7 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
 
         if (!isPanelDrag) return;
 
-        if(e.cancelable) e.preventDefault();
+        if (e.cancelable) e.preventDefault();
 
         const snapPos = getSnapPositionsFn(getPanelFullPx());
         const minY = 0, maxY = snapPos.collapsed;
