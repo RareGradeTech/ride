@@ -245,11 +245,11 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .active-panel.show{display:flex}
 @media(max-width:899px){
   .active-panel{bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;border-radius:28px 28px 0 0;padding:0;box-shadow:0 -8px 40px rgba(0,0,0,.13);height:var(--panel-full);}
-  .active-panel.snap-collapsed{transform:translateY(calc(var(--panel-full) - 118px)) translateZ(0)}
+  .active-panel.snap-collapsed{transform:translateY(calc(var(--panel-full) - 185px)) translateZ(0)}
   .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 48vh)) translateZ(0)}
   .active-panel.snap-expanded{transform:translateY(0) translateZ(0)}
   .active-panel.animating{transition:transform .44s var(--ease-decel)}
-  .active-panel.snap-collapsed .active-panel-inner::after { height: calc(var(--panel-full) - 118px); }
+  .active-panel.snap-collapsed .active-panel-inner::after { height: calc(var(--panel-full) - 185px); }
   .active-panel.snap-mid .active-panel-inner::after { height: calc(var(--panel-full) - 48vh); }
 }
 @media(min-width:900px){
@@ -271,31 +271,41 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
 .rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
 
-/* ══ DRIVER & CAR SHOWCASE ══ */
-.ad-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-shrink:0}
-.ad-info{display:flex;align-items:center;gap:14px}
-.ad-av-small{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.ad-car-info{text-align:right}
-
-.driver-showcase {
+/* ══ DRIVER PROFILE CARD (Highly Visible Image) ══ */
+.driver-profile-card {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  background: linear-gradient(to bottom, rgba(0,82,255,0.02), rgba(0,82,255,0.07));
-  border: 1px solid rgba(0,82,255,0.12);
-  border-radius: 16px; padding: 16px 10px; margin-bottom: 14px;
+  background: #fff; border: 2px solid rgba(0,82,255,0.12);
+  border-radius: 20px; padding: 24px 16px 20px; margin-bottom: 16px;
   position: relative; overflow: hidden; flex-shrink: 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
+.driver-profile-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 85px;
+  background: linear-gradient(135deg, rgba(0,82,255,0.08), rgba(0,82,255,0.02));
+  z-index: 0; border-bottom: 1px solid rgba(0,82,255,0.05);
+}
+.dpc-image-wrap { position: relative; z-index: 1; margin-bottom: 14px; animation: avatarPop 0.6s var(--ease-spring) both; }
+@keyframes avatarPop { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.dpc-image {
+  width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
+  border: 4px solid #fff; box-shadow: 0 8px 24px rgba(0,82,255,0.22);
+  background: var(--bg); display: block;
+}
+.dpc-rating {
+  position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+  background: #FFD700; color: #000; font-size: 13px; font-weight: 900;
+  padding: 4px 12px; border-radius: 14px; border: 2px solid #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12); white-space: nowrap;
+}
+.dpc-name { font-size: 24px; font-weight: 900; color: var(--ink); margin-bottom: 4px; z-index: 1; }
+.dpc-car { font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 8px; z-index: 1; }
 .ds-ride-type {
-  position: absolute; top: 12px; left: 14px;
+  position: absolute; top: 12px; left: 14px; z-index: 2;
   font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;
   background: rgba(0,82,255,0.1); color: var(--blue); padding: 4px 10px; border-radius: 8px;
 }
-.ds-car-wrap { position: relative; z-index: 1; animation: carBounce 1.8s infinite alternate ease-in-out; margin-top: 10px; }
-.ds-car-svg { width: 150px; height: auto; filter: drop-shadow(0 8px 16px rgba(0,26,77,0.15)); }
-.ds-shadow { width: 110px; height: 8px; background: rgba(0,0,0,0.15); border-radius: 50%; margin: 4px auto 0; filter: blur(3px); animation: shadowPulse 1.8s infinite alternate ease-in-out; }
-@keyframes carBounce { 0% { transform: translateY(0); } 100% { transform: translateY(-5px); } }
-@keyframes shadowPulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(0.9); opacity: 0.4; } }
 
-.ad-plate { background: #FFD700; color: #000; padding: 4px 12px; border-radius: 6px; font-weight: 900; font-size: 14px; letter-spacing: 1px; border: 1px solid #E6C200; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4); font-family: monospace; display: inline-block; margin-top: 4px; }
+.ad-plate { background: #FFD700; color: #000; padding: 4px 12px; border-radius: 6px; font-weight: 900; font-size: 14px; letter-spacing: 1px; border: 1px solid #E6C200; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.4); font-family: monospace; display: inline-block; margin-top: 4px; z-index: 1; }
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
 .ad-m-item{display:flex;flex-direction:column}
 .ad-m-lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px}
@@ -421,7 +431,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .chat-sheet{background:#fff;border-radius:26px 26px 0 0;width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;animation:slideUp .32s var(--ease-spring);box-shadow:0 -4px 30px rgba(0,0,0,.15)}
 @media(min-width:900px){.chat-sheet{border-radius:22px;max-width:480px;max-height:80vh}}
 .chat-header{display:flex;align-items:center;gap:11px;padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
-.chat-av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+.chat-av{width:38px;height:38px;border-radius:50%;background:var(--bg);border:2px solid var(--border);color:#fff;display:block;object-fit:cover;flex-shrink:0}
 .chat-rider-name{font-size:15px;font-weight:800;color:var(--ink)}
 .chat-status{font-size:12px;color:var(--green);font-weight:700;margin-top:1px}
 .chat-close{margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);}
@@ -749,7 +759,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 <div class="chat-bg" id="chatBg">
   <div class="chat-sheet">
     <div class="chat-header">
-      <div class="chat-av" id="chatAv">?</div>
+      <img class="chat-av" id="chatAv" src="https://i.pravatar.cc/150?img=11" alt="Driver">
       <div>
         <div class="chat-rider-name" id="chatDriverName">Driver</div>
         <div class="chat-status" id="chatStatus">🟢 Active Ride</div>
@@ -882,32 +892,14 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
         </div>
         
-        <div class="driver-showcase">
+        <div class="driver-profile-card">
           <div class="ds-ride-type" id="adRideType">VynixGo</div>
-          <div class="ds-car-wrap">
-            <svg class="ds-car-svg" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="60" r="14" fill="#001A4D"/>
-              <circle cx="150" cy="60" r="14" fill="#001A4D"/>
-              <path d="M20 60 C15 60, 10 55, 12 45 L20 30 C25 20, 35 15, 50 15 L120 15 C135 15, 145 18, 155 25 L175 45 C180 50, 185 55, 180 60 Z" fill="#0052FF"/>
-              <path d="M45 18 C50 10, 60 5, 80 5 L110 5 C130 5, 140 10, 148 18 L155 28 L120 28 L80 28 L45 28 Z" fill="#001A4D" opacity="0.8"/>
-              <path d="M50 25 L58 10 L95 10 L95 25 Z" fill="#F4F7FF" opacity="0.9"/>
-              <path d="M100 25 L100 10 L135 10 L145 25 Z" fill="#F4F7FF" opacity="0.9"/>
-              <path d="M170 35 L175 40 L180 40 L175 35 Z" fill="#F59E0B"/>
-              <path d="M15 35 L20 35 L18 40 L12 40 Z" fill="#E53535"/>
-              <circle cx="50" cy="60" r="6" fill="#DDE5F5"/>
-              <circle cx="150" cy="60" r="6" fill="#DDE5F5"/>
-            </svg>
-            <div class="ds-shadow"></div>
+          <div class="dpc-image-wrap">
+            <img id="adAvImg" class="dpc-image" src="https://i.pravatar.cc/150?img=11" onerror="this.src='https://i.postimg.cc/k4Wn7Qvj/default-driver.jpg'" alt="Driver Profile">
+            <div class="dpc-rating">⭐ 4.9</div>
           </div>
-          <div class="ad-av-small" id="adAv" style="position:absolute; bottom:12px; right:16px;">?</div>
-        </div>
-
-        <div style="text-align:center; margin-bottom:16px;">
-          <div style="display:flex; justify-content:center; align-items:center; gap:8px; margin-bottom:4px;">
-            <div style="font-size:18px; font-weight:900; color:var(--ink);" id="adName">Driver</div>
-            <div style="font-size:12px; font-weight:700; background:rgba(245,158,11,0.1); color:var(--orange); padding:3px 8px; border-radius:10px;">⭐ 4.9</div>
-          </div>
-          <div style="font-size:14px; font-weight:700; color:var(--muted); margin-bottom:6px;" id="adCar">—</div>
+          <div class="dpc-name" id="adName">Driver</div>
+          <div class="dpc-car" id="adCar">—</div>
           <div class="ad-plate" id="adPlate">— — —</div>
         </div>
 
@@ -1082,7 +1074,9 @@ function listenToActiveRide(rideId){
     
     if(data.status==='accepted'||data.status==='in_progress'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
-      if(data.driverAv)document.getElementById('adAv').textContent=window.ini2(data.driverName||'D');
+      
+      const imgNum = data.driverName ? (data.driverName.charCodeAt(0) % 70) + 1 : 11;
+      document.getElementById('adAvImg').src = data.driverImage || `https://i.pravatar.cc/150?img=${imgNum}`;
       
       document.getElementById('adCar').textContent=data.driverVehicle||data.driverCar||'Vehicle';
       document.getElementById('adRideType').textContent=data.rideType||'VynixGo';
@@ -1156,7 +1150,10 @@ function listenToActiveRide(rideId){
 
 function showDriverAccepted(data){
   document.getElementById('adName').textContent=data.driverName||'Driver';
-  document.getElementById('adAv').textContent=window.ini2(data.driverName||'D');
+  
+  const imgNum = data.driverName ? (data.driverName.charCodeAt(0) % 70) + 1 : 11;
+  document.getElementById('adAvImg').src = data.driverImage || `https://i.pravatar.cc/150?img=${imgNum}`;
+  
   document.getElementById('adCar').textContent=data.driverVehicle||data.driverCar||'Vehicle';
   document.getElementById('adRideType').textContent=data.rideType||'VynixGo';
   document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
@@ -1225,7 +1222,7 @@ function renderChatMsgs(){const el=document.getElementById('chatMessages');if(!c
 function scrollChatBottom(){const el=document.getElementById('chatMessages');if(el)setTimeout(()=>el.scrollTop=el.scrollHeight,60);}
 function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function updateChatBadge(){const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}}
-window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};document.getElementById('chatAv').textContent=window.ini2(data.driverName||'D');document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
+window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};const chatImgNum = data.driverName ? (data.driverName.charCodeAt(0) % 70) + 1 : 11;document.getElementById('chatAv').src = data.driverImage || `https://i.pravatar.cc/150?img=${chatImgNum}`;document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
 window.closeChat=()=>document.getElementById('chatBg').classList.remove('show');
 window.sendChatMsg=async function(){const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text||!activeRideReqId)return;inp.value='';inp.style.height='';await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));scrollChatBottom();};
 window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No active ride');return;}await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});scrollChatBottom();};
@@ -1752,8 +1749,8 @@ function getSnapPositions(panelFullPx){
 }
 function getActiveSnapPositions(panelFullPx){
   return{
-    collapsed:panelFullPx-140, // Slightly taller for the new driver showcase
-    mid:panelFullPx-(window.innerHeight*0.48),
+    collapsed:panelFullPx-170, // Increased so the large photo is fully visible when collapsed
+    mid:panelFullPx-(window.innerHeight*0.52),
     expanded:0
   };
 }
