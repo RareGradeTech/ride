@@ -232,9 +232,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .search-actions{display:flex;flex-direction:column;gap:12px;margin-top:32px;width:100%;max-width:280px}
 .retry-btn{width:100%;padding:16px;border-radius:20px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;box-shadow:0 6px 20px var(--glow);font-family:'Outfit',sans-serif}
 
-/* ══ ACTIVE RIDE PANEL ══
-   Key fix: overflow:hidden on panel, min-height:0 + overflow-y:auto on inner
-   so the cancel button is reachable when fully expanded */
+/* ══ ACTIVE RIDE PANEL ══ */
 .active-panel{
   position:absolute;background:rgba(255,255,255,.97);
   backdrop-filter:blur(28px);display:none;flex-direction:column;
@@ -247,7 +245,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     border-radius:28px 28px 0 0;padding:0;
     box-shadow:0 -8px 40px rgba(0,0,0,.13);
     height:var(--panel-full);
-    overflow:hidden; /* prevent outer overflow */
+    overflow:hidden; 
   }
   .active-panel.snap-collapsed{transform:translateY(calc(var(--panel-full) - 170px)) translateZ(0)}
   .active-panel.snap-mid{transform:translateY(calc(var(--panel-full) - 52vh)) translateZ(0)}
@@ -264,7 +262,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .active-drag.dragging-active{width:56px;background:var(--blue2);transform:scaleY(1.3)}
 .active-panel.snap-expanded .active-drag,.active-panel.snap-mid .active-drag{width:52px;background:var(--blue2)}
 
-/* FIX: min-height:0 allows flex child to shrink + scroll */
 .active-panel-inner{
   flex:1;overflow-y:auto;overflow-x:hidden;min-height:0;
   padding:0 20px calc(32px + var(--sb));
@@ -312,7 +309,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ad-btn:hover{border-color:var(--blue);color:var(--blue);background:rgba(0,82,255,.04);transform:translateY(-1px)}
 .ad-btn:active{transform:scale(.92)}
 .ad-btn svg{width:20px;height:20px}
-/* Cancel button — always accessible via scroll */
 .cancel-ride-btn{width:100%;padding:13px;border:1.5px solid rgba(229,53,53,.25);background:rgba(229,53,53,.06);border-radius:13px;color:var(--red);font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;font-family:'Outfit',sans-serif;flex-shrink:0;margin-top:4px}
 .cancel-ride-btn:hover{background:rgba(229,53,53,.1);border-color:rgba(229,53,53,.4)}
 .cancel-ride-btn:active{transform:scale(.95)}
@@ -536,7 +532,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   <div style="font-family:'Outfit',sans-serif;font-weight:800;color:var(--blue);font-size:18px">VynixRide</div>
 </div>
 
-<!-- In-app Google Sign-In Sheet (for Account tab) -->
 <div class="gsheet-bg" id="googleSheetBg">
   <div class="gsheet">
     <div class="gs-pill"></div>
@@ -827,10 +822,9 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
       </div>
     </div>
 
-    <!-- ACTIVE RIDE PANEL — fully scrollable when expanded -->
     <div class="active-panel" id="activeRidePanel">
       <div class="active-drag-wrap" id="activeDragHandle"><div class="active-drag" id="activeDragBar"></div></div>
-      <div class="active-panel-inner">
+      <div class="active-panel-inner" id="activePanelInner">
         <div class="ride-status-bar" id="rideStatusBar">
           <div class="rsb-dot"></div>
           <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
@@ -989,7 +983,6 @@ onAuthStateChanged(auth,async u=>{
   document.getElementById('initLoader').classList.add('hide');
   const isGuest=localStorage.getItem('vx_guest_mode')==='1';
 
-  // If not signed in AND not in guest mode → go back to login
   if(!u && !isGuest){
     window.location.href='login.html';
     return;
@@ -999,12 +992,10 @@ onAuthStateChanged(auth,async u=>{
   updateUI(u);
 
   if(!u){
-    // Guest mode — limited functionality
     window.showToast('Demo mode — rides won\'t be saved');
     return;
   }
 
-  // Signed-in user setup
   localStorage.removeItem('vx_guest_mode');
   const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
   if(!ws.exists())await set(ref(db,`users/${u.uid}/wallet/balance`),0);
@@ -1539,63 +1530,137 @@ window.cancelSearch=async function(msg='Search cancelled'){clearInterval(window.
 /* ── DRAG ENGINE ── */
 function getSnapPositions(panelFullPx){return{collapsed:panelFullPx-92,mid:panelFullPx-(window.innerHeight*0.54),expanded:0};}
 function getActiveSnapPositions(panelFullPx){return{collapsed:panelFullPx-170,mid:panelFullPx-(window.innerHeight*0.52),expanded:0};}
-function getPanelFullPx(){return window.innerHeight*0.8;}
+function getPanelFullPx(){return window.innerHeight*0.85;}
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
 function findSnap(pos,vel,snapPos){const projected=pos+vel*0.15;const names=Object.keys(snapPos);let best=names[0],bestDist=Infinity;for(const name of names){const dist=Math.abs(snapPos[name]-projected);if(dist<bestDist){bestDist=dist;best=name;}}return best;}
 function applyTransform(el,y){el.style.transform=`translateY(${y}px) translateZ(0)`;}
 
-/* ── BOOKING PANEL DRAG ── */
-(function(){
-  const panel=document.getElementById('bookPanel');const handle=document.getElementById('panelDragHandle');const scrollArea=document.getElementById('panelScrollArea');const bar=document.getElementById('dragHandleBar');
-  if(!handle||!panel)return;
-  let state='mid',dragging=false,startY=0,curY=0,velHistory=[];
-  function setStateDirect(name,animate=true){
-    if(window.innerWidth>=900)return;
-    state=name;const snapPos=getSnapPositions(getPanelFullPx());const targetY=snapPos[name];
-    if(animate){panel.classList.add('animating');setTimeout(()=>panel.classList.remove('animating'),460);}
-    applyTransform(panel,targetY);
-    panel.className=panel.className.replace(/snap-\w+/g,'').trim();panel.classList.add(`snap-${name}`);
-    bar.style.width=name==='collapsed'?'40px':'52px';bar.style.background=name==='collapsed'?'var(--border)':'var(--blue2)';
-    if(scrollArea)scrollArea.style.overflowY='auto';
-    updateMapClickZone();setTimeout(()=>map.resize(),460);
-  }
-  window.setPanelState=setStateDirect;
-  function getVelocity(){const now=performance.now();const recent=velHistory.filter(e=>now-e.t<80);if(recent.length<2)return 0;const oldest=recent[0],newest=recent[recent.length-1];return(newest.y-oldest.y)/(newest.t-oldest.t);}
-  function onHandleTouchStart(e){if(window.innerWidth>=900)return;dragging=true;startY=e.touches[0].clientY;velHistory=[];const snapPos=getSnapPositions(getPanelFullPx());curY=snapPos[state]||0;panel.classList.remove('animating');bar.classList.add('active');e.preventDefault();e.stopPropagation();}
-  function onHandleTouchMove(e){if(!dragging)return;const snapPos=getSnapPositions(getPanelFullPx());const minY=0,maxY=snapPos.collapsed;const raw=curY+(e.touches[0].clientY-startY);let y;if(raw<minY){y=minY-(minY-raw)*0.2;}else if(raw>maxY){y=maxY+(raw-maxY)*0.25;}else{y=raw;}applyTransform(panel,y);velHistory.push({t:performance.now(),y:e.touches[0].clientY});if(velHistory.length>20)velHistory.shift();e.preventDefault();}
-  function onHandleTouchEnd(){if(!dragging)return;dragging=false;bar.classList.remove('active');const style=window.getComputedStyle(panel);const matrix=new DOMMatrixReadOnly(style.transform);const currentY=matrix.m42||0;const vel=getVelocity();const snapPos=getSnapPositions(getPanelFullPx());const snap=findSnap(currentY,vel*120,snapPos);setStateDirect(snap,true);}
-  handle.addEventListener('touchstart',onHandleTouchStart,{passive:false});handle.addEventListener('touchmove',onHandleTouchMove,{passive:false});handle.addEventListener('touchend',onHandleTouchEnd,{passive:true});handle.addEventListener('touchcancel',onHandleTouchEnd,{passive:true});
-  if(scrollArea){scrollArea.addEventListener('touchstart',e=>{if(state==='expanded'||state==='mid'){e.stopPropagation();}},{passive:true});scrollArea.addEventListener('touchmove',e=>{if(state==='expanded'||state==='mid')e.stopPropagation();},{passive:true});}
-  setTimeout(()=>setStateDirect('mid',false),120);
-})();
+/* ── UNIFIED BOTTOM SHEET ENGINE ── */
+function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn, globalSetStateName) {
+    const panel = document.getElementById(panelId);
+    const handle = document.getElementById(handleWrapId);
+    const scrollArea = document.getElementById(scrollAreaId);
+    if (!panel || !handle) return;
 
-/* ── ACTIVE RIDE PANEL DRAG ── */
-(function(){
-  const panel=document.getElementById('activeRidePanel');const handle=document.getElementById('activeDragHandle');const inner=document.querySelector('.active-panel-inner');const bar=document.getElementById('activeDragBar');
-  if(!handle||!panel)return;
-  let state='mid',dragging=false,startY=0,curY=0,velHistory=[];
-  function setStateDirect(name,animate=true){
-    if(window.innerWidth>=900)return;
-    state=name;const snapPos=getActiveSnapPositions(getPanelFullPx());const targetY=snapPos[name];
-    if(animate){panel.classList.add('animating');setTimeout(()=>panel.classList.remove('animating'),460);}
-    applyTransform(panel,targetY);
-    panel.className=panel.className.replace(/snap-\w+/g,'').trim();panel.classList.add(`snap-${name}`);
-    bar.style.width=name==='collapsed'?'40px':'52px';bar.style.background=name==='collapsed'?'var(--border)':'var(--blue2)';
-    // When expanded, scroll is handled by active-panel-inner overflow-y:auto
-    if(inner){inner.style.overflowY='auto';}
-    updateMapClickZone();setTimeout(()=>map.resize(),460);
-  }
-  window.setActivePanelState=setStateDirect;
-  function getVelocity(){const now=performance.now();const recent=velHistory.filter(e=>now-e.t<80);if(recent.length<2)return 0;const oldest=recent[0],newest=recent[recent.length-1];return(newest.y-oldest.y)/(newest.t-oldest.t);}
-  function onHandleTouchStart(e){if(window.innerWidth>=900)return;dragging=true;startY=e.touches[0].clientY;velHistory=[];const snapPos=getActiveSnapPositions(getPanelFullPx());curY=snapPos[state]||0;panel.classList.remove('animating');bar.classList.add('dragging-active');e.preventDefault();e.stopPropagation();}
-  function onHandleTouchMove(e){if(!dragging)return;const snapPos=getActiveSnapPositions(getPanelFullPx());const minY=0,maxY=snapPos.collapsed;const raw=curY+(e.touches[0].clientY-startY);let y;if(raw<minY){y=minY-(minY-raw)*0.2;}else if(raw>maxY){y=maxY+(raw-maxY)*0.25;}else{y=raw;}applyTransform(panel,y);velHistory.push({t:performance.now(),y:e.touches[0].clientY});if(velHistory.length>20)velHistory.shift();e.preventDefault();}
-  function onHandleTouchEnd(){if(!dragging)return;dragging=false;bar.classList.remove('dragging-active');const style=window.getComputedStyle(panel);const matrix=new DOMMatrixReadOnly(style.transform);const currentY=matrix.m42||0;const vel=getVelocity();const snapPos=getActiveSnapPositions(getPanelFullPx());const snap=findSnap(currentY,vel*120,snapPos);setStateDirect(snap,true);}
-  handle.addEventListener('touchstart',onHandleTouchStart,{passive:false});handle.addEventListener('touchmove',onHandleTouchMove,{passive:false});handle.addEventListener('touchend',onHandleTouchEnd,{passive:true});handle.addEventListener('touchcancel',onHandleTouchEnd,{passive:true});
-  if(inner){
-    inner.addEventListener('touchstart',e=>{if(state==='expanded'||state==='mid')e.stopPropagation();},{passive:true});
-    inner.addEventListener('touchmove',e=>{if(state==='expanded'||state==='mid')e.stopPropagation();},{passive:true});
-  }
-})();
+    let state = 'mid', dragging = false, isPanelDrag = false, startY = 0, curY = 0, velHistory = [];
+    const bar = handle.querySelector('div');
+
+    function setStateDirect(name, animate = true) {
+        if (window.innerWidth >= 900) return;
+        state = name;
+        const snapPos = getSnapPositionsFn(getPanelFullPx());
+        const targetY = snapPos[name];
+        if (animate) {
+            panel.classList.add('animating');
+            setTimeout(() => panel.classList.remove('animating'), 460);
+        }
+        applyTransform(panel, targetY);
+        panel.className = panel.className.replace(/snap-\w+/g, '').trim();
+        panel.classList.add(`snap-${name}`);
+
+        if (bar) {
+            bar.style.width = name === 'collapsed' ? '40px' : '52px';
+            bar.style.background = name === 'collapsed' ? 'var(--border)' : 'var(--blue2)';
+        }
+        if (scrollArea) {
+            scrollArea.style.overflowY = name === 'expanded' ? 'auto' : 'hidden';
+        }
+        updateMapClickZone();
+        setTimeout(() => map.resize(), 460);
+    }
+    window[globalSetStateName] = setStateDirect;
+
+    function getVelocity() {
+        const now = performance.now();
+        const recent = velHistory.filter(e => now - e.t < 80);
+        if (recent.length < 2) return 0;
+        const oldest = recent[0], newest = recent[recent.length - 1];
+        return (newest.y - oldest.y) / (newest.t - oldest.t);
+    }
+
+    panel.addEventListener('touchstart', e => {
+        if (window.innerWidth >= 900) return;
+        const isScrollArea = scrollArea && scrollArea.contains(e.target);
+        const isHandle = handle.contains(e.target);
+        
+        const isInput = e.target.closest('button, input, textarea, .promo-banner, .rcard, .recent-item');
+        if (isInput && state !== 'expanded') {
+            // allow interaction
+        }
+
+        if (isScrollArea && state === 'expanded' && scrollArea.scrollTop > 0) {
+            isPanelDrag = false;
+            return;
+        }
+
+        isPanelDrag = true;
+        dragging = true;
+        startY = e.touches[0].clientY;
+        velHistory = [];
+        const snapPos = getSnapPositionsFn(getPanelFullPx());
+        curY = snapPos[state] || 0;
+        panel.classList.remove('animating');
+        if (bar) bar.classList.add('active');
+    }, { passive: true });
+
+    panel.addEventListener('touchmove', e => {
+        if (!dragging || window.innerWidth >= 900) return;
+
+        const clientY = e.touches[0].clientY;
+        const deltaY = clientY - startY;
+
+        if (isPanelDrag === false && scrollArea && state === 'expanded' && scrollArea.scrollTop <= 0 && deltaY > 0) {
+            isPanelDrag = true;
+            startY = clientY;
+            const snapPos = getSnapPositionsFn(getPanelFullPx());
+            curY = snapPos[state] || 0;
+            panel.classList.remove('animating');
+            if (bar) bar.classList.add('active');
+        }
+
+        if (!isPanelDrag) return;
+
+        if(e.cancelable) e.preventDefault();
+
+        const snapPos = getSnapPositionsFn(getPanelFullPx());
+        const minY = 0, maxY = snapPos.collapsed;
+        const raw = curY + (clientY - startY);
+        let y;
+        if (raw < minY) {
+            y = minY - (minY - raw) * 0.2;
+        } else if (raw > maxY) {
+            y = maxY + (raw - maxY) * 0.25;
+        } else {
+            y = raw;
+        }
+        applyTransform(panel, y);
+        velHistory.push({ t: performance.now(), y: clientY });
+        if (velHistory.length > 20) velHistory.shift();
+    }, { passive: false });
+
+    const onEnd = () => {
+        if (!dragging) return;
+        dragging = false;
+        isPanelDrag = false;
+        if (bar) bar.classList.remove('active');
+
+        const style = window.getComputedStyle(panel);
+        const matrix = new DOMMatrixReadOnly(style.transform);
+        const currentY = matrix.m42 || 0;
+        const vel = getVelocity();
+        const snapPos = getSnapPositionsFn(getPanelFullPx());
+        const snap = findSnap(currentY, vel * 120, snapPos);
+        setStateDirect(snap, true);
+    };
+
+    panel.addEventListener('touchend', onEnd, { passive: true });
+    panel.addEventListener('touchcancel', onEnd, { passive: true });
+
+    setTimeout(() => setStateDirect('mid', false), 120);
+}
+
+initBottomSheet('bookPanel', 'panelDragHandle', 'panelScrollArea', getSnapPositions, 'setPanelState');
+initBottomSheet('activeRidePanel', 'activeDragHandle', 'activePanelInner', getActiveSnapPositions, 'setActivePanelState');
 
 /* ── TABS ── */
 const TABS=['ride','trips','wallet','account'];
