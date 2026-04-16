@@ -374,28 +374,47 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
 .rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
 
-/* ══ DRIVER PROFILE & CAR CARD ══ */
+/* ══ COMPACT DRIVER PROFILE & CAR CARD ══ */
 .driver-profile-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:#fff;border:2px solid rgba(0,82,255,0.12);
-  border-radius:20px;padding:24px 16px 20px;margin-bottom:16px;
+  border-radius:18px;padding:18px 14px 16px;margin-bottom:14px;
   position:relative;overflow:hidden;flex-shrink:0;
-  box-shadow:0 10px 30px rgba(0,0,0,0.06);
+  box-shadow:0 8px 24px rgba(0,0,0,0.05);
 }
-.driver-profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:110px;background:linear-gradient(135deg,rgba(0,82,255,0.08),rgba(0,82,255,0.02));z-index:0;border-bottom:1px solid rgba(0,82,255,0.05);}
-.ds-ride-type{position:absolute;top:12px;left:14px;z-index:2;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;background:rgba(0,82,255,0.1);color:var(--blue);padding:4px 10px;border-radius:8px;}
-.ds-car-wrap{position:relative;z-index:1;animation:carBounce 1.8s infinite alternate ease-in-out;margin-top:10px;width:100%;display:flex;flex-direction:column;align-items:center;}
-.ds-car-svg{width:140px;height:auto;filter:drop-shadow(0 8px 16px rgba(0,26,77,0.15));}
-.ds-shadow{width:100px;height:8px;background:rgba(0,0,0,0.15);border-radius:50%;margin:4px auto 0;filter:blur(3px);animation:shadowPulse 1.8s infinite alternate ease-in-out;}
-.dpc-image-wrap{position:relative;z-index:2;margin-top:-24px;margin-bottom:14px;animation:avatarPop 0.6s var(--ease-spring) both;}
-@keyframes carBounce{0%{transform:translateY(0);}100%{transform:translateY(-5px);}}
-@keyframes shadowPulse{0%{transform:scale(1);opacity:0.8;}100%{transform:scale(0.9);opacity:0.4;}}
+.driver-profile-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:64px;
+  background:linear-gradient(135deg,rgba(0,82,255,0.08),rgba(0,82,255,0.02));
+  z-index:0;border-bottom:1px solid rgba(0,82,255,0.05);
+}
+.ds-ride-type{
+  position:absolute;top:10px;left:12px;z-index:2;
+  font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;
+  background:rgba(0,82,255,0.1);color:var(--blue);padding:4px 10px;border-radius:8px;
+}
+.dpc-image-wrap{
+  position:relative;z-index:2;margin-top:8px;margin-bottom:12px;
+  animation:avatarPop 0.6s var(--ease-spring) both;
+}
 @keyframes avatarPop{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
-.dpc-image{width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #fff;box-shadow:0 8px 24px rgba(0,82,255,0.22);background:var(--bg);display:block;}
-.dpc-rating{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:#FFD700;color:#000;font-size:12px;font-weight:900;padding:4px 12px;border-radius:14px;border:2px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.12);white-space:nowrap;}
-.dpc-name{font-size:22px;font-weight:900;color:var(--ink);margin-bottom:4px;z-index:1;}
-.dpc-car{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:8px;z-index:1;}
-.ad-plate{background:#FFD700;color:#000;padding:4px 12px;border-radius:6px;font-weight:900;font-size:14px;letter-spacing:1px;border:1px solid #E6C200;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.4);font-family:monospace;display:inline-block;margin-top:4px;z-index:1;}
+.dpc-image{
+  width:80px;height:80px;border-radius:50%;object-fit:cover;
+  border:4px solid #fff;box-shadow:0 8px 20px rgba(0,82,255,0.15);background:var(--bg);display:block;
+}
+.dpc-rating{
+  position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);
+  background:#FFD700;color:#000;font-size:11px;font-weight:900;
+  padding:3px 10px;border-radius:12px;border:2px solid #fff;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);white-space:nowrap;
+}
+.dpc-name{font-size:19px;font-weight:900;color:var(--ink);margin-bottom:2px;z-index:1;}
+.dpc-car{font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px;z-index:1;}
+.ad-plate{
+  background:#FFD700;color:#000;padding:4px 10px;border-radius:6px;
+  font-weight:900;font-size:13px;letter-spacing:1px;
+  border:1px solid #E6C200;box-shadow:inset 0 0 0 1px rgba(255,255,255,0.4);
+  font-family:monospace;display:inline-block;z-index:1;
+}
 
 .ad-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:14px;flex-shrink:0}
 .ad-m-item{display:flex;flex-direction:column}
@@ -956,23 +975,10 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="rsb-dot"></div>
           <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
         </div>
+        
         <div class="driver-profile-card">
           <div class="ds-ride-type" id="adRideType">VynixGo</div>
-          <div class="ds-car-wrap">
-            <svg class="ds-car-svg" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="60" r="14" fill="#001A4D"/>
-              <circle cx="150" cy="60" r="14" fill="#001A4D"/>
-              <path d="M20 60 C15 60, 10 55, 12 45 L20 30 C25 20, 35 15, 50 15 L120 15 C135 15, 145 18, 155 25 L175 45 C180 50, 185 55, 180 60 Z" fill="#0052FF"/>
-              <path d="M45 18 C50 10, 60 5, 80 5 L110 5 C130 5, 140 10, 148 18 L155 28 L120 28 L80 28 L45 28 Z" fill="#001A4D" opacity="0.8"/>
-              <path d="M50 25 L58 10 L95 10 L95 25 Z" fill="#F4F7FF" opacity="0.9"/>
-              <path d="M100 25 L100 10 L135 10 L145 25 Z" fill="#F4F7FF" opacity="0.9"/>
-              <path d="M170 35 L175 40 L180 40 L175 35 Z" fill="#F59E0B"/>
-              <path d="M15 35 L20 35 L18 40 L12 40 Z" fill="#E53535"/>
-              <circle cx="50" cy="60" r="6" fill="#DDE5F5"/>
-              <circle cx="150" cy="60" r="6" fill="#DDE5F5"/>
-            </svg>
-            <div class="ds-shadow"></div>
-          </div>
+          
           <div class="dpc-image-wrap">
             <img id="adAvImg" class="dpc-image" src="https://i.pravatar.cc/150?img=11" onerror="this.src='https://i.pravatar.cc/150?img=3'" alt="Driver Profile">
             <div class="dpc-rating">⭐ 4.9</div>
@@ -981,6 +987,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="dpc-car" id="adCar">—</div>
           <div class="ad-plate" id="adPlate">— — —</div>
         </div>
+        
         <div class="ad-meta-grid">
           <div class="ad-m-item"><span class="ad-m-lbl">Arriving in</span><span class="ad-m-val" id="adTime">-- min</span></div>
           <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
