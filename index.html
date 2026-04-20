@@ -1608,7 +1608,18 @@ function loadRecentSearches(){
 }
 window.saveRecentSearch=function(name,lng,lat){let searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');searches=searches.filter(s=>s.name!==name);searches.unshift({name,lng,lat});if(searches.length>3)searches=searches.slice(0,3);localStorage.setItem('vx_recent_searches',JSON.stringify(searches));};
 window.clearRecentSearches=function(){localStorage.removeItem('vx_recent_searches');document.getElementById('recentSection').style.display='none';window.showToast('Recent searches cleared');};
-window.selectRecentSearch=function(name,lng,lat){const input=document.querySelector('.mapboxgl-ctrl-geocoder--input');if(input){input.value=name.split(',').slice(0,2).join(',');input.style.borderColor='rgba(0,82,255,.4)';setTimeout(()=>input.style.borderColor='',1200);}setDestination(name,lng,lat,false);};
+window.selectRecentSearch=function(name,lng,lat){
+  const input=document.querySelector('.mapboxgl-ctrl-geocoder--input');
+  if(input){
+    input.value=name.split(',').slice(0,2).join(',');
+    input.style.borderColor='rgba(0,82,255,.4)';
+    setTimeout(()=>input.style.borderColor='',1200);
+  }
+  setDestination(name,lng,lat,false);
+  
+  // Automatically trigger the booking confirmation modal
+  setTimeout(() => openModal(), 250);
+};
 
 /* ── RIDE DATA ── */
 const BASE=[
