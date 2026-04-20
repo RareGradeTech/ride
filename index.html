@@ -56,6 +56,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .shimmer-logo::after,.shimmer-nav-item::after,.shimmer-handle::after,.shimmer-block::after,.shimmer-bnav-icon::after,.shimmer-bnav-label::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 .shimmer-nav-item{width:38px;height:38px;border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 .shimmer-panel{position:absolute;bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;background:#fff;border-radius:28px 28px 0 0;padding:14px 20px 20px;box-shadow:0 -8px 40px rgba(0,0,0,.1);overflow:hidden;}
+@media(min-width:900px){.shimmer-panel{top:22px;left:22px;bottom:auto;width:385px;border-radius:22px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.1);}}
 .shimmer-handle{width:40px;height:5px;border-radius:5px;background:var(--shimmer-base);margin:0 auto 18px;position:relative;overflow:hidden;}
 .shimmer-block{border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;margin-bottom:12px;}
 .shimmer-block.title{height:28px;width:55%;}
@@ -73,7 +74,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 @media(min-width:900px){
   .init-loader { flex-direction: row; }
   .shimmer-panel {
-    top:22px; left:102px; /* Offset past the 80px sidebar + 22px margin */
+    top:22px; left:102px;
     bottom:auto; width:385px; border-radius:22px; padding:24px;
     box-shadow:0 20px 50px rgba(0,0,0,.1);
   }
@@ -238,15 +239,12 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .promo-banner:hover{box-shadow:0 6px 20px rgba(0,82,255,.15);transform:translateY(-1px)}
 .promo-banner:hover::after{transform:scale(1.4)}
 .promo-banner:active{transform:scale(.98)}
-.promo-banner.applied{background:linear-gradient(120deg,rgba(23,168,90,.07),rgba(23,168,90,.13));border-color:rgba(23,168,90,.3);}
+
 .promo-badge{background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;font-size:14px;font-weight:900;padding:6px 11px;border-radius:10px;letter-spacing:-.3px;flex-shrink:0;box-shadow:0 3px 10px var(--glow);white-space:nowrap;transition:background .3s,box-shadow .3s;}
-.promo-banner.applied .promo-badge{background:linear-gradient(130deg,#22c55e,var(--green));box-shadow:0 3px 10px rgba(23,168,90,.3)}
 .promo-text-wrap{flex:1;min-width:0}
 .promo-title{font-size:13px;font-weight:800;color:var(--blue);transition:color .3s}
-.promo-banner.applied .promo-title{color:var(--green)}
 .promo-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:500}
 .promo-code-pill{background:rgba(0,82,255,.1);border:1.5px dashed rgba(0,82,255,.3);color:var(--blue);font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px;letter-spacing:.05em;flex-shrink:0;white-space:nowrap;transition:all .3s var(--ease-spring);}
-.promo-banner.applied .promo-code-pill{background:rgba(23,168,90,.12);border-color:rgba(23,168,90,.3);border-style:solid;color:var(--green);}
 
 /* ══ RIDE CARDS ══ */
 .rcard{display:flex;align-items:center;justify-content:space-between;padding:12px 13px;border-radius:15px;border:2px solid var(--border);cursor:pointer;background:#fff;position:relative;flex-shrink:0;transition:all .22s var(--ease-smooth);animation:cardIn .35s var(--ease-spring) both;}
@@ -410,7 +408,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .bni.act svg{transform:scale(1.15)}
 
 /* ══ FULL PAGES ══ */
-/* Increased bottom padding specifically so the account tab scrolls perfectly past the bottom nav */
 .fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 60px)}
 @media(min-width:900px){.fpage{padding:32px 36px 32px}}
 .fpage.show{display:flex;animation:fadeIn .3s ease;}
@@ -726,7 +723,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="mr"><span class="mrl">Pickup</span><b class="mrv" id="m-pickup">Current Location</b></div>
     <div class="mr"><span class="mrl">Destination</span><b class="mrv" id="m-dest">—</b></div>
     <div class="mr"><span class="mrl">Fare</span><b class="mrv" id="m-fare" style="color:var(--blue);font-size:17px;font-weight:800">—</b></div>
-    <div id="promoAppliedRow" style="display:none" class="mr"><span class="mrl">Promo (RIDE20)</span><b class="mrv" style="color:var(--green)" id="m-discount">—</b></div>
+    <div id="promoAppliedRow" style="display:none" class="mr"><span class="mrl">Promo</span><b class="mrv" style="color:var(--green)" id="m-discount">—</b></div>
     <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px">
       <button class="mok" onclick="initiateRidePayment('card')" style="width:100%">Pay with Card (Yoco)</button>
       <button class="mok green" onclick="initiateRidePayment('cash')" style="width:100%">Book with Cash</button>
@@ -1247,7 +1244,6 @@ window.closeAnimatedModal = function(id) {
     }
 }
 
-
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
 gp.setCustomParameters({prompt:'select_account'});
@@ -1588,7 +1584,6 @@ window.showPinOverlay=function(){
   document.getElementById('pinOverlay').classList.add('show');
   setTimeout(()=>document.getElementById('pdi0')?.focus(),250);
 };
-window.closePinOverlay=()=>window.closeAnimatedModal('pinOverlay');
 window.pinNext=function(e,i){e.target.value=e.target.value.replace(/\D/,'');if(e.target.value&&i<3)document.getElementById(`pdi${i+1}`)?.focus();};
 window.verifyDriverPin=function(){
   const entered=[0,1,2,3].map(i=>document.getElementById(`pdi${i}`)?.value||'').join('');
@@ -1889,8 +1884,11 @@ window.applyPromo=function(){
 };
 function updatePromoBannerState(){
   const banner=document.getElementById('promoBanner');const pill=document.getElementById('promoCodePill');if(!banner||!pill)return;
-  if(window._promoApplied){banner.classList.add('applied');pill.textContent='✓ Applied!';document.querySelector('.promo-title').textContent='20% off applied!';document.querySelector('.promo-sub').textContent='Discount applied to your total';}
+  if(window._promoApplied){
+      banner.style.display = 'none';
+  }
   else{
+      banner.style.display = 'flex';
       banner.classList.remove('applied');
       pill.textContent= window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20';
       document.querySelector('.promo-title').textContent='First time discount!';
