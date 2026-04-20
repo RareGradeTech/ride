@@ -28,6 +28,16 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg)}
 
+/* ══ SPLASH SCREEN ══ */
+#realSplash {
+  position:fixed; inset:0; background:var(--blue); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:#fff; transition:opacity 0.5s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+}
+#realSplash.hide { opacity:0; pointer-events:none; transform:scale(1.05); }
+.splash-logo { width:84px; height:84px; background:#fff; color:var(--blue); border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:36px; font-weight:900; margin-bottom:20px; box-shadow:0 12px 34px rgba(0,0,0,0.25); animation: splashPulse 1.8s infinite; }
+.splash-text { font-size:30px; font-weight:800; letter-spacing:-1px; }
+@keyframes splashPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+
 /* ══ SHIMMER LOADER ══ */
 .init-loader{
   position:fixed;inset:0;background:var(--bg);z-index:9999;
@@ -36,74 +46,29 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   overflow:hidden;
 }
 .init-loader.hide{opacity:0;pointer-events:none}
-
-/* Fake map shimmer */
-.shimmer-map{
-  flex:1;background:var(--shimmer-base);position:relative;overflow:hidden;
-}
-/* Shimmer animation sweep */
-@keyframes shimmerSweep{
-  0%{transform:translateX(-100%)}
-  100%{transform:translateX(200%)}
-}
-.shimmer-map::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);
-  animation:shimmerSweep 1.6s ease-in-out infinite;
-}
-/* Fake map road lines */
-.shimmer-road{
-  position:absolute;border-radius:4px;background:rgba(255,255,255,.35);
-}
-
-/* Fake sidebar shimmer (desktop) */
-.shimmer-sidebar{
-  width:80px;background:rgba(255,255,255,.7);border-right:1px solid var(--border);
-  display:none;flex-direction:column;padding:26px 14px;gap:18px;flex-shrink:0;
-}
+.shimmer-map{flex:1;background:var(--shimmer-base);position:relative;overflow:hidden;}
+@keyframes shimmerSweep{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
+.shimmer-map::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.55) 50%,transparent 100%);animation:shimmerSweep 1.6s ease-in-out infinite;}
+.shimmer-road{position:absolute;border-radius:4px;background:rgba(255,255,255,.35);}
+.shimmer-sidebar{width:80px;background:rgba(255,255,255,.7);border-right:1px solid var(--border);display:none;flex-direction:column;padding:26px 14px;gap:18px;flex-shrink:0;}
 @media(min-width:900px){.shimmer-sidebar{display:flex}}
 .shimmer-logo{width:38px;height:38px;border-radius:10px;background:var(--shimmer-base);margin-bottom:10px;position:relative;overflow:hidden;}
-.shimmer-logo::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
+.shimmer-logo::after,.shimmer-nav-item::after,.shimmer-handle::after,.shimmer-block::after,.shimmer-bnav-icon::after,.shimmer-bnav-label::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 .shimmer-nav-item{width:38px;height:38px;border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;}
-.shimmer-nav-item::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite .1s;}
-
-/* Fake bottom sheet shimmer */
-.shimmer-panel{
-  position:absolute;bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;
-  background:#fff;border-radius:28px 28px 0 0;
-  padding:14px 20px 20px;
-  box-shadow:0 -8px 40px rgba(0,0,0,.1);
-  overflow:hidden;
-}
-@media(min-width:900px){
-  .shimmer-panel{
-    top:22px;left:22px;bottom:auto;width:385px;
-    border-radius:22px;padding:24px;
-    box-shadow:0 20px 50px rgba(0,0,0,.1);
-  }
-}
+.shimmer-panel{position:absolute;bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;background:#fff;border-radius:28px 28px 0 0;padding:14px 20px 20px;box-shadow:0 -8px 40px rgba(0,0,0,.1);overflow:hidden;}
+@media(min-width:900px){.shimmer-panel{top:22px;left:22px;bottom:auto;width:385px;border-radius:22px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.1);}}
 .shimmer-handle{width:40px;height:5px;border-radius:5px;background:var(--shimmer-base);margin:0 auto 18px;position:relative;overflow:hidden;}
-.shimmer-handle::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 .shimmer-block{border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;margin-bottom:12px;}
-.shimmer-block::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 .shimmer-block.title{height:28px;width:55%;}
 .shimmer-block.origin{height:52px;}
 .shimmer-block.search{height:48px;}
 .shimmer-block.promo{height:58px;border-radius:14px;}
 .shimmer-block.card{height:64px;margin-bottom:8px;}
-
-/* Fake bottom nav shimmer */
-.shimmer-bnav{
-  position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + var(--sb));
-  background:rgba(255,255,255,.97);border-top:1px solid var(--border);
-  display:flex;justify-content:space-around;align-items:flex-start;padding-top:14px;
-  z-index:50;
-}
+.shimmer-bnav{position:fixed;bottom:0;width:100%;height:calc(var(--nav-h) + var(--sb));background:rgba(255,255,255,.97);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:flex-start;padding-top:14px;z-index:50;}
 @media(min-width:900px){.shimmer-bnav{display:none}}
 .shimmer-bnav-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .shimmer-bnav-icon{width:24px;height:24px;border-radius:6px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 .shimmer-bnav-label{width:28px;height:8px;border-radius:4px;background:var(--shimmer-base);position:relative;overflow:hidden;}
-.shimmer-bnav-icon::after,.shimmer-bnav-label::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 
 /* ══ SHELL ══ */
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative}
@@ -204,12 +169,16 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .panel-scroll-area::-webkit-scrollbar{display:none}
 @media(min-width:900px){.panel-scroll-area{padding:0 24px 24px}}
 
-/* ══ PANEL HEADER ══ */
+/* ══ PANEL HEADER & COURIER TOGGLE ══ */
 .panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-shrink:0;padding-top:4px}
 .ptitle{font-size:21px;font-weight:800;letter-spacing:-.35px}
 .top-cbtn{background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;padding:9px 18px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px var(--glow);transition:transform .15s var(--ease-spring),opacity .2s,box-shadow .2s;display:none;font-family:'Outfit',sans-serif;letter-spacing:.02em}
 .top-cbtn:hover{box-shadow:0 6px 18px var(--glow);transform:translateY(-1px)}
 .top-cbtn:active{transform:scale(.94)}
+
+.service-toggle { display:flex; background:rgba(0,82,255,0.06); border-radius:14px; padding:4px; margin-bottom:14px; flex-shrink:0; }
+.st-btn { flex:1; text-align:center; padding:10px; font-size:14px; font-weight:700; border-radius:10px; cursor:pointer; color:var(--muted); transition:all .2s var(--ease-spring); }
+.st-btn.act { background:#fff; color:var(--blue); box-shadow:0 4px 12px rgba(0,82,255,0.12); transform:scale(1.02); }
 
 /* ══ GEO WRAP ══ */
 .geo-wrap{margin-bottom:10px;flex-shrink:0}
@@ -317,7 +286,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;
     border-radius:28px 28px 0 0;padding:0;
     box-shadow:0 -8px 40px rgba(0,0,0,.13);
-    /* Fixed height so inner content can scroll */
     height:var(--panel-full);
     overflow:hidden;
   }
@@ -341,7 +309,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   display:flex;align-items:center;justify-content:center;
   padding:12px 16px 8px;flex-shrink:0;
   cursor:grab;touch-action:none;user-select:none;
-  /* Never shrinks — always visible */
   min-height:32px;
 }
 .active-drag-wrap:active{cursor:grabbing}
@@ -350,19 +317,15 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .active-drag.dragging-active{width:56px;background:var(--blue2);transform:scaleY(1.3)}
 .active-panel.snap-expanded .active-drag,.active-panel.snap-mid .active-drag{width:52px;background:var(--blue2)}
 
-/* ── The key fix: scrollable inner area ── */
 .active-panel-inner{
   flex:1;
   overflow-y:auto;
   overflow-x:hidden;
   min-height:0;
-  /* Smooth iOS scroll */
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
-  /* Padding at bottom so cancel btn isn't cut off */
   padding:0 20px calc(32px + var(--sb));
   display:flex;flex-direction:column;
-  /* Enable scrollbar only when panel is expanded */
   scrollbar-width:none;
 }
 .active-panel-inner::-webkit-scrollbar{display:none}
@@ -632,16 +595,14 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 /* ══ EMPTY ══ */
 .empty{text-align:center;padding:44px 20px;color:var(--muted)}
 .empty-ico{font-size:34px;margin-bottom:10px}
-
-/* ══ DEST BADGE ══ */
-.dest-badge{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:13px;border:1.5px solid var(--border);background:#fff;margin-bottom:10px;flex-shrink:0;animation:fadeSlideUp .3s var(--ease-spring) both;}
-.dest-badge-dot{width:7px;height:7px;background:var(--blue);border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,82,255,.15)}
-.dest-badge-text{font-size:12px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
-.dest-badge-clear{width:22px;height:22px;border-radius:50%;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:11px;flex-shrink:0;transition:background .15s,transform .15s var(--ease-spring)}
-.dest-badge-clear:hover{background:rgba(229,53,53,.1);color:var(--red);transform:scale(1.1)}
 </style>
 </head>
 <body>
+
+<div id="realSplash">
+  <div class="splash-logo">VX</div>
+  <div class="splash-text">VynixRide</div>
+</div>
 
 <div class="init-loader" id="initLoader">
   <div class="shimmer-sidebar">
@@ -651,7 +612,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="shimmer-nav-item"></div>
   </div>
 
-  <div class="shimmer-map" style="flex:1;position:relative;">
+  <div class="shimmer-map">
     <div class="shimmer-road" style="width:60%;height:6px;top:38%;left:20%;transform:rotate(-8deg)"></div>
     <div class="shimmer-road" style="width:4px;height:45%;top:10%;left:48%;transform:rotate(5deg)"></div>
     <div class="shimmer-road" style="width:40%;height:4px;top:62%;left:30%;transform:rotate(3deg)"></div>
@@ -719,6 +680,20 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
   </div>
 </div>
 
+<div class="mbg" id="courierModal">
+  <div class="modal" style="text-align:left">
+    <div class="modal-pill"></div>
+    <div class="mh">Package Details</div>
+    <div class="input-wrap"><div class="slabel">Recipient Name</div><input type="text" id="cPName" class="t-input" placeholder="Who is receiving this?"></div>
+    <div class="input-wrap"><div class="slabel">Recipient Phone</div><input type="tel" id="cPPhone" class="t-input" placeholder="082 123 4567"></div>
+    <div class="input-wrap"><div class="slabel">Package Description</div><input type="text" id="cPDesc" class="t-input" placeholder="e.g. Keys, Birthday Gift, 2 Boxes"></div>
+    <div class="mbtns">
+      <button class="mcancel" onclick="document.getElementById('courierModal').classList.remove('show')">Cancel</button>
+      <button class="mok" onclick="proceedToCourierConfirm()">Continue</button>
+    </div>
+  </div>
+</div>
+
 <div class="mbg" id="confirmModal">
   <div class="modal" style="position:relative">
     <div class="modal-pill"></div>
@@ -726,7 +701,8 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <div class="mh" style="padding-left:36px">Confirm Booking</div>
-    <div class="mr"><span class="mrl">Ride</span><b class="mrv" id="m-type">—</b></div>
+    <div class="mr"><span class="mrl" id="m-type-label">Ride</span><b class="mrv" id="m-type">—</b></div>
+    <div class="mr" id="m-courier-row" style="display:none"><span class="mrl">Package</span><b class="mrv" id="m-courier-info">—</b></div>
     <div class="mr"><span class="mrl">Driver</span><b class="mrv" id="m-driver">—</b></div>
     <div class="mr"><span class="mrl">ETA (Driver)</span><b class="mrv" id="m-eta">—</b></div>
     <div class="mr"><span class="mrl">Trip Duration</span><b class="mrv" id="m-trip-time">—</b></div>
@@ -936,6 +912,12 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="ptitle">Where to?</div>
           <button class="top-cbtn" id="confirmBtn" onclick="openModal()">Book</button>
         </div>
+        
+        <div class="service-toggle" id="serviceToggle">
+          <div class="st-btn act" onclick="setServiceMode('ride')">🚕 Ride</div>
+          <div class="st-btn" onclick="setServiceMode('courier')">📦 Courier</div>
+        </div>
+
         <div class="origin-row">
           <div class="o-dot"></div>
           <div>
@@ -960,7 +942,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
           <div class="recent-list" id="recentList"></div>
         </div>
         <div id="ridesSection" style="display:none">
-          <div class="slabel">Available Rides</div>
+          <div class="slabel">Available Options</div>
           <div class="ride-list" id="rideList"></div>
         </div>
       </div>
@@ -1090,6 +1072,19 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as 
 import{getDatabase,ref,set,push,get,onValue,update,remove,off}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
 
+// Handle Splash Screen Logic Immediately
+document.addEventListener("DOMContentLoaded", () => {
+    const splash = document.getElementById('realSplash');
+    if (!sessionStorage.getItem('vx_splash_shown')) {
+        setTimeout(() => {
+            splash.classList.add('hide');
+            sessionStorage.setItem('vx_splash_shown', '1');
+        }, 2200);
+    } else {
+        splash.style.display = 'none';
+    }
+});
+
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
 gp.setCustomParameters({prompt:'select_account'});
@@ -1171,7 +1166,12 @@ function listenToActiveRide(rideId){
       document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
       if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
       if(data.arrivedPin)window._driverPin=data.arrivedPin;
-      if(data.arrived&&data.status!=='in_progress'){document.getElementById('rideStatusText').textContent='Driver arrived — verify PIN to start';}
+      
+      const isCourier = data.serviceMode === 'courier';
+      
+      if(data.arrived&&data.status!=='in_progress'){
+          document.getElementById('rideStatusText').textContent = isCourier ? 'Courier arrived — verify PIN' : 'Driver arrived — verify PIN to start';
+      }
       if(!data.driverId){
         if(data.status==='in_progress'){document.getElementById('adDist').textContent=data.distKm?data.distKm.toFixed(1)+' km':'-- km';document.getElementById('adTime').textContent=data.tripMins?data.tripMins+' min':'-- min';}
         else if(data.arrived){document.getElementById('adDist').textContent='0.0 km';document.getElementById('adTime').textContent='0 min';}
@@ -1216,6 +1216,7 @@ function listenToActiveRide(rideId){
 }
 
 function showDriverAccepted(data){
+  const isCourier = data.serviceMode === 'courier';
   document.getElementById('adName').textContent=data.driverName||'Driver';
   const imgNum=data.driverName?(data.driverName.charCodeAt(0)%70)+1:11;
   document.getElementById('adAvImg').src=data.driverAv||data.driverImage||`https://i.pravatar.cc/150?img=${imgNum}`;
@@ -1231,8 +1232,8 @@ function showDriverAccepted(data){
     document.getElementById('activeRidePanel').classList.add('show');
     if(window.setActivePanelState)window.setActivePanelState('expanded');
   });
-  document.getElementById('rideStatusText').textContent='Driver on the way to pickup…';
-  window.showToast('🎉 Driver accepted! Track them on the map.');
+  document.getElementById('rideStatusText').textContent=isCourier ? 'Courier on the way to pickup…' : 'Driver on the way to pickup…';
+  window.showToast(`🎉 ${isCourier ? 'Courier' : 'Driver'} accepted! Track them on the map.`);
 }
 
 function handleRideCanceled(by,reason=''){
@@ -1247,7 +1248,7 @@ function handleRideCanceled(by,reason=''){
   loadRecentSearches();
   if(by==='driver'){
     const b=document.getElementById('driverCanceledBanner');
-    b.innerHTML=reason?`🚗 Driver cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`:'🚗 Your driver cancelled. Please rebook your ride.';
+    b.innerHTML=reason?`🚗 Driver/Courier cancelled:<br><span style="font-weight:500;font-size:13px">${reason}</span>`:'🚗 Your driver cancelled. Please rebook.';
     b.classList.add('show');setTimeout(()=>b.classList.remove('show'),7000);
   }
 }
@@ -1311,8 +1312,8 @@ window.verifyDriverPin=function(){
   if(!expected){window.showToast('Driver has not arrived yet');return;}
   if(entered===expected){
     document.getElementById('pinOverlay').classList.remove('show');
-    document.getElementById('rideStatusText').textContent='🚗 Ride in progress!';
-    window.showToast('✅ PIN verified — enjoy your ride!');
+    document.getElementById('rideStatusText').textContent=window._activeRideData?.serviceMode === 'courier' ? '📦 Delivery in progress!' : '🚗 Ride in progress!';
+    window.showToast('✅ PIN verified — enjoy your trip!');
     if(window._activeRideData){document.getElementById('adDist').textContent=window._activeRideData.distKm?window._activeRideData.distKm.toFixed(1)+' km':'-- km';document.getElementById('adTime').textContent=window._activeRideData.tripMins?window._activeRideData.tripMins+' min':'-- min';}
     if(window._activeRideData&&window._activeRideData.destLng){drawRoute([window._activeRideData.pickupLng||window._wULng,window._activeRideData.pickupLat||window._wULat],[window._activeRideData.destLng,window._activeRideData.destLat],false);window._drawnPhase='arrived';}
   }else{
@@ -1328,17 +1329,27 @@ window.initiateRidePayment=async function(method='card'){
   if(!cu){window.showToast('Please sign in first');return;}
   const r=window._rides.find(x=>x.id===window._selId);
   let finalFare=r.price;
+  
   const processBooking=async(payType)=>{
     try{
       const dest=window._destName.split(',').slice(0,2).join(',');
       const secPin=Math.floor(1000+Math.random()*9000).toString();
-      const rideReqRef=await push(ref(db,'ride_requests'),{
+      
+      const payload = {
         status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',
         rideType:r.type,fare:finalFare,pickup:document.getElementById('originLabel').textContent||'Current Location',
         destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,
         destLng:window._destLng,destLat:window._destLat,pickupLng:window._wULng,pickupLat:window._wULat,
-        capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now()
-      });
+        capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now(),
+        serviceMode: window._serviceMode
+      };
+      
+      if (window._serviceMode === 'courier') {
+          payload.courierDetails = window._courierDetails;
+      }
+      
+      const rideReqRef=await push(ref(db,'ride_requests'), payload);
+      
       activeRideReqId=rideReqRef.key;
       window._riderPin=secPin;
       await set(ref(db,`users/${cu.uid}/activeRideId`),activeRideReqId);
@@ -1346,33 +1357,34 @@ window.initiateRidePayment=async function(method='card'){
       document.getElementById('bookPanel').style.display='none';
       window.startSearchTimer();
       listenToActiveRide(activeRideReqId);
-    }catch(e){window.showToast('Error creating ride request');}
+    }catch(e){window.showToast('Error creating request');}
   };
+  
   if(method==='card'){
-    window.triggerYocoPayment(finalFare,`Ride: ${r.type}`,async()=>{
+    window.triggerYocoPayment(finalFare,`${window._serviceMode === 'courier' ? 'Delivery' : 'Ride'}: ${r.type}`,async()=>{
       await processBooking('Card');
       if(cu){
-        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card'});
-        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ride (Card)`,amount:finalFare,type:'dr',date:Date.now()});
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card', isCourier: window._serviceMode === 'courier'});
+        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ${window._serviceMode === 'courier' ? 'delivery' : 'ride'} (Card)`,amount:finalFare,type:'dr',date:Date.now()});
       }
     },'confirmModal');
   }else{
     await processBooking('Cash');
-    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash'});
+    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash', isCourier: window._serviceMode === 'courier'});
   }
 };
 
 window.cancelActiveRide=async function(){
   if(!activeRideReqId||!cu){window.showToast('No active ride');return;}
-  if(!confirm('Cancel your ride?'))return;
+  if(!confirm('Cancel your request?'))return;
   try{
     const snap=await get(ref(db,`ride_requests/${activeRideReqId}`));
     const d=snap.val();
     if(d&&(d.status==='pending'||d.status==='accepted')){await update(ref(db,`ride_requests/${activeRideReqId}`),{status:'canceled_by_rider',canceledAt:Date.now()});await push(ref(db,`users/${cu.uid}/trips`),{type:d.rideType||'—',driver:d.driverName||'—',fare:d.fare||0,destination:d.destination||'—',status:'Canceled',date:Date.now(),paymentMethod:d.paymentMethod||'—'});}
     if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}if(chatUnsub){chatUnsub();chatUnsub=null;}
     await set(ref(db,`users/${cu.uid}/activeRideId`),null);
-    activeRideReqId=null;resetToBooking();window.showToast('Ride cancelled');
-  }catch(e){window.showToast('Error cancelling ride');}
+    activeRideReqId=null;resetToBooking();window.showToast('Request cancelled');
+  }catch(e){window.showToast('Error cancelling request');}
 };
 
 /* ── YOCO ── */
@@ -1423,7 +1435,7 @@ window.applyTripFilter=function(){
 };
 function renderTrips(list){
   const el=document.getElementById('tripsList');
-  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No trips found.<br>Book your next ride!</p></div>';return;}
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">🚗</div><p>No history found.<br>Book your next ride!</p></div>';return;}
   el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,.05)">${t.paymentMethod||'Card'}</span></div><div class="tc-meta">${t.destination||'—'} · ${t.driver||'—'}</div></div><div class="tc-fare">R ${parseFloat(t.fare||0).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge ${t.status==='Canceled'?'canceled':''}">${t.status==='Canceled'?'✕ Canceled':'✓ '+(t.status||'Completed')}</span></div>`).join('');
 }
 function renderTx(obj){
@@ -1506,7 +1518,7 @@ function updateCarMarker(lat,lng){
   if(window._carMarkerEl){window._carMarkerEl.setLngLat([lng,lat]);return;}
   const wrap=document.createElement('div');wrap.style.cssText='position:relative;width:34px;height:34px';
   const pulse=document.createElement('div');pulse.className='car-pulse';
-  const car=document.createElement('div');car.className='car-marker';car.textContent='🚕';
+  const car=document.createElement('div');car.className='car-marker';car.textContent= window._serviceMode === 'courier' ? '📦' : '🚕';
   wrap.appendChild(pulse);wrap.appendChild(car);
   window._carMarkerEl=new mapboxgl.Marker({element:wrap,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
 }
@@ -1587,15 +1599,20 @@ function clearDestination(){
 /* ── PROMO ── */
 window._promoApplied=false;
 window.applyPromo=function(){
-  if(window._promoApplied){window.showToast('✅ RIDE20 already applied — 20% off!');return;}
+  if(window._promoApplied){window.showToast(`✅ ${window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20'} already applied!`);return;}
   window._promoApplied=true;updatePromoBannerState();
-  if(window._destName){updatePrices();window.showToast('🎉 RIDE20 applied — 20% off your ride!');}
-  else{window.showToast('🎉 RIDE20 applied! Now search for a destination.');}
+  if(window._destName){updatePrices();window.showToast(`🎉 ${window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20'} applied — 20% off!`);}
+  else{window.showToast(`🎉 ${window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20'} applied! Now search for a destination.`);}
 };
 function updatePromoBannerState(){
   const banner=document.getElementById('promoBanner');const pill=document.getElementById('promoCodePill');if(!banner||!pill)return;
-  if(window._promoApplied){banner.classList.add('applied');pill.textContent='✓ Applied!';document.querySelector('.promo-title').textContent='20% off applied!';document.querySelector('.promo-sub').textContent='Discount applied to your ride';}
-  else{banner.classList.remove('applied');pill.textContent='RIDE20';document.querySelector('.promo-title').textContent='First ride discount!';document.querySelector('.promo-sub').textContent='Tap to apply your promo code';}
+  if(window._promoApplied){banner.classList.add('applied');pill.textContent='✓ Applied!';document.querySelector('.promo-title').textContent='20% off applied!';document.querySelector('.promo-sub').textContent='Discount applied to your total';}
+  else{
+      banner.classList.remove('applied');
+      pill.textContent= window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20';
+      document.querySelector('.promo-title').textContent='First time discount!';
+      document.querySelector('.promo-sub').textContent='Tap to apply your promo code';
+  }
 }
 
 /* ── RECENT SEARCHES ── */
@@ -1616,43 +1633,127 @@ window.selectRecentSearch=function(name,lng,lat){
     setTimeout(()=>input.style.borderColor='',1200);
   }
   setDestination(name,lng,lat,false);
-  
-  // Automatically trigger the booking confirmation modal
   setTimeout(() => openModal(), 250);
 };
 
-/* ── RIDE DATA ── */
-const BASE=[
+/* ── RIDE & COURIER DATA ── */
+const RIDE_BASE=[
   {id:1,type:'VynixGo',baseFare:20,perKm:5.5,capacity:4,driver:'Kabelo P.',specs:'Compact · Economy'},
   {id:2,type:'VynixComfort',baseFare:30,perKm:8,capacity:4,driver:'Thabo M.',specs:'Newer cars · Legroom'},
   {id:3,type:'VynixXL',baseFare:45,perKm:12,capacity:6,driver:'Lesego R.',specs:'SUVs & Vans · 6 seats'}
 ];
-window._rides=BASE.map(r=>({...r,price:r.baseFare,time:'3 min'}));
+const COURIER_BASE=[
+  {id:4,type:'VynixBike',baseFare:15,perKm:4.5,capacity:1,driver:'Sipho T.',specs:'Documents & Small Parcels'},
+  {id:5,type:'VynixCourier',baseFare:25,perKm:6.5,capacity:1,driver:'Johan V.',specs:'Standard Boxes'},
+  {id:6,type:'VynixCargo',baseFare:50,perKm:10.5,capacity:1,driver:'Pieter D.',specs:'Large Items & Furniture'}
+];
+
+window._serviceMode = 'ride'; // default
+window._rides=RIDE_BASE.map(r=>({...r,price:r.baseFare,time:'3 min'}));
 window._selId=1;window._distKm=0;window._destName='';window._tripDurationMins=0;
+window._courierDetails={};
+
+window.setServiceMode = function(mode) {
+    window._serviceMode = mode;
+    
+    // Update Toggle UI
+    document.querySelectorAll('.st-btn').forEach(el => el.classList.remove('act'));
+    event.currentTarget.classList.add('act');
+    
+    // Adjust header and promo
+    document.querySelector('.ptitle').textContent = mode === 'ride' ? 'Where to?' : 'Send a package';
+    updatePromoBannerState();
+    
+    // Update active ID and re-render
+    window._selId = mode === 'ride' ? 1 : 4; 
+    updatePrices();
+    
+    if(window._destName) {
+        const r = window._rides.find(x => x.id === window._selId);
+        const btn = document.getElementById('confirmBtn');
+        btn.textContent = `Book ${r.type}`;
+    }
+};
 
 function haversine(la1,lo1,la2,lo2){const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
 window.haversine=haversine;
 
 function updatePrices(){
-  const km=window._distKm||0;const discount=window._promoApplied?0.8:1;
-  window._rides=BASE.map(r=>{const base=Math.round((r.baseFare+r.perKm*km)*100)/100;const final=Math.round(base*discount*100)/100;return{...r,price:final,originalPrice:window._promoApplied?base:null,time:`${3+(r.id-1)} min`,tripTime:window._tripDurationMins?`${window._tripDurationMins} min`:'N/A'};});
+  const baseArr = window._serviceMode === 'courier' ? COURIER_BASE : RIDE_BASE;
+  const km=window._distKm||0;
+  const discount=window._promoApplied?0.8:1;
+  
+  window._rides = baseArr.map(r=>{
+      const basePrice = Math.round((r.baseFare+r.perKm*km)*100)/100;
+      const finalPrice = Math.round(basePrice*discount*100)/100;
+      return{
+          ...r, 
+          price: finalPrice, 
+          originalPrice: window._promoApplied ? basePrice : null,
+          time:`${3 + (r.id % 3)} min`,
+          tripTime: window._tripDurationMins ? `${window._tripDurationMins} min` : 'N/A'
+      };
+  });
   renderRides(true);
 }
 
 function renderRides(withDest=false){
   const list=document.getElementById('rideList');if(!withDest){list.innerHTML='';return;}
-  list.innerHTML=window._rides.map(r=>`<div class="rcard ${r.id===window._selId?'sel':''}" onclick="selRide(${r.id})"><div class="rinfo"><div class="rav">${window.ini2(r.driver)}</div><div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">👤${r.capacity}</span></div><div class="rmeta">${r.specs}</div></div></div><div style="text-align:right;flex-shrink:0">${r.originalPrice?`<div class="r-old-price">R ${r.originalPrice.toFixed(2)}</div>`:''}<div class="rprice ${r.originalPrice?'promo-price':''}">R ${r.price.toFixed(2)}</div><div class="rtbadge">${r.time}</div></div></div>`).join('');
+  const iconHtml = window._serviceMode === 'courier' ? '📦' : '👤';
+  list.innerHTML=window._rides.map(r=>`<div class="rcard ${r.id===window._selId?'sel':''}" onclick="selRide(${r.id})"><div class="rinfo"><div class="rav">${window.ini2(r.driver)}</div><div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">${iconHtml}${r.capacity}</span></div><div class="rmeta">${r.specs}</div></div></div><div style="text-align:right;flex-shrink:0">${r.originalPrice?`<div class="r-old-price">R ${r.originalPrice.toFixed(2)}</div>`:''}<div class="rprice ${r.originalPrice?'promo-price':''}">R ${r.price.toFixed(2)}</div><div class="rtbadge">${r.time}</div></div></div>`).join('');
 }
 
 window.selRide=function(id){window._selId=id;renderRides(!!window._destName);const r=window._rides.find(x=>x.id===id);if(window._destName){const btn=document.getElementById('confirmBtn');btn.textContent=`Book ${r.type}`;}};
+
 window.openModal=function(){
   if(!window._destName){window.showToast('Search for a destination first');return;}
+  if(window._serviceMode === 'courier') {
+      document.getElementById('courierModal').classList.add('show');
+  } else {
+      showConfirmModal();
+  }
+};
+
+window.proceedToCourierConfirm = function() {
+    const n = document.getElementById('cPName').value.trim();
+    const p = document.getElementById('cPPhone').value.trim();
+    const desc = document.getElementById('cPDesc').value.trim();
+    if(!n || !p) { window.showToast('Please enter recipient details'); return; }
+    window._courierDetails = { name: n, phone: p, desc: desc || 'Package' };
+    document.getElementById('courierModal').classList.remove('show');
+    showConfirmModal();
+};
+
+window.showConfirmModal = function() {
   const r=window._rides.find(x=>x.id===window._selId);
-  document.getElementById('m-type').textContent=r.type;document.getElementById('m-driver').textContent=r.driver;document.getElementById('m-eta').textContent=r.time;document.getElementById('m-trip-time').textContent=r.tripTime||'N/A';document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
-  if(window._promoApplied&&r.originalPrice){document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;document.getElementById('m-fare').style.color='var(--green)';document.getElementById('m-discount').textContent=`-R ${(r.originalPrice-r.price).toFixed(2)}`;document.getElementById('promoAppliedRow').style.display='';}
-  else{document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;document.getElementById('m-fare').style.color='var(--blue)';document.getElementById('promoAppliedRow').style.display='none';}
+  document.getElementById('m-type-label').textContent = window._serviceMode === 'courier' ? 'Service' : 'Ride';
+  document.getElementById('m-type').textContent=r.type;
+  
+  if (window._serviceMode === 'courier') {
+      document.getElementById('m-courier-row').style.display = 'flex';
+      document.getElementById('m-courier-info').textContent = `${window._courierDetails.name} (${window._courierDetails.desc})`;
+  } else {
+      document.getElementById('m-courier-row').style.display = 'none';
+  }
+  
+  document.getElementById('m-driver').textContent=r.driver;
+  document.getElementById('m-eta').textContent=r.time;
+  document.getElementById('m-trip-time').textContent=r.tripTime||'N/A';
+  document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
+  
+  if(window._promoApplied&&r.originalPrice){
+      document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+      document.getElementById('m-fare').style.color='var(--green)';
+      document.getElementById('m-discount').textContent=`-R ${(r.originalPrice-r.price).toFixed(2)}`;
+      document.getElementById('promoAppliedRow').style.display='';
+  } else {
+      document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
+      document.getElementById('m-fare').style.color='var(--blue)';
+      document.getElementById('promoAppliedRow').style.display='none';
+  }
   document.getElementById('confirmModal').classList.add('show');
 };
+
 window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
 window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
 window.closeTopUpModal=()=>document.getElementById('topUpModal').classList.remove('show');
@@ -1660,17 +1761,17 @@ window.closeTopUpModal=()=>document.getElementById('topUpModal').classList.remov
 /* ── SEARCH TIMER ── */
 window.startSearchTimer=function(){
   const overlay=document.getElementById('searchOverlay');overlay.classList.add('show');
-  document.getElementById('searchTitle').textContent='Finding your driver…';
-  document.getElementById('searchSub').textContent='Pinging nearby drivers. If no one accepts within 60 seconds, the request will timeout.';
+  document.getElementById('searchTitle').textContent= window._serviceMode === 'courier' ? 'Finding a courier…' : 'Finding your driver…';
+  document.getElementById('searchSub').textContent= `Pinging nearby ${window._serviceMode === 'courier' ? 'couriers' : 'drivers'}. If no one accepts within 60 seconds, the request will timeout.`;
   document.getElementById('searchProgressWrap').style.display='flex';document.getElementById('cancelSearchBtn').style.display='block';document.getElementById('timeoutActions').style.display='none';
   let t=60;const circle=document.getElementById('searchProgress'),txt=document.getElementById('searchTimerTxt');
   circle.style.transition='none';circle.style.strokeDashoffset='0';void circle.offsetWidth;setTimeout(()=>circle.style.transition='stroke-dashoffset 1s linear',50);
   txt.textContent='60s';clearInterval(window._searchInterval);
   window._searchInterval=setInterval(()=>{t--;txt.textContent=t+'s';circle.style.strokeDashoffset=(283-(t/60)*283);if(t<=0){clearInterval(window._searchInterval);window.showSearchTimeout();}},1000);
 };
-window.showSearchTimeout=function(){document.getElementById('searchTitle').textContent='No drivers available';document.getElementById('searchSub').textContent='All nearby drivers are currently busy. Would you like to keep trying?';document.getElementById('searchProgressWrap').style.display='none';document.getElementById('cancelSearchBtn').style.display='none';document.getElementById('timeoutActions').style.display='flex';};
+window.showSearchTimeout=function(){document.getElementById('searchTitle').textContent=`No ${window._serviceMode === 'courier' ? 'couriers' : 'drivers'} available`;document.getElementById('searchSub').textContent=`All nearby ${window._serviceMode === 'courier' ? 'couriers' : 'drivers'} are currently busy. Would you like to keep trying?`;document.getElementById('searchProgressWrap').style.display='none';document.getElementById('cancelSearchBtn').style.display='none';document.getElementById('timeoutActions').style.display='flex';};
 window.retrySearch=async function(){if(window.activeRideReqId&&window.db){try{const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId),{createdAt:Date.now()});}catch(e){}}window.startSearchTimer();};
-window.cancelSearch=async function(msg='Search cancelled'){clearInterval(window._searchInterval);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='flex';window.showToast(msg);if(window.activeRideReqId&&window.db){try{const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);const s=await fbGet(r);if(s.exists()&&s.val().status==='pending')await fbRemove(r);}catch(e){}window.activeRideReqId=null;}};
+window.cancelSearch=async function(msg='Request cancelled'){clearInterval(window._searchInterval);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='flex';window.showToast(msg);if(window.activeRideReqId&&window.db){try{const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);const s=await fbGet(r);if(s.exists()&&s.val().status==='pending')await fbRemove(r);}catch(e){}window.activeRideReqId=null;}};
 
 /* ══ DRAG ENGINE ══ */
 function getSnapPositions(panelFullPx){return{collapsed:panelFullPx-92,mid:panelFullPx-(window.innerHeight*0.54),expanded:0};}
