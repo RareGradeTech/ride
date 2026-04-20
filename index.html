@@ -56,7 +56,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .shimmer-logo::after,.shimmer-nav-item::after,.shimmer-handle::after,.shimmer-block::after,.shimmer-bnav-icon::after,.shimmer-bnav-label::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:shimmerSweep 1.6s ease-in-out infinite;}
 .shimmer-nav-item{width:38px;height:38px;border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 .shimmer-panel{position:absolute;bottom:calc(var(--nav-h) + var(--sb));left:0;width:100%;background:#fff;border-radius:28px 28px 0 0;padding:14px 20px 20px;box-shadow:0 -8px 40px rgba(0,0,0,.1);overflow:hidden;}
-@media(min-width:900px){.shimmer-panel{top:22px;left:22px;bottom:auto;width:385px;border-radius:22px;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.1);}}
 .shimmer-handle{width:40px;height:5px;border-radius:5px;background:var(--shimmer-base);margin:0 auto 18px;position:relative;overflow:hidden;}
 .shimmer-block{border-radius:10px;background:var(--shimmer-base);position:relative;overflow:hidden;margin-bottom:12px;}
 .shimmer-block.title{height:28px;width:55%;}
@@ -69,6 +68,16 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .shimmer-bnav-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
 .shimmer-bnav-icon{width:24px;height:24px;border-radius:6px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 .shimmer-bnav-label{width:28px;height:8px;border-radius:4px;background:var(--shimmer-base);position:relative;overflow:hidden;}
+
+/* Desktop Shimmer Adjustments */
+@media(min-width:900px){
+  .init-loader { flex-direction: row; }
+  .shimmer-panel {
+    top:22px; left:102px; /* Offset past the 80px sidebar + 22px margin */
+    bottom:auto; width:385px; border-radius:22px; padding:24px;
+    box-shadow:0 20px 50px rgba(0,0,0,.1);
+  }
+}
 
 /* ══ SHELL ══ */
 .shell{display:flex;height:100vh;width:100vw;overflow:hidden;position:relative}
@@ -402,7 +411,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 
 /* ══ FULL PAGES ══ */
 /* Increased bottom padding specifically so the account tab scrolls perfectly past the bottom nav */
-.fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 40px)}
+.fpage{flex:1;height:100vh;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 60px)}
 @media(min-width:900px){.fpage{padding:32px 36px 32px}}
 .fpage.show{display:flex;animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
@@ -447,20 +456,22 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .ss{background:var(--card);border-radius:18px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04)}
 .sr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;user-select:none}
 .sr:last-child{border:none}
-.srl{display:flex;align-items:center;gap:12px}
+.srl{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
 .sri{width:34px;height:34px;border-radius:10px;background:rgba(0,82,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.srt{font-size:15px;font-weight:500;color:var(--ink)}
-.sra{color:var(--muted);font-size:16px}
+.srt{font-size:15px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sra{color:var(--muted);font-size:16px;flex-shrink:0;}
+
+/* Preference List Flex Wrappers */
+.pm-text-wrap { flex:1; min-width:0; margin-right:12px; }
+.pm-label { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pm-sub { font-size:12px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* ══ MODALS ══ */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
-@media(min-width:900px){.mbg{align-items:center}}
 .mbg.show{display:flex}
-.modal{background:#fff;border-radius:26px 26px 0 0;padding:22px 22px calc(30px + var(--sb));width:100%;max-width:440px;animation:slideUp .32s var(--ease-spring);text-align:center;max-height:90vh;overflow-y:auto;}
-@media(min-width:900px){.modal{border-radius:22px;padding-bottom:28px}}
+.modal, .pin-card, .chat-sheet, .gsheet{background:#fff;border-radius:26px 26px 0 0;padding:22px 22px calc(30px + var(--sb));width:100%;max-width:440px;animation:slideUp .32s var(--ease-spring);text-align:center;max-height:90vh;overflow-y:auto;}
 @keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
 .modal-pill{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 18px;flex-shrink:0;}
-@media(min-width:900px){.modal-pill{display:none}}
 .modal-back-btn{position:absolute;top:16px;left:16px;width:36px;height:36px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:16px;}
 .mh{font-size:19px;font-weight:800;margin-bottom:14px;text-align:left}
 .mr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -474,6 +485,14 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 .t-input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s;color:var(--ink)}
 .input-wrap{margin-bottom:14px;text-align:left}
 
+/* Modals Desktop Fixes */
+@media(min-width:900px){
+  .mbg, .pin-overlay, .chat-bg, .gsheet-bg { align-items: center; }
+  .modal, .pin-card, .chat-sheet, .gsheet{border-radius:22px;padding-bottom:28px}
+  .chat-sheet {max-width:480px;max-height:80vh;}
+  .modal-pill{display:none}
+}
+
 /* ══ RATING MODAL ══ */
 .rating-stars{display:flex;justify-content:center;gap:10px;margin-bottom:24px;font-size:38px;cursor:pointer;user-select:none;}
 .r-star{color:var(--border);transition:color 0.2s,transform 0.2s var(--ease-spring);}
@@ -483,7 +502,6 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 /* ══ PIN OVERLAY ══ */
 .pin-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.65);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}
 .pin-overlay.show{display:flex}
-.pin-card{background:#fff;border-radius:28px 28px 0 0;padding:24px 24px calc(32px + var(--sb));width:100%;max-width:440px;animation:slideUp .38s var(--ease-spring);position:relative;text-align:center}
 .pin-icon{font-size:42px;margin-bottom:12px;animation:iconBounce .6s var(--ease-spring) .1s both}
 @keyframes iconBounce{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
 .pin-title{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:6px}
@@ -505,8 +523,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 /* ══ CHAT ══ */
 .chat-bg{position:fixed;inset:0;z-index:700;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:none;align-items:flex-end;justify-content:center}
 .chat-bg.show{display:flex}
-.chat-sheet{background:#fff;border-radius:26px 26px 0 0;width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;animation:slideUp .32s var(--ease-spring);box-shadow:0 -4px 30px rgba(0,0,0,.15)}
-@media(min-width:900px){.chat-sheet{border-radius:22px;max-width:480px;max-height:80vh}}
+.chat-sheet{max-width:520px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 -4px 30px rgba(0,0,0,.15)}
 .chat-header{display:flex;align-items:center;gap:11px;padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
 .chat-av{width:38px;height:38px;border-radius:50%;background:var(--bg);border:2px solid var(--border);color:#fff;display:block;object-fit:cover;flex-shrink:0}
 .chat-rider-name{font-size:15px;font-weight:800;color:var(--ink)}
@@ -538,10 +555,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 /* ══ GOOGLE SHEET (for in-app sign in) ══ */
 .gsheet-bg{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .gsheet-bg.show{display:flex}
-.gsheet{background:#fff;border-radius:28px 28px 0 0;padding:10px 28px calc(40px + var(--sb));width:100%;max-width:480px;animation:slideUp .32s var(--ease-spring)}
-@media(min-width:900px){.gsheet-bg{align-items:center}.gsheet{border-radius:22px;padding-bottom:36px;max-width:420px}}
-.gs-pill{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 22px}
-@media(min-width:900px){.gs-pill{display:none}}
+.gsheet{padding:10px 28px calc(40px + var(--sb));}
 .gs-brand{display:flex;align-items:center;gap:10px;margin-bottom:6px}
 .gs-brand-dot{width:36px;height:36px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;box-shadow:0 4px 12px var(--glow);flex-shrink:0}
 .gs-brand-name{font-size:17px;font-weight:800;color:var(--ink)}
@@ -677,7 +691,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px">— OR —</div>
     <div class="input-wrap"><div class="slabel">Redeem Voucher Code</div><input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform:uppercase"></div>
     <div class="mbtns">
-      <button class="mcancel" onclick="closeTopUpModal()">Cancel</button>
+      <button class="mcancel" onclick="closeAnimatedModal('topUpModal')">Cancel</button>
       <button class="mok" onclick="executeVoucher()">Redeem</button>
     </div>
   </div>
@@ -691,7 +705,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="input-wrap"><div class="slabel">Recipient Phone</div><input type="tel" id="cPPhone" class="t-input" placeholder="082 123 4567"></div>
     <div class="input-wrap"><div class="slabel">Package Description</div><input type="text" id="cPDesc" class="t-input" placeholder="e.g. Keys, Birthday Gift, 2 Boxes"></div>
     <div class="mbtns">
-      <button class="mcancel" onclick="document.getElementById('courierModal').classList.remove('show')">Cancel</button>
+      <button class="mcancel" onclick="closeAnimatedModal('courierModal')">Cancel</button>
       <button class="mok" onclick="proceedToCourierConfirm()">Continue</button>
     </div>
   </div>
@@ -700,7 +714,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 <div class="mbg" id="confirmModal">
   <div class="modal" style="position:relative">
     <div class="modal-pill"></div>
-    <button class="modal-back-btn" onclick="closeModal()">
+    <button class="modal-back-btn" onclick="closeAnimatedModal('confirmModal')">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
     <div class="mh" style="padding-left:36px">Confirm Booking</div>
@@ -716,7 +730,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div style="margin-top:18px;display:flex;flex-direction:column;gap:10px">
       <button class="mok" onclick="initiateRidePayment('card')" style="width:100%">Pay with Card (Yoco)</button>
       <button class="mok green" onclick="initiateRidePayment('cash')" style="width:100%">Book with Cash</button>
-      <button class="mcancel" onclick="closeModal()" style="width:100%;border-color:rgba(229,53,53,.2);color:var(--red)">Cancel</button>
+      <button class="mcancel" onclick="closeAnimatedModal('confirmModal')" style="width:100%;border-color:rgba(229,53,53,.2);color:var(--red)">Cancel</button>
     </div>
   </div>
 </div>
@@ -727,20 +741,29 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="mh">Notifications</div>
     <div class="ss" style="margin-bottom:0;border-radius:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
-        <div><div style="font-size:14px;font-weight:600">Ride status updates</div><div style="font-size:12px;color:var(--muted)">Driver accepted, arriving, trip started</div></div>
+        <div class="pm-text-wrap">
+          <div class="pm-label">Ride status updates</div>
+          <div class="pm-sub">Driver accepted, arriving, trip started</div>
+        </div>
         <label class="ts"><input type="checkbox" id="notif-ride" checked><span class="ts-slider"></span></label>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)">
-        <div><div style="font-size:14px;font-weight:600">Promotional offers</div><div style="font-size:12px;color:var(--muted)">Discounts and promo codes</div></div>
+        <div class="pm-text-wrap">
+          <div class="pm-label">Promotional offers</div>
+          <div class="pm-sub">Discounts and promo codes</div>
+        </div>
         <label class="ts"><input type="checkbox" id="notif-promo"><span class="ts-slider"></span></label>
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px">
-        <div><div style="font-size:14px;font-weight:600">Wallet activity</div><div style="font-size:12px;color:var(--muted)">Top-ups, deductions, vouchers</div></div>
+        <div class="pm-text-wrap">
+          <div class="pm-label">Wallet activity</div>
+          <div class="pm-sub">Top-ups, deductions, vouchers</div>
+        </div>
         <label class="ts"><input type="checkbox" id="notif-wallet" checked><span class="ts-slider"></span></label>
       </div>
     </div>
     <div class="mbtns" style="margin-top:18px">
-      <button class="mcancel" onclick="document.getElementById('notifModal').classList.remove('show')">Close</button>
+      <button class="mcancel" onclick="closeAnimatedModal('notifModal')">Close</button>
       <button class="mok" onclick="saveNotifPrefs()">Save</button>
     </div>
   </div>
@@ -751,12 +774,19 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="modal-pill"></div>
     <div class="mh">Payment Methods</div>
     <div class="ss" style="margin-bottom:14px;border-radius:14px">
-      <div class="pm-card"><div class="pm-icon">💳</div><div><div class="pm-label">Pay by Card (Yoco)</div><div class="pm-sub">Visa, Mastercard</div></div><span class="pm-badge pm-default-badge">Default</span></div>
-      <div class="pm-card"><div class="pm-icon">👛</div><div><div class="pm-label">VynixRide Wallet</div><div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div></div></div>
+      <div class="pm-card">
+        <div class="pm-icon">💳</div>
+        <div class="pm-text-wrap"><div class="pm-label">Pay by Card (Yoco)</div><div class="pm-sub">Visa, Mastercard</div></div>
+        <span class="pm-badge pm-default-badge">Default</span>
+      </div>
+      <div class="pm-card">
+        <div class="pm-icon">👛</div>
+        <div class="pm-text-wrap"><div class="pm-label">VynixRide Wallet</div><div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div></div>
+      </div>
     </div>
     <div class="mbtns">
-      <button class="mcancel" onclick="document.getElementById('payModal').classList.remove('show')">Close</button>
-      <button class="mok" onclick="document.getElementById('payModal').classList.remove('show');openTopUpModal()">Top Up Wallet</button>
+      <button class="mcancel" onclick="closeAnimatedModal('payModal')">Close</button>
+      <button class="mok" onclick="closeAnimatedModal('payModal');setTimeout(()=>openTopUpModal(), 250)">Top Up Wallet</button>
     </div>
   </div>
 </div>
@@ -766,12 +796,30 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="modal-pill"></div>
     <div class="mh">Saved Places</div>
     <div class="ss" style="margin-bottom:14px;border-radius:14px">
-      <div class="sp-row"><div class="sp-icon" style="background:rgba(255,174,0,.12)">🏠</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Home</div><input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…"></div></div>
-      <div class="sp-row"><div class="sp-icon" style="background:rgba(0,82,255,.09)">🏢</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div><input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…"></div></div>
-      <div class="sp-row" style="border:none"><div class="sp-icon" style="background:rgba(229,53,53,.09)">⭐</div><div style="flex:1"><div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Favourite</div><input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…"></div></div>
+      <div class="sp-row">
+        <div class="sp-icon" style="background:rgba(255,174,0,.12)">🏠</div>
+        <div class="pm-text-wrap" style="margin-right:0">
+            <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Home</div>
+            <input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…">
+        </div>
+      </div>
+      <div class="sp-row">
+        <div class="sp-icon" style="background:rgba(0,82,255,.09)">🏢</div>
+        <div class="pm-text-wrap" style="margin-right:0">
+            <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div>
+            <input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…">
+        </div>
+      </div>
+      <div class="sp-row" style="border:none">
+        <div class="sp-icon" style="background:rgba(229,53,53,.09)">⭐</div>
+        <div class="pm-text-wrap" style="margin-right:0">
+            <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Favourite</div>
+            <input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…">
+        </div>
+      </div>
     </div>
     <div class="mbtns">
-      <button class="mcancel" onclick="document.getElementById('placesModal').classList.remove('show')">Cancel</button>
+      <button class="mcancel" onclick="closeAnimatedModal('placesModal')">Cancel</button>
       <button class="mok" onclick="savePlaces()">Save Places</button>
     </div>
   </div>
@@ -793,7 +841,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="input-wrap"><div class="slabel">Phone Number</div><input type="tel" id="epPhone" class="t-input" placeholder="e.g. 082 123 4567"></div>
     
     <div class="mbtns" style="margin-top:24px;">
-      <button class="mcancel" onclick="document.getElementById('editProfileModal').classList.remove('show')">Cancel</button>
+      <button class="mcancel" onclick="closeAnimatedModal('editProfileModal')">Cancel</button>
       <button class="mok" id="epSaveBtn" onclick="saveProfile()">Save Changes</button>
     </div>
   </div>
@@ -805,7 +853,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="mh" style="text-align:center">Sign Out</div>
     <p style="font-size:14px;color:var(--muted);margin-bottom:24px;">Are you sure you want to sign out of VynixRide?</p>
     <div class="mbtns">
-      <button class="mcancel" onclick="document.getElementById('signOutModal').classList.remove('show')">Cancel</button>
+      <button class="mcancel" onclick="closeAnimatedModal('signOutModal')">Cancel</button>
       <button class="mok" style="background:linear-gradient(130deg,var(--red),#b91c1c);box-shadow:0 4px 12px rgba(229,53,53,.2)" onclick="executeSignOut()">Sign Out</button>
     </div>
   </div>
@@ -813,7 +861,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
 
 <div class="pin-overlay" id="pinOverlay">
   <div class="pin-card">
-    <button class="pin-close-btn" onclick="closePinOverlay()">
+    <button class="pin-close-btn" onclick="closeAnimatedModal('pinOverlay')">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="pin-icon">🔐</div>
@@ -864,7 +912,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
         <div class="chat-rider-name" id="chatDriverName">Driver</div>
         <div class="chat-status" id="chatStatus">🟢 Active Ride</div>
       </div>
-      <button class="chat-close" onclick="closeChat()">
+      <button class="chat-close" onclick="closeAnimatedModal('chatBg')">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -1056,12 +1104,12 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
     <div class="prof-banner" onclick="openEditProfile()">
       <img class="prof-av-lg" id="profAvImg" src="" style="display:none;object-fit:cover;">
       <div class="prof-av-lg" id="profAvTxt">?</div>
-      <div style="flex:1">
-        <div class="prof-name" id="profName">Guest</div>
-        <div class="prof-email" id="profEmail">Not signed in</div>
-        <div class="prof-email" id="profPhone" style="opacity:0.75;font-size:11px;margin-top:1px;font-weight:600"></div>
+      <div style="flex:1; min-width:0;">
+        <div class="prof-name" id="profName" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Guest</div>
+        <div class="prof-email" id="profEmail" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Not signed in</div>
+        <div class="prof-email" id="profPhone" style="opacity:0.75;font-size:11px;margin-top:1px;font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
       </div>
-      <div style="background:rgba(255,255,255,0.22);padding:7px 12px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1)">Edit</div>
+      <div style="background:rgba(255,255,255,0.22);padding:7px 12px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1); flex-shrink:0;">Edit</div>
     </div>
     
     <div class="acc-section-title">My Account</div>
@@ -1075,7 +1123,7 @@ html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;color:var(
       <div class="sr" onclick="document.getElementById('notifModal').classList.add('show')">
         <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><span class="srt">Notifications</span></div><span class="sra">›</span>
       </div>
-      <div class="sr" onclick="openPayModal()">
+      <div class="sr" onclick="document.getElementById('payModal').classList.add('show')">
         <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><span class="srt">Payment Methods</span></div><span class="sra">›</span>
       </div>
       <div class="sr" onclick="document.getElementById('placesModal').classList.add('show')">
@@ -1116,14 +1164,89 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as 
 import{getDatabase,ref,set,push,get,onValue,update,remove,off}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
 
-// Extended Splash Screen Logic (4.5s)
+// Extended Splash Screen Logic (5s)
 document.addEventListener("DOMContentLoaded", () => {
     const splash = document.getElementById('realSplash');
     setTimeout(() => {
         splash.classList.add('hide');
         setTimeout(() => splash.style.display = 'none', 800); // cleanup
-    }, 4500); 
+    }, 5000); 
+    
+    // Initialize Swipe-to-dismiss gestures for all modals
+    initModalGestures();
 });
+
+// GLOBAL MODAL ENGINE
+function initModalGestures() {
+    const overlays = document.querySelectorAll('.mbg, .pin-overlay, .chat-bg');
+    overlays.forEach(bg => {
+        const modal = bg.querySelector('.modal, .pin-card, .chat-sheet, .gsheet');
+        if (!modal) return;
+
+        // Click outside to close
+        bg.addEventListener('mousedown', (e) => {
+            if (e.target === bg) window.closeAnimatedModal(bg.id);
+        });
+
+        // Touch drag to close (mobile only)
+        let startY = 0, currentY = 0, isDragging = false;
+
+        modal.addEventListener('touchstart', (e) => {
+            if (window.innerWidth >= 900) return;
+            // Prevent drag if user is scrolling inside the modal's content
+            if (modal.scrollTop > 0) return; 
+            
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            modal.style.transition = 'none';
+        }, {passive: true});
+
+        modal.addEventListener('touchmove', (e) => {
+            if (!isDragging || window.innerWidth >= 900) return;
+            currentY = e.touches[0].clientY - startY;
+            
+            // Only allow dragging downwards
+            if (currentY > 0) {
+                if (e.cancelable) e.preventDefault(); // Stop native background scroll
+                modal.style.transform = `translateY(${currentY}px)`;
+            } else {
+                currentY = 0;
+            }
+        }, {passive: false});
+
+        modal.addEventListener('touchend', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            modal.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+            
+            if (currentY > window.innerHeight * 0.15) { // 15% threshold to close
+                window.closeAnimatedModal(bg.id);
+            } else {
+                modal.style.transform = ''; // Snap back
+                setTimeout(() => modal.style.transition = '', 300);
+            }
+        });
+    });
+}
+
+window.closeAnimatedModal = function(id) {
+    const bg = document.getElementById(id);
+    if (!bg) return;
+    const modal = bg.querySelector('.modal, .pin-card, .chat-sheet, .gsheet');
+    
+    if (modal && window.innerWidth < 900) {
+        modal.style.transition = 'transform 0.25s ease-in';
+        modal.style.transform = 'translateY(100%)';
+        setTimeout(() => {
+            bg.classList.remove('show');
+            modal.style.transform = '';
+            modal.style.transition = '';
+        }, 250);
+    } else {
+        bg.classList.remove('show'); // Instant close on Desktop
+    }
+}
+
 
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
@@ -1141,10 +1264,9 @@ rc.settings.minimumFetchIntervalMillis=3600000;
 fetchAndActivate(rc).then(()=>{const k=getValue(rc,'yoco_public_key').asString();if(k)yocoPublicKey=k;}).catch(()=>{});
 
 /* ── IN-APP GOOGLE SHEET ── */
-document.getElementById('gsClose').onclick=()=>document.getElementById('googleSheetBg').classList.remove('show');
-document.getElementById('googleSheetBg').addEventListener('click',e=>{if(e.target===document.getElementById('googleSheetBg'))document.getElementById('googleSheetBg').classList.remove('show');});
+document.getElementById('gsClose').onclick=()=>window.closeAnimatedModal('googleSheetBg');
 document.getElementById('gsGoogleBtn').onclick=()=>{
-  document.getElementById('googleSheetBg').classList.remove('show');
+  window.closeAnimatedModal('googleSheetBg');
   signInWithPopup(auth,gp).catch(()=>window.showToast('Sign-in cancelled'));
 };
 
@@ -1161,7 +1283,6 @@ onAuthStateChanged(auth,async u=>{
   cu=u;
 
   if(u) {
-      // Fetch custom profile data (phone, custom photo)
       const pSnap = await get(ref(db, `users/${u.uid}/profile`));
       if(pSnap.exists()) window._customProfileData = pSnap.val();
   }
@@ -1182,7 +1303,6 @@ onAuthStateChanged(auth,async u=>{
   });
   onValue(ref(db,`users/${u.uid}/wallet`),snap=>{const d=snap.val()||{balance:0};document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;renderTx(d.transactions||{});});
   
-  // Realtime listen for profile updates
   onValue(ref(db,`users/${u.uid}/profile`),snap=>{
       if(snap.exists()) {
           window._customProfileData = snap.val();
@@ -1274,7 +1394,7 @@ window.uploadProfilePic = async function(event) {
         }
     } catch(e) {
         statusEl.textContent = 'Upload Failed ❌';
-        window.showToast('Could not upload photo. Check Cloudinary preset.');
+        window.showToast('Could not upload photo. Check Cloudinary connection.');
     } finally {
         saveBtn.disabled = false;
         saveBtn.style.opacity = '1';
@@ -1290,13 +1410,11 @@ window.saveProfile = async function() {
     saveBtn.textContent = 'Saving...';
 
     try {
-        // Update Firebase Auth natively
         await updateProfile(cu, {
             displayName: newName,
             photoURL: window._tempPhotoUrl || cu.photoURL
         });
         
-        // Save to RTDB Profile path
         await update(ref(db, `users/${cu.uid}/profile`), {
             name: newName,
             phone: newPhone,
@@ -1304,7 +1422,7 @@ window.saveProfile = async function() {
         });
 
         window.showToast('Profile updated successfully!');
-        document.getElementById('editProfileModal').classList.remove('show');
+        window.closeAnimatedModal('editProfileModal');
     } catch(e) {
         window.showToast('Error saving profile');
     } finally {
@@ -1322,7 +1440,7 @@ function listenToActiveRide(rideId){
     if(!data){if(activeRideReqId)handleRideCanceled('driver','Ride was deleted from server');return;}
     window._activeRideData=data;
     const isPanelActive=document.getElementById('activeRidePanel').style.display==='flex';
-    if(data.status==='accepted'&&!isPanelActive){showDriverAccepted(data);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='none';clearInterval(window._searchInterval);}
+    if(data.status==='accepted'&&!isPanelActive){showDriverAccepted(data);window.closeAnimatedModal('searchOverlay');document.getElementById('bookPanel').style.display='none';clearInterval(window._searchInterval);}
     if(data.status==='accepted'||data.status==='in_progress'){
       if(data.driverName)document.getElementById('adName').textContent=data.driverName;
       const imgNum=data.driverName?(data.driverName.charCodeAt(0)%70)+1:11;
@@ -1455,7 +1573,7 @@ function scrollChatBottom(){const el=document.getElementById('chatMessages');if(
 function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function updateChatBadge(){const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}}
 window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};const chatImgNum=data.driverName?(data.driverName.charCodeAt(0)%70)+1:11;document.getElementById('chatAv').src=data.driverAv||data.driverImage||`https://i.pravatar.cc/150?img=${chatImgNum}`;document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
-window.closeChat=()=>document.getElementById('chatBg').classList.remove('show');
+window.closeChat=()=>window.closeAnimatedModal('chatBg');
 window.sendChatMsg=async function(){const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text||!activeRideReqId)return;inp.value='';inp.style.height='';await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));scrollChatBottom();};
 window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No active ride');return;}await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});scrollChatBottom();};
 window.chatKeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMsg();}};
@@ -1470,14 +1588,14 @@ window.showPinOverlay=function(){
   document.getElementById('pinOverlay').classList.add('show');
   setTimeout(()=>document.getElementById('pdi0')?.focus(),250);
 };
-window.closePinOverlay=()=>document.getElementById('pinOverlay').classList.remove('show');
+window.closePinOverlay=()=>window.closeAnimatedModal('pinOverlay');
 window.pinNext=function(e,i){e.target.value=e.target.value.replace(/\D/,'');if(e.target.value&&i<3)document.getElementById(`pdi${i+1}`)?.focus();};
 window.verifyDriverPin=function(){
   const entered=[0,1,2,3].map(i=>document.getElementById(`pdi${i}`)?.value||'').join('');
   const expected=window._driverPin||'';
   if(!expected){window.showToast('Driver has not arrived yet');return;}
   if(entered===expected){
-    document.getElementById('pinOverlay').classList.remove('show');
+    window.closeAnimatedModal('pinOverlay');
     document.getElementById('rideStatusText').textContent=window._activeRideData?.serviceMode === 'courier' ? '📦 Delivery in progress!' : '🚗 Ride in progress!';
     window.showToast('✅ PIN verified — enjoy your trip!');
     if(window._activeRideData){document.getElementById('adDist').textContent=window._activeRideData.distKm?window._activeRideData.distKm.toFixed(1)+' km':'-- km';document.getElementById('adTime').textContent=window._activeRideData.tripMins?window._activeRideData.tripMins+' min':'-- min';}
@@ -1519,7 +1637,7 @@ window.initiateRidePayment=async function(method='card'){
       activeRideReqId=rideReqRef.key;
       window._riderPin=secPin;
       await set(ref(db,`users/${cu.uid}/activeRideId`),activeRideReqId);
-      document.getElementById('confirmModal').classList.remove('show');
+      window.closeAnimatedModal('confirmModal');
       document.getElementById('bookPanel').style.display='none';
       window.startSearchTimer();
       listenToActiveRide(activeRideReqId);
@@ -1556,7 +1674,7 @@ window.cancelActiveRide=async function(){
 /* ── YOCO ── */
 window.triggerYocoPayment=function(amount,description,onSuccess,restoreModalId){
   if(typeof window.YocoSDK==='undefined'){window.showToast('Payment unavailable');return;}
-  if(restoreModalId)document.getElementById(restoreModalId)?.classList.remove('show');
+  if(restoreModalId)window.closeAnimatedModal(restoreModalId);
   const yoco=new window.YocoSDK({publicKey:yocoPublicKey});
   yoco.showPopup({amountInCents:Math.round(amount*100),currency:'ZAR',name:'VynixRide',description,callback:function(result){
     if(result.error){if(restoreModalId)document.getElementById(restoreModalId)?.classList.add('show');window.showToast('Payment failed: '+result.error.message);}
@@ -1587,7 +1705,7 @@ window.executeVoucher=async function(){
       const wSnap=await get(ref(db,`users/${cu.uid}/wallet/balance`));const curr=wSnap.val()||0;
       const updates={};updates[`users/${cu.uid}/wallet/balance`]=curr+amt;updates[`vouchers/${code}/used`]=true;updates[`vouchers/${code}/redeemedBy`]=cu.uid;
       await update(ref(db),updates);await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
-      window.closeTopUpModal();window.showToast(`R${amt.toFixed(2)} added!`);document.getElementById('voucherCode').value='';
+      window.closeAnimatedModal('topUpModal');window.showToast(`R${amt.toFixed(2)} added!`);document.getElementById('voucherCode').value='';
     }else{window.showToast('Invalid voucher code');}
   }catch(e){window.showToast('Error processing voucher');}
 };
@@ -1622,9 +1740,9 @@ window.executeSignOut=async()=>{
   window.location.href='login.html';
 };
 
-window.saveNotifPrefs=function(){const prefs={};['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});localStorage.setItem('vx_notif_prefs',JSON.stringify(prefs));document.getElementById('notifModal').classList.remove('show');window.showToast('Preferences saved');};
+window.saveNotifPrefs=function(){const prefs={};['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});localStorage.setItem('vx_notif_prefs',JSON.stringify(prefs));window.closeAnimatedModal('notifModal');window.showToast('Preferences saved');};
 window.openPayModal=function(){const b=document.getElementById('walletBal');document.getElementById('payModalWalletBal').textContent='Balance: '+(b?b.textContent:'R 0.00');document.getElementById('payModal').classList.add('show');};
-window.savePlaces=async function(){const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};localStorage.setItem('vx_saved_places',JSON.stringify(data));if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});document.getElementById('placesModal').classList.remove('show');window.showToast('Saved places updated');};
+window.savePlaces=async function(){const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};localStorage.setItem('vx_saved_places',JSON.stringify(data));if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});window.closeAnimatedModal('placesModal');window.showToast('Saved places updated');};
 
 function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 window.ini2=ini2;
@@ -1637,7 +1755,7 @@ document.querySelectorAll('.r-star').forEach(star=>{
     document.querySelectorAll('.r-star').forEach(s=>{s.classList.toggle('active',parseInt(s.getAttribute('data-val'))<=window.currentRating);});
   });
 });
-window.skipRating=function(){document.getElementById('ratingModal').classList.remove('show');window.currentRating=0;document.querySelectorAll('.r-star').forEach(s=>s.classList.remove('active'));document.getElementById('ratingComment').value='';};
+window.skipRating=function(){window.closeAnimatedModal('ratingModal');window.currentRating=0;document.querySelectorAll('.r-star').forEach(s=>s.classList.remove('active'));document.getElementById('ratingComment').value='';};
 window.submitRating=async function(){
   if(!window.currentRating){window.showToast('Please select a star rating');return;}
   if(window._lastCompletedDriverId&&window.db){
@@ -1691,7 +1809,7 @@ function updateCarMarker(lat,lng){
 window.requestLocation=function(){
   if(navigator.geolocation){
     navigator.geolocation.getCurrentPosition(pos=>{
-      document.getElementById('locModal').classList.remove('show');
+      window.closeAnimatedModal('locModal');
       const{latitude:la,longitude:lo}=pos.coords;
       wULng=lo;wULat=la;oMk.setLngLat([lo,la]);window._wULat=la;window._wULng=lo;
       map.flyTo({center:[lo,la],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
@@ -1892,7 +2010,7 @@ window.proceedToCourierConfirm = function() {
     const desc = document.getElementById('cPDesc').value.trim();
     if(!n || !p) { window.showToast('Please enter recipient details'); return; }
     window._courierDetails = { name: n, phone: p, desc: desc || 'Package' };
-    document.getElementById('courierModal').classList.remove('show');
+    window.closeAnimatedModal('courierModal');
     showConfirmModal();
 };
 
@@ -1926,9 +2044,9 @@ window.showConfirmModal = function() {
   document.getElementById('confirmModal').classList.add('show');
 };
 
-window.closeModal=()=>document.getElementById('confirmModal').classList.remove('show');
+window.closeModal=()=>window.closeAnimatedModal('confirmModal');
 window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
-window.closeTopUpModal=()=>document.getElementById('topUpModal').classList.remove('show');
+window.closeTopUpModal=()=>window.closeAnimatedModal('topUpModal');
 
 /* ── SEARCH TIMER ── */
 window.startSearchTimer=function(){
@@ -1979,7 +2097,6 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
       bar.style.background = name === 'collapsed' ? 'var(--border)' : 'var(--blue2)';
     }
     if (scrollArea) {
-      // Enable scroll only when fully expanded
       scrollArea.style.overflowY = name === 'expanded' ? 'auto' : 'hidden';
     }
     updateMapClickZone();
@@ -2039,12 +2156,10 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
     if (isScrollArea && state === 'expanded') {
       if (scrollArea.scrollTop <= 0) {
         if (deltaY < 0) {
-          // Dragging UP at top -> Let it scroll natively!
           isPanelDrag = false;
         } else if (deltaY > 0 && !isPanelDrag) {
-          // Reached top while pulling DOWN -> Switch to drag the panel
           isPanelDrag = true;
-          startY = clientY; // Reset to prevent jumps
+          startY = clientY; 
           const snapPos = getSnapPositionsFn(getPanelFullPx());
           curY = snapPos[state] || 0;
           panel.classList.remove('animating');
@@ -2052,10 +2167,7 @@ function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn
         }
       }
     }
-
     if (!isPanelDrag) return;
-
-    // We are dragging the panel — prevent default so the page doesn't scroll natively
     if (e.cancelable) e.preventDefault();
 
     const snapPos = getSnapPositionsFn(getPanelFullPx());
@@ -2119,6 +2231,10 @@ appShell.addEventListener('touchend',e=>{if(e.target.closest('#map')||e.target.c
 
 /* ── MAP CLICK ZONE ── */
 function updateMapClickZone(){
+  if (window.innerWidth >= 900) {
+      document.getElementById('mapClickZone').classList.remove('active');
+      return;
+  }
   const bookEl=document.getElementById('bookPanel');const activeEl=document.getElementById('activeRidePanel');
   const bookVisible=bookEl.style.display!=='none';const activeVisible=activeEl.style.display==='flex';
   const bookCollapsed=bookEl.classList.contains('snap-collapsed');const activeCollapsed=activeEl.classList.contains('snap-collapsed');
@@ -2126,6 +2242,12 @@ function updateMapClickZone(){
   document.getElementById('mapClickZone').classList.toggle('active',open);
 }
 window.updateMapClickZone=updateMapClickZone;
+
+// Add a resize listener to dynamically adapt between desktop and mobile modes seamlessly
+window.addEventListener('resize', () => {
+    updateMapClickZone();
+});
+
 window.collapsePanel=function(){if(window.setPanelState)window.setPanelState('collapsed');if(window.setActivePanelState)window.setActivePanelState('collapsed');};
 
 window.showToast=function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove('show'),3200);};
