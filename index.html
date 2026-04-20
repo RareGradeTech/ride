@@ -75,7 +75,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 @media(min-width:900px){
   .init-loader { flex-direction: row; }
   .shimmer-panel {
-    top:22px; left:102px;
+    top:22px; left:102px; /* Offset past the 80px sidebar + 22px margin */
     bottom:auto; width:385px; border-radius:22px; padding:24px;
     box-shadow:0 20px 50px rgba(0,0,0,.1);
   }
@@ -172,6 +172,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 /* ══ PANEL SCROLLABLE CONTENT ══ */
 .panel-scroll-area{
   flex:1;overflow-y:auto;overflow-x:hidden;min-height:0;
+  /* Added more bottom padding so the last elements scroll up easily on mobile */
   padding:0 20px calc(50px + var(--sb));
   display:flex;flex-direction:column;
   -webkit-overflow-scrolling:touch;
@@ -478,6 +479,31 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .pm-text-wrap { flex:1; min-width:0; margin-right:12px; }
 .pm-label { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pm-sub { font-size:12px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Dedicated Sign Out Pill Button */
+.logout-pill-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 16px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    border-radius: 30px; 
+    background: rgba(229,53,53,.1);
+    color: var(--red);
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+    transition: transform 0.2s var(--ease-spring), background 0.2s;
+}
+.logout-pill-btn:active {
+    transform: scale(0.96);
+    background: rgba(229,53,53,.15);
+}
 
 /* ══ MODALS ══ */
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
@@ -1138,19 +1164,20 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
       <div class="sr" onclick="document.getElementById('notifModal').classList.add('show')">
         <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><span class="srt">Notifications</span></div><span class="sra">›</span>
       </div>
-      <div class="sr" onclick="openPayModal()">
+      <div class="sr" onclick="document.getElementById('payModal').classList.add('show')">
         <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><span class="srt">Payment Methods</span></div><span class="sra">›</span>
       </div>
       <div class="sr" onclick="document.getElementById('placesModal').classList.add('show')">
         <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><span class="srt">Saved Places</span></div><span class="sra">›</span>
       </div>
     </div>
-    <div class="ss anim-item" id="signOutSection" style="display:none">
-      <div class="sr" onclick="document.getElementById('signOutModal').classList.add('show')">
-        <div class="srl"><div class="sri" style="background:rgba(229,53,53,.08)"><svg width="15" height="15" fill="none" stroke="var(--red)" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><span class="srt" style="color:var(--red)">Sign Out</span></div><span class="sra" style="color:var(--red)">›</span>
-      </div>
-    </div>
-    <div class="anim-item" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px">VynixRide v2.2 · South Africa 🇿🇦</div>
+    
+    <button class="logout-pill-btn anim-item" id="signOutSection" onclick="document.getElementById('signOutModal').classList.add('show')">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Sign Out
+    </button>
+    
+    <div class="anim-item" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;padding-bottom:30px;">VynixRide v2.2 · South Africa 🇿🇦</div>
   </div>
 
   <nav class="bnav">
@@ -1355,8 +1382,14 @@ function updateUI(u){
   document.getElementById('profPhone').textContent=p;
   
   const al=document.getElementById('authLabel'),so=document.getElementById('signOutSection');
-  if(u){if(al)al.textContent='Google — '+e;if(so)so.style.display='';}
-  else{if(al)al.textContent='Sign in with Google';if(so)so.style.display='none';}
+  
+  if(u){
+      if(al)al.textContent='Google — '+e;
+      if(so)so.style.display='flex';
+  } else {
+      if(al)al.textContent='Sign in with Google';
+      if(so)so.style.display='flex';
+  }
 }
 
 /* ── PROFILE EDITING & CLOUDINARY ── */
@@ -1588,7 +1621,6 @@ function scrollChatBottom(){const el=document.getElementById('chatMessages');if(
 function escHtml(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function updateChatBadge(){const btn=document.querySelector('.ad-btn.chat-btn');if(!btn)return;if(chatUnread>0){btn.classList.add('has-unread');btn.setAttribute('data-count',chatUnread);}else{btn.classList.remove('has-unread');btn.removeAttribute('data-count');}}
 window.openChat=function(){if(!activeRideReqId){window.showToast('No active ride');return;}const data=window._activeRideData||{};const chatImgNum=data.driverName?(data.driverName.charCodeAt(0)%70)+1:11;document.getElementById('chatAv').src=data.driverAv||data.driverImage||`https://i.pravatar.cc/150?img=${chatImgNum}`;document.getElementById('chatDriverName').textContent=data.driverName||'Driver';document.getElementById('chatBg').classList.add('show');chatUnread=0;updateChatBadge();markRead(activeRideReqId);renderChatMsgs();scrollChatBottom();};
-window.closeChat=()=>window.closeAnimatedModal('chatBg');
 window.sendChatMsg=async function(){const inp=document.getElementById('chatInput');const text=inp.value.trim();if(!text||!activeRideReqId)return;inp.value='';inp.style.height='';await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>window.showToast('Failed to send'));scrollChatBottom();};
 window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No active ride');return;}await push(ref(db,`ride_requests/${activeRideReqId}/chat`),{text,sender:'rider',ts:Date.now(),readByDriver:false,readByRider:true}).catch(()=>{});scrollChatBottom();};
 window.chatKeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMsg();}};
