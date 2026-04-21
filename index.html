@@ -2076,28 +2076,53 @@ function updatePromoBannerState(){
 
 function loadRecentSearches(){
   const searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');
-  const section=document.getElementById('recentSection');const list=document.getElementById('recentList');
+  const section=document.getElementById('recentSection');
+  const list=document.getElementById('recentList');
+  
   if(!searches.length||window._destName){section.style.display='none';return;}
   section.style.display='block';
-  list.innerHTML=searches.map(s=>`<div class="recent-item" onclick="selectRecentSearch(${JSON.stringify(s.name)},${s.lng},${s.lat})"><div class="recent-icon">🕐</div><div class="recent-text-wrap"><div class="recent-name">${s.name.split(',').slice(0,2).join(',')}</div><div class="recent-sub">${s.name.split(',').slice(2,4).join(',').trim()||'Recent search'}</div></div><div class="recent-arrow">›</div></div>`).join('');
+  
+  list.innerHTML=searches.map(s=>{
+    // Safely escape quotes so the HTML onclick attribute doesn't break
+    const safeName = JSON.stringify(s.name).replace(/"/g, '&quot;');
+    
+    return `<div class="recent-item" onclick="selectRecentSearch(${safeName},${s.lng},${s.lat})">
+      <div class="recent-icon">🕐</div>
+      <div class="recent-text-wrap">
+        <div class="recent-name">${s.name.split(',').slice(0,2).join(',')}</div>
+        <div class="recent-sub">${s.name.split(',').slice(2,4).join(',').trim()||'Recent search'}</div>
+      </div>
+      <div class="recent-arrow">›</div>
+    </div>`;
+  }).join('');
 }
+
+  
 window.saveRecentSearch=function(name,lng,lat){let searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');searches=searches.filter(s=>s.name!==name);searches.unshift({name,lng,lat});if(searches.length>3)searches=searches.slice(0,3);localStorage.setItem('vx_recent_searches',JSON.stringify(searches));};
 window.clearRecentSearches=function(){localStorage.removeItem('vx_recent_searches');document.getElementById('recentSection').style.display='none';window.showToast('Recent searches cleared');};
 
-window.selectRecentSearch=function(name,lng,lat){
-  const input=document.querySelector('#destWrap .mapboxgl-ctrl-geocoder--input');
-  if(input){
-    input.value=name.split(',').slice(0,2).join(',');
-    input.style.borderColor='rgba(0,82,255,.4)';
-    setTimeout(()=>input.style.borderColor='',1200);
+window.selectRecentSearch = function(name, lng, lat) {
+  const input = document.querySelector('#destWrap .mapboxgl-ctrl-geocoder--input');
+  if (input) {
+    input.value = name.split(',').slice(0, 2).join(',');
+    input.style.borderColor = 'rgba(0,82,255,.4)';
+    setTimeout(() => input.style.borderColor = '', 1200);
   }
-  setDestination(name,lng,lat,false);
-  if(window._serviceMode==='courier'){
-    setTimeout(()=>document.getElementById('courierModal').classList.add('show'),600);
-  }else{
-    setTimeout(()=>{
-      if(window._destName){ window.showConfirmModal(); }
-    },800);
+  
+  // Set the destination and draw the route
+  setDestination(name, lng, lat, false);
+  
+  if (window._serviceMode === 'courier') {
+    // Courier still needs package details
+    setTimeout(() => document.getElementById('courierModal').classList.add('show'), 600);
+  } else {
+    // RIDE MODE: Instantly request the ride (defaulting to 'card' or 'cash')
+    setTimeout(() => {
+      if (window._destName) { 
+        // Instantly start the search timer and booking process
+        window.initiateRidePayment('card'); 
+      }
+    }, 800);
   }
 };
 
