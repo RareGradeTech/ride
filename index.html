@@ -504,13 +504,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .wbtns{display:flex;gap:10px;}
 .wbtn{background:var(--blue);border:none;color:#fff;border-radius:12px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:.2s var(--ease-spring); width: 100%; box-shadow: 0 4px 14px var(--glow);}
 
-.inline-topup-section {
-  display: none; background: #fff; border-radius: 16px; padding: 20px;
-  border: 1px solid var(--border); margin-bottom: 24px;
-  animation: slideDown 0.3s var(--ease-spring);
-}
-@keyframes slideDown { from {opacity:0; transform: translateY(-10px);} to {opacity:1; transform: translateY(0);} }
-
 .txi{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
 .txi:last-child{border:none}
 .txl{font-size:14px;font-weight:500}
@@ -843,6 +836,29 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<div class="mbg" id="topUpModal">
+  <div class="modal">
+    <div class="modal-pill"></div>
+    <div class="mh">Top Up Balance</div>
+    <div class="input-wrap">
+      <div class="slabel">Top Up via Yoco (ZAR)</div>
+      <input type="number" id="yocoAmountModal" class="t-input" placeholder="e.g. 150">
+    </div>
+    <div class="mbtns" style="margin-bottom:20px">
+      <button class="mok" style="flex:1" onclick="window.executeYocoTopUpModal()">Pay with Yoco</button>
+    </div>
+    <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px">— OR —</div>
+    <div class="input-wrap">
+      <div class="slabel">Redeem Voucher Code</div>
+      <input type="text" id="voucherCodeModal" class="t-input" placeholder="Enter code" style="text-transform:uppercase">
+    </div>
+    <div class="mbtns">
+      <button class="mcancel" onclick="closeAnimatedModal('topUpModal')">Cancel</button>
+      <button class="mok" style="background:var(--ink);" onclick="window.executeVoucherModal()">Redeem</button>
+    </div>
+  </div>
+</div>
+
 <div class="mbg" id="courierModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
@@ -932,7 +948,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     </div>
     <div class="mbtns">
       <button class="mcancel" onclick="closeAnimatedModal('payModal')">Close</button>
-      <button class="mok" onclick="closeAnimatedModal('payModal'); switchTab('wallet'); toggleTopUp();">Top Up Wallet</button>
+      <button class="mok" onclick="closeAnimatedModal('payModal'); switchTab('wallet'); setTimeout(()=>openTopUpModal(), 300);">Top Up Wallet</button>
     </div>
   </div>
 </div>
@@ -1243,17 +1259,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     </div>
 
     <div class="wbtns anim-item" style="margin-bottom: 24px;">
-      <button class="wbtn" onclick="toggleTopUp()">+ Top Up Balance</button>
-    </div>
-
-    <div id="inlineTopUp" class="inline-topup-section anim-item">
-       <div class="slabel">Top Up via Yoco (ZAR)</div>
-       <input type="number" id="yocoAmountInline" class="t-input" placeholder="e.g. 150" style="margin-bottom:12px;">
-       <button class="mok" style="width:100%; margin-bottom:24px;" onclick="window.executeYocoTopUpInline()">Pay with Yoco</button>
-       
-       <div class="slabel">Redeem Voucher Code</div>
-       <input type="text" id="voucherCodeInline" class="t-input" placeholder="Enter code" style="text-transform:uppercase; margin-bottom:12px;">
-       <button class="mok" style="width:100%; background:var(--ink);" onclick="window.executeVoucherInline()">Redeem</button>
+      <button class="wbtn" onclick="window.openTopUpModal()">+ Top Up Balance</button>
     </div>
 
     <div class="slabel anim-item">Transactions</div>
@@ -1817,33 +1823,41 @@ window.cancelActiveRide=async function(){
   }catch(e){window.showToast('Error cancelling request');}
 };
 
-window.triggerYocoPayment=function(amount,description,onSuccess,restoreModalId){
+window.triggerYocoPayment=function(amount,description,onSuccess,modalToClose){
   if(typeof window.YocoSDK==='undefined'){window.showToast('Payment unavailable');return;}
-  if(restoreModalId)window.closeAnimatedModal(restoreModalId);
+  // We explicitly do NOT close the parent modal here so Yoco appears over it
   const yoco=new window.YocoSDK({publicKey:yocoPublicKey});
   yoco.showPopup({amountInCents:Math.round(amount*100),currency:'ZAR',name:'VynixRide',description,callback:function(result){
-    if(result.error){if(restoreModalId)document.getElementById(restoreModalId)?.classList.add('show');window.showToast('Payment failed: '+result.error.message);}
-    else{onSuccess(result.id);}
+    if(result.error){
+      window.showToast('Payment failed: '+result.error.message);
+    }
+    else{
+      if(modalToClose) window.closeAnimatedModal(modalToClose);
+      onSuccess(result.id);
+    }
   }});
 };
 
-window.executeYocoTopUpInline=async function(){
+window.openTopUpModal = function() {
+  document.getElementById('topUpModal').classList.add('show');
+};
+
+window.executeYocoTopUpModal = async function() {
   if(!cu){window.showToast('Sign in first');return;}
-  const amt=parseFloat(document.getElementById('yocoAmountInline').value);
+  const amt=parseFloat(document.getElementById('yocoAmountModal').value);
   if(isNaN(amt)||amt<10){window.showToast('Min R10');return;}
   window.triggerYocoPayment(amt,'Wallet Top-Up',async()=>{
     const wRef=ref(db,`users/${cu.uid}/wallet/balance`);const snap=await get(wRef);const curr=snap.val()||0;
     await update(ref(db,`users/${cu.uid}/wallet`),{balance:curr+amt});
     await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
-    document.getElementById('yocoAmountInline').value='';
+    document.getElementById('yocoAmountModal').value='';
     window.showToast(`Added R${amt.toFixed(2)}`);
-    window.toggleTopUp();
-  });
+  }, 'topUpModal');
 };
 
-window.executeVoucherInline=async function(){
+window.executeVoucherModal = async function() {
   if(!cu){window.showToast('Sign in first');return;}
-  const code=document.getElementById('voucherCodeInline').value.trim().toUpperCase();if(!code){window.showToast('Enter a code');return;}
+  const code=document.getElementById('voucherCodeModal').value.trim().toUpperCase();if(!code){window.showToast('Enter a code');return;}
   try{
     const vRef=ref(db,`vouchers/${code}`);const snap=await get(vRef);
     if(snap.exists()){
@@ -1853,8 +1867,8 @@ window.executeVoucherInline=async function(){
       const updates={};updates[`users/${cu.uid}/wallet/balance`]=curr+amt;updates[`vouchers/${code}/used`]=true;updates[`vouchers/${code}/redeemedBy`]=cu.uid;
       await update(ref(db),updates);await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
       window.showToast(`R${amt.toFixed(2)} added!`);
-      document.getElementById('voucherCodeInline').value='';
-      window.toggleTopUp();
+      document.getElementById('voucherCodeModal').value='';
+      window.closeAnimatedModal('topUpModal');
     }else{window.showToast('Invalid voucher code');}
   }catch(e){window.showToast('Error processing voucher');}
 };
@@ -2265,11 +2279,6 @@ window.switchTab=function(name){
   document.querySelectorAll('.nl[data-tab]').forEach(el=>el.classList.toggle('act',el.dataset.tab===name));
   localStorage.setItem('vx_active_tab', name);
   if(name==='ride' && window._mapInstance) setTimeout(()=>window._mapInstance.resize(), 40);
-};
-
-window.toggleTopUp = function() {
-  const el = document.getElementById('inlineTopUp');
-  el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 };
 
 let touchstartX=0,touchendX=0;
