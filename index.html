@@ -402,15 +402,41 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .bni svg{transition:transform .2s var(--ease-spring)}
 .bni.act svg{transform:scale(1.15)}
 
-/* ══ FULL PAGES ══ */
-.fpage{flex:1;height:100%;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 100px); -webkit-overflow-scrolling:touch;}
+/* ══ FULL PAGES — FIXED FOR ACCOUNT TAB ══ */
+.fpage{
+  flex:1;
+  height:100%;
+  position:relative;
+  z-index:20;
+  background:var(--bg);
+  display:none;
+  flex-direction:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+  /* Mobile: pad for bottom nav + safe area + extra breathing room */
+  padding:28px 20px calc(var(--nav-h) + var(--sb) + 40px);
+  -webkit-overflow-scrolling:touch;
+}
+
+/* Desktop overrides */
 @media(min-width:900px){
-  .fpage{padding:40px 36px 32px; align-items: center;}
-  .fpage > * { max-width:680px; width:100%; }
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; }
-  ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+  .fpage{
+    padding:40px 36px 60px;
+    /* KEY FIX: align-items was center, causing children to not fill width properly */
+    align-items:flex-start;
+    /* Allow page to be scrollable on desktop too */
+    overflow-y:auto;
+  }
+  /* Constrain content width on desktop */
+  .fpage > * {
+    max-width:680px;
+    width:100%;
+  }
+  /* Scrollbar styling */
+  .fpage::-webkit-scrollbar { width: 8px; }
+  .fpage::-webkit-scrollbar-track { background: transparent; }
+  .fpage::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; }
+  .fpage::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 }
 .fpage.show{display:flex;animation:fadeIn .3s ease;}
 
@@ -425,9 +451,11 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .fpage.show .anim-item:nth-child(4) { animation-delay: 0.16s; }
 .fpage.show .anim-item:nth-child(5) { animation-delay: 0.20s; }
 .fpage.show .anim-item:nth-child(6) { animation-delay: 0.24s; }
+.fpage.show .anim-item:nth-child(7) { animation-delay: 0.28s; }
+.fpage.show .anim-item:nth-child(8) { animation-delay: 0.32s; }
 
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-.ph{font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px}
+.ph{font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px;width:100%}
 
 /* ══ TRIPS ══ */
 .tc{background:var(--card);border-radius:16px;padding:16px 18px;margin-bottom:11px;border:1px solid var(--border);transition:.2s var(--ease-spring)}
@@ -442,7 +470,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .date-filter-input{border:none;outline:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--ink);background:transparent;}
 
 /* ══ WALLET ══ */
-.w-hero{background:linear-gradient(135deg,#0044FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden}
+.w-hero{background:linear-gradient(135deg,#0044FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden;width:100%}
 .w-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%}
 .w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px;width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%}
 .wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500}
@@ -456,26 +484,42 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .txa{font-size:14px;font-weight:700}
 .txa.cr{color:var(--green)}.txa.dr{color:var(--red)}
 
-/* ══ ACCOUNT — FIXED ══ */
+/* ══ ACCOUNT TAB — FULLY FIXED ══ */
+
+/* Profile banner — full width, no clipping */
 .prof-banner{
   background:linear-gradient(135deg,#0033CC,#0052FF,#3377FF);
-  border-radius:20px;padding:22px 20px;margin-bottom:20px;
-  display:flex;align-items:center;gap:14px;color:#fff;
-  position:relative;overflow:hidden;cursor:pointer;
+  border-radius:20px;
+  padding:22px 20px;
+  margin-bottom:20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
   transition:transform .2s var(--ease-spring), box-shadow .2s;
+  /* KEY FIX: ensure full width within fpage */
+  width:100%;
+  box-sizing:border-box;
+  flex-shrink:0;
 }
 .prof-banner:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,82,255,.25);}
 .prof-banner:active{transform:scale(.97);}
 .prof-banner::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
 
-/* Unified Avatar — covers both image & initial states cleanly */
+/* Unified Avatar */
 .prof-av-unified{
   width:58px;height:58px;border-radius:16px;
   background:rgba(255,255,255,.22);
   display:flex;align-items:center;justify-content:center;
   font-size:22px;font-weight:800;
-  flex-shrink:0;border:2px solid rgba(255,255,255,.35);
+  flex-shrink:0;
+  border:2px solid rgba(255,255,255,.35);
   overflow:hidden;color:#fff;
+  /* Prevent squishing */
+  min-width:58px;
 }
 .prof-av-unified img{
   width:100%;height:100%;object-fit:cover;display:block;
@@ -485,52 +529,105 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .prof-email{font-size:13px;opacity:.72;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .prof-phone{font-size:11px;opacity:.65;margin-top:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 
-.acc-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px 4px}
-.ss{background:var(--card);border-radius:18px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04)}
-.sr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s, transform 0.15s var(--ease-spring);user-select:none}
+/* Section titles — full width */
+.acc-section-title{
+  font-size:11px;font-weight:700;color:var(--muted);
+  letter-spacing:.1em;text-transform:uppercase;
+  margin:18px 0 8px 4px;
+  width:100%;
+  display:block;
+}
+
+/* Settings card groups */
+.ss{
+  background:var(--card);
+  border-radius:18px;
+  margin-bottom:12px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:0 2px 10px rgba(0,0,0,.04);
+  /* KEY FIX: full width, no collapsing */
+  width:100%;
+  display:block;
+}
+
+/* Settings rows — prevent overlap */
+.sr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 18px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.2s, transform 0.15s var(--ease-spring);
+  user-select:none;
+  /* KEY FIX: min-height so rows don't collapse */
+  min-height:56px;
+}
 .sr:active{transform:scale(0.98);background:rgba(0,82,255,0.04);}
 .sr.sr-disabled{cursor:default;opacity:.55;}
 .sr.sr-disabled:active{transform:none;}
 .sr:last-child{border:none}
 .srl{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
-.sri{width:34px;height:34px;border-radius:10px;background:rgba(0,82,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sri{
+  width:34px;height:34px;
+  border-radius:10px;
+  background:rgba(0,82,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  /* KEY FIX: don't shrink icon */
+  flex-shrink:0;
+}
 .srt{font-size:15px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sra{color:var(--muted);font-size:16px;flex-shrink:0;}
+.sra{color:var(--muted);font-size:16px;flex-shrink:0;margin-left:8px;}
 
-/* Auth status badge on account row */
+/* Auth status badge */
 .auth-status-badge{
   font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;
   background:rgba(23,168,90,.1);color:var(--green);flex-shrink:0;
+  white-space:nowrap;
 }
 
 .pm-text-wrap { flex:1; min-width:0; margin-right:12px; }
 .pm-label { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pm-sub { font-size:12px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-/* Sign Out Button */
+/* Sign Out Button — FIXED: visible and properly spaced */
 .logout-pill-btn {
-    display: none; /* controlled by JS */
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 16px;
-    margin-top: 24px;
-    margin-bottom: 12px;
-    border-radius: 30px;
-    background: rgba(229,53,53,.1);
-    color: var(--red);
-    font-weight: 700;
-    font-size: 15px;
-    border: none;
-    cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-    transition: transform 0.2s var(--ease-spring), background 0.2s;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  border-radius: 30px;
+  background: rgba(229,53,53,.1);
+  color: var(--red);
+  font-weight: 700;
+  font-size: 15px;
+  border: 1.5px solid rgba(229,53,53,.2);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: transform 0.2s var(--ease-spring), background 0.2s;
+  /* KEY FIX: flex-shrink:0 so it never collapses */
+  flex-shrink: 0;
 }
 .logout-pill-btn.show{display:flex;}
 .logout-pill-btn:active {
-    transform: scale(0.96);
-    background: rgba(229,53,53,.15);
+  transform: scale(0.96);
+  background: rgba(229,53,53,.15);
+}
+
+/* Version text at bottom — always visible */
+.acc-version-text {
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  margin-top:8px;
+  padding-bottom:20px;
+  width:100%;
+  flex-shrink:0;
 }
 
 /* ══ MODALS ══ */
@@ -1176,13 +1273,13 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <div id="txList" class="anim-item"></div>
   </div>
 
-  <!-- ══ ACCOUNT TAB — FIXED ══ -->
+  <!-- ══ ACCOUNT TAB — FULLY FIXED ══ -->
   <div class="fpage" id="tab-account">
+    <!-- Page heading -->
     <div class="ph anim-item">Account</div>
 
-    <!-- Profile Banner — clicking opens Edit Profile only when signed in -->
+    <!-- Profile Banner -->
     <div class="prof-banner anim-item" id="profBanner" onclick="openEditProfile()">
-      <!-- Unified avatar handles both photo and initials -->
       <div class="prof-av-unified" id="profAvUnified">
         <img id="profAvImg" src="" alt="Profile" style="display:none;width:100%;height:100%;object-fit:cover;">
         <span id="profAvTxt">?</span>
@@ -1198,7 +1295,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <!-- My Account section -->
     <div class="acc-section-title anim-item">My Account</div>
     <div class="ss anim-item">
-      <!-- Auth row: sign in when guest, shows email when signed in (non-clickable) -->
       <div class="sr" id="authRow" onclick="handleAuthAction()">
         <div class="srl">
           <div class="sri">
@@ -1213,7 +1309,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <!-- Preferences section -->
     <div class="acc-section-title anim-item">Preferences</div>
     <div class="ss anim-item">
-      <!-- FIX: Notifications now correctly opens notifModal -->
       <div class="sr" onclick="openNotifModal()">
         <div class="srl">
           <div class="sri">
@@ -1243,13 +1338,14 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
       </div>
     </div>
 
-    <!-- Sign Out pill — toggled by JS, not CSS display:none hack -->
+    <!-- Sign Out button — always visible when signed in -->
     <button class="logout-pill-btn anim-item" id="signOutBtn" onclick="document.getElementById('signOutModal').classList.add('show')">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Sign Out
     </button>
 
-    <div class="anim-item" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;padding-bottom:30px;">VynixRide v2.3 · South Africa 🇿🇦</div>
+    <!-- Version text — always visible at bottom -->
+    <div class="acc-version-text anim-item">VynixRide v2.3 · South Africa 🇿🇦</div>
   </div>
 
   <!-- Bottom Nav -->
@@ -1382,7 +1478,7 @@ onAuthStateChanged(auth,async u=>{
   if(arSnap.exists()&&arSnap.val()){ activeRideReqId=arSnap.val(); listenToActiveRide(activeRideReqId); }
 });
 
-// ── FIX: updateUI — unified avatar logic, correct sign-out toggle, correct auth row ──
+// ── updateUI ──
 function updateUI(u) {
   const n = window._customProfileData?.name || (u ? (u.displayName||'Rider') : 'Guest');
   const e = u ? u.email : 'Not signed in';
@@ -1390,7 +1486,6 @@ function updateUI(u) {
   const photo = window._customProfileData?.photo || (u ? u.photoURL : null);
   const initials = ini2(n);
 
-  // Profile banner avatar
   const imgEl = document.getElementById('profAvImg');
   const txtEl = document.getElementById('profAvTxt');
   if (photo) {
@@ -1403,16 +1498,13 @@ function updateUI(u) {
     txtEl.textContent = initials;
   }
 
-  // Profile banner text
   document.getElementById('profName').textContent = n;
   document.getElementById('profEmail').textContent = e;
   document.getElementById('profPhone').textContent = p;
 
-  // Show/hide Edit badge
   const editBadge = document.getElementById('profEditBadge');
   if (editBadge) editBadge.style.display = u ? 'block' : 'none';
 
-  // Sidebar avatar
   const sbAv = document.getElementById('sbAv');
   if (photo) {
     sbAv.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="Avatar">`;
@@ -1422,7 +1514,6 @@ function updateUI(u) {
   document.getElementById('sbName').textContent = n;
   document.getElementById('sbEmail').textContent = e;
 
-  // Auth row — FIX: signed-in users see email + Connected badge; guests see sign-in arrow
   const authLabel = document.getElementById('authLabel');
   const authRowRight = document.getElementById('authRowRight');
   const authRow = document.getElementById('authRow');
@@ -1435,7 +1526,6 @@ function updateUI(u) {
     if (signOutBtn) signOutBtn.classList.add('show');
   } else {
     if (authLabel) authLabel.textContent = 'Sign in with Google';
-    // Re-create the arrow span if it was replaced
     const rr = document.getElementById('authRowRight');
     if (rr && !rr.classList.contains('sra')) {
       rr.outerHTML = `<span id="authRowRight" class="sra">›</span>`;
@@ -1445,9 +1535,8 @@ function updateUI(u) {
   }
 }
 
-// ── FIX: Account modal openers (Notifications fixed, Places pre-fills) ──
+// ── Account modal openers ──
 window.openNotifModal = function() {
-  // Pre-load saved preferences
   try {
     const saved = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
     if ('ride' in saved) document.getElementById('notif-ride').checked = saved.ride;
@@ -1464,7 +1553,6 @@ window.openPaymentModal = function() {
 };
 
 window.openPlacesModal = function() {
-  // Pre-fill saved places
   try {
     const saved = JSON.parse(localStorage.getItem('vx_saved_places') || '{}');
     document.getElementById('sp-home').value = saved.home || '';
@@ -1489,7 +1577,6 @@ window.openEditProfile = function() {
   document.getElementById('epPhone').value = currentPhone;
   window._tempPhotoUrl = currentPhoto || null;
 
-  // Set avatar preview in edit modal
   const epPrev = document.getElementById('epPreview');
   const epInit = document.getElementById('epInitial');
   if (currentPhoto) {
@@ -1560,7 +1647,7 @@ window.saveProfile = async function() {
 
 // ── Auth & Sign Out ──
 window.handleAuthAction = function() {
-  if (cu) return; // Already signed in — row is disabled
+  if (cu) return;
   document.getElementById('googleSheetBg').classList.add('show');
 };
 
@@ -1854,7 +1941,7 @@ window.saveNotifPrefs=function(){
 
 window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
 window.closeTopUpModal=()=>window.closeAnimatedModal('topUpModal');
-window.openPayModal=window.openPaymentModal; // alias
+window.openPayModal=window.openPaymentModal;
 
 window.savePlaces=async function(){
   const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};
