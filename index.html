@@ -25,6 +25,20 @@
   --shimmer-base:#e8edf8;
   --shimmer-highlight:#f4f7ff;
 }
+
+/* Force Yoco SDK to the absolute top and push our modals back */
+body.yoco-is-open .mbg {
+  z-index: 5 !important;
+  backdrop-filter: none !important; /* Prevents iOS Safari stacking context trapping */
+  background: rgba(0,0,0,0.2) !important;
+}
+
+iframe[name^="yoco"], iframe[src*="yoco"], .yoco-sdk-popup {
+  z-index: 2147483647 !important;
+  position: relative !important;
+}
+
+  
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg)}
 
@@ -1832,17 +1846,18 @@ window.cancelActiveRide=async function(){
 };
 
 window.triggerYocoPayment = function(amount, description, onSuccess, modalToClose) {
-  if (typeof window.YocoSDK === 'undefined') { 
-    window.showToast('Payment unavailable'); 
-    return; 
+  if (typeof window.YocoSDK === 'undefined') {
+    window.showToast('Payment unavailable. Check internet connection.');
+    return;
   }
   
-  // Grab the active bottom sheet
-  const activeModal = document.getElementById(modalToClose);
+  // 1. Force our app's bottom sheets to the background
+  document.body.classList.add('yoco-is-open');
   
-  // Temporarily drop the bottom sheet's z-index so Yoco naturally sits on top
+  // 2. Target the specific active modal to ensure it doesn't fight Yoco
+  const activeModal = document.getElementById(modalToClose);
   if (activeModal) {
-    activeModal.style.zIndex = '90'; 
+    activeModal.style.zIndex = '5';
   }
   
   const yoco = new window.YocoSDK({ publicKey: yocoPublicKey });
@@ -1853,7 +1868,8 @@ window.triggerYocoPayment = function(amount, description, onSuccess, modalToClos
     description: description,
     callback: function(result) {
       
-      // Instantly restore the bottom sheet's original z-index when Yoco closes
+      // 3. Restore our app's bottom sheet instantly when Yoco closes
+      document.body.classList.remove('yoco-is-open');
       if (activeModal) {
         activeModal.style.zIndex = '';
       }
@@ -1861,6 +1877,7 @@ window.triggerYocoPayment = function(amount, description, onSuccess, modalToClos
       if (result.error) {
         window.showToast('Payment failed: ' + result.error.message);
       } else {
+        // Only close the bottom sheet automatically if payment succeeds
         if (modalToClose) window.closeAnimatedModal(modalToClose);
         onSuccess(result.id);
       }
