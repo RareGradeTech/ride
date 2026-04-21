@@ -26,8 +26,6 @@
   --shimmer-highlight:#f4f7ff;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-
-/* Dynamic Viewport Height fixes mobile URL bar clipping */
 html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-serif;color:var(--ink);background:var(--bg)}
 
 /* ══ SPLASH SCREEN ══ */
@@ -71,11 +69,10 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .shimmer-bnav-icon{width:24px;height:24px;border-radius:6px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 .shimmer-bnav-label{width:28px;height:8px;border-radius:4px;background:var(--shimmer-base);position:relative;overflow:hidden;}
 
-/* Desktop Shimmer Adjustments */
 @media(min-width:900px){
   .init-loader { flex-direction: row; }
   .shimmer-panel {
-    top:22px; left:102px; /* Offset past the 80px sidebar + 22px margin */
+    top:22px; left:102px;
     bottom:auto; width:385px; border-radius:22px; padding:24px;
     box-shadow:0 20px 50px rgba(0,0,0,.1);
   }
@@ -101,7 +98,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .nav-spacer{flex:1}
 .user-mini{display:flex;align-items:center;gap:14px;padding:11px;background:var(--bg);border-radius:12px;margin-top:10px;cursor:pointer;transition:.17s;min-width:240px}
 .user-mini:hover{background:rgba(0,82,255,.07)}
-.av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.av{width:36px;height:36px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;overflow:hidden}
 .user-txt{opacity:0;transition:opacity .18s .1s;display:flex;flex-direction:column;overflow:hidden}
 .sidebar:hover .user-txt{opacity:1}
 .u-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
@@ -127,9 +124,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .map-click-zone{position:absolute;inset:0;z-index:2;pointer-events:none}
 .map-click-zone.active{pointer-events:all}
 
-/* ══════════════════════════════════════════
-   PANEL SYSTEM
-══════════════════════════════════════════ */
+/* ══ PANEL SYSTEM ══ */
 .panel{
   position:absolute;background:rgba(255,255,255,.97);
   backdrop-filter:blur(28px) saturate(2);-webkit-backdrop-filter:blur(28px) saturate(2);
@@ -172,7 +167,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 /* ══ PANEL SCROLLABLE CONTENT ══ */
 .panel-scroll-area{
   flex:1;overflow-y:auto;overflow-x:hidden;min-height:0;
-  /* Added more bottom padding so the last elements scroll up easily on mobile */
   padding:0 20px calc(50px + var(--sb));
   display:flex;flex-direction:column;
   -webkit-overflow-scrolling:touch;
@@ -241,7 +235,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .promo-banner:hover{box-shadow:0 6px 20px rgba(0,82,255,.15);transform:translateY(-1px)}
 .promo-banner:hover::after{transform:scale(1.4)}
 .promo-banner:active{transform:scale(.98)}
-
 .promo-badge{background:linear-gradient(130deg,var(--blue2),var(--blue));color:#fff;font-size:14px;font-weight:900;padding:6px 11px;border-radius:10px;letter-spacing:-.3px;flex-shrink:0;box-shadow:0 3px 10px var(--glow);white-space:nowrap;transition:background .3s,box-shadow .3s;}
 .promo-text-wrap{flex:1;min-width:0}
 .promo-title{font-size:13px;font-weight:800;color:var(--blue);transition:color .3s}
@@ -283,7 +276,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .search-actions{display:flex;flex-direction:column;gap:12px;margin-top:32px;width:100%;max-width:280px}
 .retry-btn{width:100%;padding:16px;border-radius:20px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-weight:800;font-size:15px;border:none;cursor:pointer;box-shadow:0 6px 20px var(--glow);font-family:'Outfit',sans-serif}
 
-/* ══ ACTIVE RIDE PANEL — FIXED SCROLL ══ */
+/* ══ ACTIVE RIDE PANEL ══ */
 .active-panel{
   position:absolute;background:rgba(255,255,255,.97);
   backdrop-filter:blur(28px);display:none;flex-direction:column;
@@ -346,7 +339,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,82,255,.4)}50%{box-shadow:0 0 0 6px rgba(0,82,255,0)}}
 .rsb-text{font-size:13px;font-weight:700;color:var(--blue)}
 
-/* ══ COMPACT DRIVER PROFILE & CAR CARD ══ */
+/* ══ DRIVER PROFILE CARD ══ */
 .driver-profile-card{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:#fff;border:2px solid rgba(0,82,255,0.12);
@@ -409,15 +402,11 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .bni svg{transition:transform .2s var(--ease-spring)}
 .bni.act svg{transform:scale(1.15)}
 
-/* ══ FULL PAGES & ANIMATIONS ══ */
-/* Desktop structural fix to stop the pages from spanning infinitely */
+/* ══ FULL PAGES ══ */
 .fpage{flex:1;height:100%;position:relative;z-index:20;background:var(--bg);display:none;flex-direction:column;overflow-y:auto;padding:28px 20px calc(var(--nav-h) + var(--sb) + 100px); -webkit-overflow-scrolling:touch;}
 @media(min-width:900px){
   .fpage{padding:40px 36px 32px; align-items: center;}
-  /* Keeps layout elements well-proportioned on wide desktop screens */
-  .fpage > * { max-width:680px; width:100%; } 
-  
-  /* Optional: Custom clean scrollbar for desktop */
+  .fpage > * { max-width:680px; width:100%; }
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; }
@@ -425,7 +414,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 }
 .fpage.show{display:flex;animation:fadeIn .3s ease;}
 
-/* Staggered entry animations for account/wallet/trips items */
 @keyframes slideUpFade {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -436,6 +424,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .fpage.show .anim-item:nth-child(3) { animation-delay: 0.12s; }
 .fpage.show .anim-item:nth-child(4) { animation-delay: 0.16s; }
 .fpage.show .anim-item:nth-child(5) { animation-delay: 0.20s; }
+.fpage.show .anim-item:nth-child(6) { animation-delay: 0.24s; }
 
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 .ph{font-size:24px;font-weight:800;margin-bottom:22px;letter-spacing:-.4px}
@@ -467,32 +456,60 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .txa{font-size:14px;font-weight:700}
 .txa.cr{color:var(--green)}.txa.dr{color:var(--red)}
 
-/* ══ ACCOUNT ══ */
-.prof-banner{background:linear-gradient(135deg,#0033CC,#0052FF,#3377FF);border-radius:20px;padding:22px 20px;margin-bottom:20px;display:flex;align-items:center;gap:14px;color:#fff;position:relative;overflow:hidden;cursor:pointer;transition:transform .2s var(--ease-spring), box-shadow .2s;}
+/* ══ ACCOUNT — FIXED ══ */
+.prof-banner{
+  background:linear-gradient(135deg,#0033CC,#0052FF,#3377FF);
+  border-radius:20px;padding:22px 20px;margin-bottom:20px;
+  display:flex;align-items:center;gap:14px;color:#fff;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:transform .2s var(--ease-spring), box-shadow .2s;
+}
 .prof-banner:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,82,255,.25);}
 .prof-banner:active{transform:scale(.97);}
 .prof-banner::after{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none}
-.prof-av-lg{width:58px;height:58px;border-radius:16px;background:rgba(255,255,255,.22);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.35)}
-.prof-name{font-size:19px;font-weight:700;letter-spacing:-.2px}
-.prof-email{font-size:13px;opacity:.72;margin-top:3px}
+
+/* Unified Avatar — covers both image & initial states cleanly */
+.prof-av-unified{
+  width:58px;height:58px;border-radius:16px;
+  background:rgba(255,255,255,.22);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:800;
+  flex-shrink:0;border:2px solid rgba(255,255,255,.35);
+  overflow:hidden;color:#fff;
+}
+.prof-av-unified img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+
+.prof-name{font-size:19px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prof-email{font-size:13px;opacity:.72;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prof-phone{font-size:11px;opacity:.65;margin-top:2px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
 .acc-section-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin:18px 0 8px 4px}
 .ss{background:var(--card);border-radius:18px;margin-bottom:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 10px rgba(0,0,0,.04)}
 .sr{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s, transform 0.15s var(--ease-spring);user-select:none}
-.sr:active { transform: scale(0.98); background: rgba(0,82,255,0.04); }
+.sr:active{transform:scale(0.98);background:rgba(0,82,255,0.04);}
+.sr.sr-disabled{cursor:default;opacity:.55;}
+.sr.sr-disabled:active{transform:none;}
 .sr:last-child{border:none}
 .srl{display:flex;align-items:center;gap:12px;flex:1;min-width:0;}
 .sri{width:34px;height:34px;border-radius:10px;background:rgba(0,82,255,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .srt{font-size:15px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .sra{color:var(--muted);font-size:16px;flex-shrink:0;}
 
-/* Preference List Flex Wrappers */
+/* Auth status badge on account row */
+.auth-status-badge{
+  font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;
+  background:rgba(23,168,90,.1);color:var(--green);flex-shrink:0;
+}
+
 .pm-text-wrap { flex:1; min-width:0; margin-right:12px; }
 .pm-label { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pm-sub { font-size:12px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-/* Dedicated Sign Out Pill Button */
+/* Sign Out Button */
 .logout-pill-btn {
-    display: flex;
+    display: none; /* controlled by JS */
     align-items: center;
     justify-content: center;
     gap: 8px;
@@ -500,7 +517,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     padding: 16px;
     margin-top: 24px;
     margin-bottom: 12px;
-    border-radius: 30px; 
+    border-radius: 30px;
     background: rgba(229,53,53,.1);
     color: var(--red);
     font-weight: 700;
@@ -510,6 +527,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     font-family: 'Outfit', sans-serif;
     transition: transform 0.2s var(--ease-spring), background 0.2s;
 }
+.logout-pill-btn.show{display:flex;}
 .logout-pill-btn:active {
     transform: scale(0.96);
     background: rgba(229,53,53,.15);
@@ -534,9 +552,9 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .mok:active { transform:scale(.96); }
 .mok.green{background:linear-gradient(130deg,#17A85A,#0d7a3e)}
 .t-input{width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;outline:none;transition:border-color .2s,box-shadow .2s;color:var(--ink)}
+.t-input:focus{border-color:rgba(0,82,255,.4);box-shadow:0 0 0 3px rgba(0,82,255,.08)}
 .input-wrap{margin-bottom:14px;text-align:left}
 
-/* Modals Desktop Fixes */
 @media(min-width:900px){
   .mbg, .pin-overlay, .chat-bg, .gsheet-bg { align-items: center; }
   .modal, .pin-card, .chat-sheet, .gsheet{border-radius:22px;padding-bottom:28px}
@@ -603,7 +621,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .typing-dot:nth-child(3){animation-delay:.4s}
 @keyframes typeBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 
-/* ══ GOOGLE SHEET (for in-app sign in) ══ */
+/* ══ GOOGLE SIGN-IN SHEET ══ */
 .gsheet-bg{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .gsheet-bg.show{display:flex}
 .gsheet{padding:10px 28px calc(40px + var(--sb));}
@@ -638,13 +656,11 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}
 @media(min-width:900px){.toast{bottom:26px}}
 
-/* ══ PAYMENT / PLACES ══ */
+/* ══ PAYMENT & PLACES ══ */
 .pm-card{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
 .pm-card:last-child{border:none}
 .pm-card:hover{background:rgba(0,82,255,.03)}
 .pm-icon{width:40px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1.5px solid var(--border);background:#fff}
-.pm-label{font-size:14px;font-weight:600}
-.pm-sub{font-size:12px;color:var(--muted);margin-top:1px}
 .pm-badge{margin-left:auto;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(23,168,90,.1);color:var(--green)}
 .pm-default-badge{background:rgba(0,82,255,.08);color:var(--blue)}
 .sp-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border)}
@@ -660,7 +676,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .ts input:checked + .ts-slider{background:var(--blue)}
 .ts input:checked + .ts-slider::before{transform:translateX(18px)}
 
-/* ══ EMPTY ══ */
+/* ══ EMPTY STATE ══ */
 .empty{text-align:center;padding:44px 20px;color:var(--muted)}
 .empty-ico{font-size:34px;margin-bottom:10px}
 </style>
@@ -679,13 +695,11 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <div class="shimmer-nav-item"></div>
     <div class="shimmer-nav-item"></div>
   </div>
-
   <div class="shimmer-map">
     <div class="shimmer-road" style="width:60%;height:6px;top:38%;left:20%;transform:rotate(-8deg)"></div>
     <div class="shimmer-road" style="width:4px;height:45%;top:10%;left:48%;transform:rotate(5deg)"></div>
     <div class="shimmer-road" style="width:40%;height:4px;top:62%;left:30%;transform:rotate(3deg)"></div>
   </div>
-
   <div class="shimmer-panel">
     <div class="shimmer-handle"></div>
     <div class="shimmer-block title"></div>
@@ -696,7 +710,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <div class="shimmer-block card"></div>
     <div class="shimmer-block card"></div>
   </div>
-
   <div class="shimmer-bnav">
     <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
     <div class="shimmer-bnav-item"><div class="shimmer-bnav-icon"></div><div class="shimmer-bnav-label"></div></div>
@@ -705,9 +718,9 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Google Sign-In Sheet -->
 <div class="gsheet-bg" id="googleSheetBg">
   <div class="gsheet">
-    <div class="gs-pill"></div>
     <div class="gs-close-wrap">
       <button class="gs-close" id="gsClose">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -724,6 +737,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Location Permission Modal -->
 <div class="mbg" id="locModal">
   <div class="modal">
     <div class="modal-pill"></div>
@@ -733,6 +747,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Top Up Modal -->
 <div class="mbg" id="topUpModal">
   <div class="modal">
     <div class="modal-pill"></div>
@@ -748,6 +763,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Courier Details Modal -->
 <div class="mbg" id="courierModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
@@ -762,6 +778,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Booking Confirm Modal -->
 <div class="mbg" id="confirmModal">
   <div class="modal" style="position:relative">
     <div class="modal-pill"></div>
@@ -786,6 +803,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Notifications Modal -->
 <div class="mbg" id="notifModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
@@ -820,6 +838,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Payment Methods Modal -->
 <div class="mbg" id="payModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
@@ -842,6 +861,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Saved Places Modal -->
 <div class="mbg" id="placesModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
@@ -850,22 +870,22 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
       <div class="sp-row">
         <div class="sp-icon" style="background:rgba(255,174,0,.12)">🏠</div>
         <div class="pm-text-wrap" style="margin-right:0">
-            <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Home</div>
-            <input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Home</div>
+          <input type="text" id="sp-home" class="sp-field" placeholder="Add your home address…">
         </div>
       </div>
       <div class="sp-row">
         <div class="sp-icon" style="background:rgba(0,82,255,.09)">🏢</div>
         <div class="pm-text-wrap" style="margin-right:0">
-            <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div>
-            <input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Work</div>
+          <input type="text" id="sp-work" class="sp-field" placeholder="Add your work address…">
         </div>
       </div>
       <div class="sp-row" style="border:none">
         <div class="sp-icon" style="background:rgba(229,53,53,.09)">⭐</div>
         <div class="pm-text-wrap" style="margin-right:0">
-            <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Favourite</div>
-            <input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…">
+          <div style="font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Favourite</div>
+          <input type="text" id="sp-fav" class="sp-field" placeholder="Add a favourite place…">
         </div>
       </div>
     </div>
@@ -876,21 +896,22 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Edit Profile Modal -->
 <div class="mbg" id="editProfileModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
     <div class="mh">Edit Profile</div>
-    
-    <div style="display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom:20px;">
-       <img id="epPreview" src="https://i.pravatar.cc/150?img=11" style="width:76px;height:76px;border-radius:20px;object-fit:cover;border:2px solid var(--border);">
-       <button onclick="document.getElementById('epFileInput').click()" style="background:rgba(0,82,255,.08);color:var(--blue);border:none;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;">Change Photo</button>
-       <input type="file" id="epFileInput" accept="image/*" style="display:none" onchange="uploadProfilePic(event)">
-       <div id="epUploadStatus" style="font-size:11px;color:var(--muted);display:none;font-weight:600">Uploading to Cloudinary...</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:20px;">
+      <div id="epAvatarWrap" style="width:76px;height:76px;border-radius:20px;overflow:hidden;border:2px solid var(--border);background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;cursor:pointer;" onclick="document.getElementById('epFileInput').click()">
+        <img id="epPreview" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
+        <span id="epInitial">?</span>
+      </div>
+      <button onclick="document.getElementById('epFileInput').click()" style="background:rgba(0,82,255,.08);color:var(--blue);border:none;padding:8px 16px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;">Change Photo</button>
+      <input type="file" id="epFileInput" accept="image/*" style="display:none" onchange="uploadProfilePic(event)">
+      <div id="epUploadStatus" style="font-size:11px;color:var(--muted);display:none;font-weight:600">Uploading…</div>
     </div>
-
     <div class="input-wrap"><div class="slabel">Full Name</div><input type="text" id="epName" class="t-input" placeholder="Your name"></div>
     <div class="input-wrap"><div class="slabel">Phone Number</div><input type="tel" id="epPhone" class="t-input" placeholder="e.g. 082 123 4567"></div>
-    
     <div class="mbtns" style="margin-top:24px;">
       <button class="mcancel" onclick="closeAnimatedModal('editProfileModal')">Cancel</button>
       <button class="mok" id="epSaveBtn" onclick="saveProfile()">Save Changes</button>
@@ -898,6 +919,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Sign Out Confirm Modal -->
 <div class="mbg" id="signOutModal">
   <div class="modal" style="text-align:center">
     <div class="modal-pill"></div>
@@ -910,6 +932,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- PIN Overlay -->
 <div class="pin-overlay" id="pinOverlay">
   <div class="pin-card">
     <button class="pin-close-btn" onclick="closeAnimatedModal('pinOverlay')">
@@ -933,6 +956,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Rating Modal -->
 <div class="mbg" id="ratingModal">
   <div class="modal" style="text-align:center">
     <div class="modal-pill"></div>
@@ -955,6 +979,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Chat Sheet -->
 <div class="chat-bg" id="chatBg">
   <div class="chat-sheet">
     <div class="chat-header">
@@ -989,6 +1014,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
+<!-- Search Overlay -->
 <div class="search-overlay" id="searchOverlay">
   <div class="circular-progress" id="searchProgressWrap">
     <svg viewBox="0 0 100 100"><circle class="circ-bg" cx="50" cy="50" r="45"></circle><circle class="circ-fill" id="searchProgress" cx="50" cy="50" r="45"></circle></svg>
@@ -1006,6 +1032,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 <div class="driver-canceled-banner" id="driverCanceledBanner">🚗 Your driver cancelled. Please rebook your ride.</div>
 <div class="toast" id="toast"></div>
 
+<!-- ══ MAIN APP SHELL ══ -->
 <div class="shell" id="appShell">
   <aside class="sidebar" id="mainSidebar">
     <div class="logo"><div class="logo-mark">VX</div><span class="l-txt">VynixRide</span></div>
@@ -1032,6 +1059,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     </div>
   </aside>
 
+  <!-- ══ RIDE TAB ══ -->
   <div class="map-wrap" id="tab-ride">
     <div id="map"></div>
     <div class="map-click-zone" id="mapClickZone" onclick="collapsePanel()"></div>
@@ -1048,12 +1076,10 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
           <div class="ptitle">Where to?</div>
           <button class="top-cbtn" id="confirmBtn" onclick="openModal()">Book</button>
         </div>
-        
         <div class="service-toggle" id="serviceToggle">
           <div class="st-btn act" onclick="setServiceMode('ride')">🚕 Ride</div>
           <div class="st-btn" onclick="setServiceMode('courier')">📦 Courier</div>
         </div>
-
         <div class="origin-row">
           <div class="o-dot"></div>
           <div>
@@ -1084,6 +1110,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
       </div>
     </div>
 
+    <!-- Active Ride Panel -->
     <div class="active-panel" id="activeRidePanel">
       <div class="active-drag-wrap" id="activeDragHandle">
         <div class="active-drag" id="activeDragBar"></div>
@@ -1093,10 +1120,8 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
           <div class="rsb-dot"></div>
           <div class="rsb-text" id="rideStatusText">Driver on the way…</div>
         </div>
-        
         <div class="driver-profile-card">
           <div class="ds-ride-type" id="adRideType">VynixGo</div>
-          
           <div class="dpc-image-wrap">
             <img id="adAvImg" class="dpc-image" src="https://i.pravatar.cc/150?img=11" onerror="this.src='https://i.pravatar.cc/150?img=3'" alt="Driver Profile">
             <div class="dpc-rating">⭐ 4.9</div>
@@ -1105,7 +1130,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
           <div class="dpc-car" id="adCar">—</div>
           <div class="ad-plate" id="adPlate">— — —</div>
         </div>
-        
         <div class="ad-meta-grid">
           <div class="ad-m-item"><span class="ad-m-lbl">Arriving in</span><span class="ad-m-val" id="adTime">-- min</span></div>
           <div class="ad-m-item"><span class="ad-m-lbl">Distance</span><span class="ad-m-val" id="adDist">-- km</span></div>
@@ -1126,6 +1150,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     </div>
   </div>
 
+  <!-- ══ TRIPS TAB ══ -->
   <div class="fpage" id="tab-trips">
     <div class="ph anim-item" style="display:flex;justify-content:space-between;align-items:center;">
       My Trips
@@ -1137,6 +1162,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <div id="tripsList" class="anim-item"></div>
   </div>
 
+  <!-- ══ WALLET TAB ══ -->
   <div class="fpage" id="tab-wallet">
     <div class="ph anim-item">Wallet</div>
     <div class="w-hero anim-item">
@@ -1150,46 +1176,83 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
     <div id="txList" class="anim-item"></div>
   </div>
 
+  <!-- ══ ACCOUNT TAB — FIXED ══ -->
   <div class="fpage" id="tab-account">
     <div class="ph anim-item">Account</div>
-    <div class="prof-banner anim-item" onclick="openEditProfile()">
-      <img class="prof-av-lg" id="profAvImg" src="" style="display:none;object-fit:cover;">
-      <div class="prof-av-lg" id="profAvTxt">?</div>
-      <div style="flex:1; min-width:0;">
-        <div class="prof-name" id="profName" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Guest</div>
-        <div class="prof-email" id="profEmail" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Not signed in</div>
-        <div class="prof-email" id="profPhone" style="opacity:0.75;font-size:11px;margin-top:1px;font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"></div>
+
+    <!-- Profile Banner — clicking opens Edit Profile only when signed in -->
+    <div class="prof-banner anim-item" id="profBanner" onclick="openEditProfile()">
+      <!-- Unified avatar handles both photo and initials -->
+      <div class="prof-av-unified" id="profAvUnified">
+        <img id="profAvImg" src="" alt="Profile" style="display:none;width:100%;height:100%;object-fit:cover;">
+        <span id="profAvTxt">?</span>
       </div>
-      <div style="background:rgba(255,255,255,0.22);padding:7px 12px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1); flex-shrink:0;">Edit</div>
+      <div style="flex:1;min-width:0;">
+        <div class="prof-name" id="profName">Guest</div>
+        <div class="prof-email" id="profEmail">Not signed in</div>
+        <div class="prof-phone" id="profPhone"></div>
+      </div>
+      <div id="profEditBadge" style="background:rgba(255,255,255,0.22);padding:7px 12px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1);flex-shrink:0;display:none;">Edit</div>
     </div>
-    
+
+    <!-- My Account section -->
     <div class="acc-section-title anim-item">My Account</div>
     <div class="ss anim-item">
+      <!-- Auth row: sign in when guest, shows email when signed in (non-clickable) -->
       <div class="sr" id="authRow" onclick="handleAuthAction()">
-        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="srt" id="authLabel">Sign in with Google</span></div><span class="sra">›</span>
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="srt" id="authLabel">Sign in with Google</span>
+        </div>
+        <span id="authRowRight" class="sra">›</span>
       </div>
     </div>
+
+    <!-- Preferences section -->
     <div class="acc-section-title anim-item">Preferences</div>
     <div class="ss anim-item">
-        <div class="sr" onclick="window.openPayModal()">  
-        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><span class="srt">Notifications</span></div><span class="sra">›</span>
+      <!-- FIX: Notifications now correctly opens notifModal -->
+      <div class="sr" onclick="openNotifModal()">
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <span class="srt">Notifications</span>
+        </div>
+        <span class="sra">›</span>
       </div>
-      <div class="sr" onclick="document.getElementById('payModal').classList.add('show')">
-        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><span class="srt">Payment Methods</span></div><span class="sra">›</span>
+      <div class="sr" onclick="openPaymentModal()">
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          </div>
+          <span class="srt">Payment Methods</span>
+        </div>
+        <span class="sra">›</span>
       </div>
-      <div class="sr" onclick="document.getElementById('placesModal').classList.add('show')">
-        <div class="srl"><div class="sri"><svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div><span class="srt">Saved Places</span></div><span class="sra">›</span>
+      <div class="sr" onclick="openPlacesModal()">
+        <div class="srl">
+          <div class="sri">
+            <svg width="15" height="15" fill="none" stroke="var(--blue)" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span class="srt">Saved Places</span>
+        </div>
+        <span class="sra">›</span>
       </div>
     </div>
-    
-    <button class="logout-pill-btn anim-item" id="signOutSection" onclick="document.getElementById('signOutModal').classList.add('show')" style="display:none">
+
+    <!-- Sign Out pill — toggled by JS, not CSS display:none hack -->
+    <button class="logout-pill-btn anim-item" id="signOutBtn" onclick="document.getElementById('signOutModal').classList.add('show')">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Sign Out
     </button>
-    
-    <div class="anim-item" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;padding-bottom:30px;">VynixRide v2.2 · South Africa 🇿🇦</div>
+
+    <div class="anim-item" style="text-align:center;font-size:12px;color:var(--muted);margin-top:8px;padding-bottom:30px;">VynixRide v2.3 · South Africa 🇿🇦</div>
   </div>
 
+  <!-- Bottom Nav -->
   <nav class="bnav">
     <div class="bni act" id="bn-ride" onclick="switchTab('ride')">
       <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
@@ -1216,89 +1279,55 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as 
 import{getDatabase,ref,set,push,get,onValue,update,remove,off}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
 
-// Extended Splash Screen Logic (5s)
+// ── Splash ──
 document.addEventListener("DOMContentLoaded", () => {
-    const splash = document.getElementById('realSplash');
-    setTimeout(() => {
-        splash.classList.add('hide');
-        setTimeout(() => splash.style.display = 'none', 800); // cleanup
-    }, 5000); 
-    
-    // Initialize Swipe-to-dismiss gestures for all modals
-    initModalGestures();
+  const splash = document.getElementById('realSplash');
+  setTimeout(() => {
+    splash.classList.add('hide');
+    setTimeout(() => splash.style.display = 'none', 800);
+  }, 5000);
+  initModalGestures();
 });
 
-// GLOBAL MODAL ENGINE
+// ── Global Modal Engine ──
 function initModalGestures() {
-    const overlays = document.querySelectorAll('.mbg, .pin-overlay, .chat-bg');
-    overlays.forEach(bg => {
-        const modal = bg.querySelector('.modal, .pin-card, .chat-sheet, .gsheet');
-        if (!modal) return;
-
-        // Click outside to close
-        bg.addEventListener('mousedown', (e) => {
-            if (e.target === bg) window.closeAnimatedModal(bg.id);
-        });
-
-        // Touch drag to close (mobile only)
-        let startY = 0, currentY = 0, isDragging = false;
-
-        modal.addEventListener('touchstart', (e) => {
-            if (window.innerWidth >= 900) return;
-            // Prevent drag if user is scrolling inside the modal's content
-            if (modal.scrollTop > 0) return; 
-            
-            startY = e.touches[0].clientY;
-            isDragging = true;
-            modal.style.transition = 'none';
-        }, {passive: true});
-
-        modal.addEventListener('touchmove', (e) => {
-            if (!isDragging || window.innerWidth >= 900) return;
-            currentY = e.touches[0].clientY - startY;
-            
-            // Only allow dragging downwards
-            if (currentY > 0) {
-                if (e.cancelable) e.preventDefault(); // Stop native background scroll
-                modal.style.transform = `translateY(${currentY}px)`;
-            } else {
-                currentY = 0;
-            }
-        }, {passive: false});
-
-        modal.addEventListener('touchend', () => {
-            if (!isDragging) return;
-            isDragging = false;
-            modal.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
-            
-            if (currentY > window.innerHeight * 0.15) { // 15% threshold to close
-                window.closeAnimatedModal(bg.id);
-            } else {
-                modal.style.transform = ''; // Snap back
-                setTimeout(() => modal.style.transition = '', 300);
-            }
-        });
+  const overlays = document.querySelectorAll('.mbg, .pin-overlay, .chat-bg');
+  overlays.forEach(bg => {
+    const modal = bg.querySelector('.modal, .pin-card, .chat-sheet, .gsheet');
+    if (!modal) return;
+    bg.addEventListener('mousedown', (e) => { if (e.target === bg) window.closeAnimatedModal(bg.id); });
+    let startY = 0, currentY = 0, isDragging = false;
+    modal.addEventListener('touchstart', (e) => {
+      if (window.innerWidth >= 900) return;
+      if (modal.scrollTop > 0) return;
+      startY = e.touches[0].clientY; isDragging = true; modal.style.transition = 'none';
+    }, {passive: true});
+    modal.addEventListener('touchmove', (e) => {
+      if (!isDragging || window.innerWidth >= 900) return;
+      currentY = e.touches[0].clientY - startY;
+      if (currentY > 0) { if (e.cancelable) e.preventDefault(); modal.style.transform = `translateY(${currentY}px)`; } else { currentY = 0; }
+    }, {passive: false});
+    modal.addEventListener('touchend', () => {
+      if (!isDragging) return; isDragging = false;
+      modal.style.transition = 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)';
+      if (currentY > window.innerHeight * 0.15) { window.closeAnimatedModal(bg.id); }
+      else { modal.style.transform = ''; setTimeout(() => modal.style.transition = '', 300); }
     });
+  });
 }
 
 window.closeAnimatedModal = function(id) {
-    const bg = document.getElementById(id);
-    if (!bg) return;
-    const modal = bg.querySelector('.modal, .pin-card, .chat-sheet, .gsheet');
-    
-    if (modal && window.innerWidth < 900) {
-        modal.style.transition = 'transform 0.25s ease-in';
-        modal.style.transform = 'translateY(100%)';
-        setTimeout(() => {
-            bg.classList.remove('show');
-            modal.style.transform = '';
-            modal.style.transition = '';
-        }, 250);
-    } else {
-        bg.classList.remove('show'); // Instant close on Desktop
-    }
-}
-
+  const bg = document.getElementById(id);
+  if (!bg) return;
+  const modal = bg.querySelector('.modal, .pin-card, .chat-sheet, .gsheet');
+  if (modal && window.innerWidth < 900) {
+    modal.style.transition = 'transform 0.25s ease-in';
+    modal.style.transform = 'translateY(100%)';
+    setTimeout(() => { bg.classList.remove('show'); modal.style.transform = ''; modal.style.transition = ''; }, 250);
+  } else {
+    bg.classList.remove('show');
+  }
+};
 
 const app=initializeApp({apiKey:"AIzaSyBOyZ3As4GTuNvjemvPF_SpsC6m6vqtNhc",authDomain:"fire-b-a8878.firebaseapp.com",databaseURL:"https://fire-b-a8878.firebaseio.com",projectId:"fire-b-a8878",storageBucket:"fire-b-a8878.firebasestorage.app",messagingSenderId:"658673187627",appId:"1:658673187627:web:32699cbc33e85f4bafa36e"});
 const auth=getAuth(app),db=getDatabase(app),gp=new GoogleAuthProvider();
@@ -1315,187 +1344,234 @@ const rc=getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis=3600000;
 fetchAndActivate(rc).then(()=>{const k=getValue(rc,'yoco_public_key').asString();if(k)yocoPublicKey=k;}).catch(()=>{});
 
-/* ── IN-APP GOOGLE SHEET ── */
+// ── Google Sheet sign-in ──
 document.getElementById('gsClose').onclick=()=>window.closeAnimatedModal('googleSheetBg');
 document.getElementById('gsGoogleBtn').onclick=()=>{
   window.closeAnimatedModal('googleSheetBg');
   signInWithPopup(auth,gp).catch(()=>window.showToast('Sign-in cancelled'));
 };
 
-/* ── AUTH STATE ── */
+// ── Auth State ──
 onAuthStateChanged(auth,async u=>{
   document.getElementById('initLoader').classList.add('hide');
   const isGuest=localStorage.getItem('vx_guest_mode')==='1';
-
-  if(!u && !isGuest){
-    window.location.href='login.html';
-    return;
-  }
-
+  if(!u&&!isGuest){ window.location.href='login.html'; return; }
   cu=u;
-
-  if(u) {
-      const pSnap = await get(ref(db, `users/${u.uid}/profile`));
-      if(pSnap.exists()) window._customProfileData = pSnap.val();
+  if(u){
+    const pSnap=await get(ref(db,`users/${u.uid}/profile`));
+    if(pSnap.exists()) window._customProfileData=pSnap.val();
   }
-
   updateUI(u);
-
-  if(!u){
-    window.showToast('Demo mode — rides won\'t be saved');
-    return;
-  }
-
+  if(!u){ window.showToast('Demo mode — rides won\'t be saved'); return; }
   localStorage.removeItem('vx_guest_mode');
   const ws=await get(ref(db,`users/${u.uid}/wallet/balance`));
-  if(!ws.exists())await set(ref(db,`users/${u.uid}/wallet/balance`),0);
+  if(!ws.exists()) await set(ref(db,`users/${u.uid}/wallet/balance`),0);
   onValue(ref(db,`users/${u.uid}/trips`),snap=>{
     window._allTrips=Object.values(snap.val()||{}).reverse();
     window.applyTripFilter();
   });
-  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{const d=snap.val()||{balance:0};document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;renderTx(d.transactions||{});});
-  
-  onValue(ref(db,`users/${u.uid}/profile`),snap=>{
-      if(snap.exists()) {
-          window._customProfileData = snap.val();
-          updateUI(u);
-      }
+  onValue(ref(db,`users/${u.uid}/wallet`),snap=>{
+    const d=snap.val()||{balance:0};
+    document.getElementById('walletBal').textContent=`R ${(d.balance||0).toFixed(2)}`;
+    renderTx(d.transactions||{});
   });
-
+  onValue(ref(db,`users/${u.uid}/profile`),snap=>{
+    if(snap.exists()){ window._customProfileData=snap.val(); updateUI(u); }
+  });
   const arSnap=await get(ref(db,`users/${u.uid}/activeRideId`));
-  if(arSnap.exists()&&arSnap.val()){activeRideReqId=arSnap.val();listenToActiveRide(activeRideReqId);}
+  if(arSnap.exists()&&arSnap.val()){ activeRideReqId=arSnap.val(); listenToActiveRide(activeRideReqId); }
 });
 
-function updateUI(u){
+// ── FIX: updateUI — unified avatar logic, correct sign-out toggle, correct auth row ──
+function updateUI(u) {
   const n = window._customProfileData?.name || (u ? (u.displayName||'Rider') : 'Guest');
-  const e = u ? u.email : 'Demo mode';
+  const e = u ? u.email : 'Not signed in';
   const p = window._customProfileData?.phone || '';
   const photo = window._customProfileData?.photo || (u ? u.photoURL : null);
-  const i = ini2(n);
-  
+  const initials = ini2(n);
+
+  // Profile banner avatar
+  const imgEl = document.getElementById('profAvImg');
+  const txtEl = document.getElementById('profAvTxt');
   if (photo) {
-      document.getElementById('profAvImg').src = photo;
-      document.getElementById('profAvImg').style.display = 'block';
-      document.getElementById('profAvImg').style.borderRadius = '16px';
-      document.getElementById('profAvTxt').style.display = 'none';
-      document.getElementById('sbAv').innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+    imgEl.src = photo;
+    imgEl.style.display = 'block';
+    txtEl.style.display = 'none';
   } else {
-      document.getElementById('profAvImg').style.display = 'none';
-      document.getElementById('profAvTxt').style.display = 'flex';
-      document.getElementById('profAvTxt').textContent = i;
-      document.getElementById('sbAv').textContent = i;
+    imgEl.style.display = 'none';
+    txtEl.style.display = 'inline';
+    txtEl.textContent = initials;
   }
 
-  document.getElementById('sbName').textContent=n;
-  document.getElementById('sbEmail').textContent=e;
-  document.getElementById('profName').textContent=n;
-  document.getElementById('profEmail').textContent=e;
-  document.getElementById('profPhone').textContent=p;
-  
-  const al=document.getElementById('authLabel');
-  const so=document.getElementById('signOutSection');
-  const authRow=document.getElementById('authRow');
+  // Profile banner text
+  document.getElementById('profName').textContent = n;
+  document.getElementById('profEmail').textContent = e;
+  document.getElementById('profPhone').textContent = p;
 
-  if(u){
-    if(al) al.textContent='Google — '+e;
-    if(so) so.style.display='flex';
-    if(authRow){ authRow.style.cursor='default'; authRow.style.opacity='0.55'; authRow.onclick=null; }
+  // Show/hide Edit badge
+  const editBadge = document.getElementById('profEditBadge');
+  if (editBadge) editBadge.style.display = u ? 'block' : 'none';
+
+  // Sidebar avatar
+  const sbAv = document.getElementById('sbAv');
+  if (photo) {
+    sbAv.innerHTML = `<img src="${photo}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="Avatar">`;
   } else {
-    if(al) al.textContent='Sign in with Google';
-    if(so) so.style.display='none';
-    if(authRow){ authRow.style.cursor='pointer'; authRow.style.opacity='1'; authRow.onclick=()=>document.getElementById('googleSheetBg').classList.add('show'); }
+    sbAv.textContent = initials;
+  }
+  document.getElementById('sbName').textContent = n;
+  document.getElementById('sbEmail').textContent = e;
+
+  // Auth row — FIX: signed-in users see email + Connected badge; guests see sign-in arrow
+  const authLabel = document.getElementById('authLabel');
+  const authRowRight = document.getElementById('authRowRight');
+  const authRow = document.getElementById('authRow');
+  const signOutBtn = document.getElementById('signOutBtn');
+
+  if (u) {
+    if (authLabel) authLabel.textContent = u.email;
+    if (authRowRight) authRowRight.outerHTML = `<span id="authRowRight" class="auth-status-badge">Connected</span>`;
+    if (authRow) { authRow.classList.add('sr-disabled'); authRow.onclick = null; }
+    if (signOutBtn) signOutBtn.classList.add('show');
+  } else {
+    if (authLabel) authLabel.textContent = 'Sign in with Google';
+    // Re-create the arrow span if it was replaced
+    const rr = document.getElementById('authRowRight');
+    if (rr && !rr.classList.contains('sra')) {
+      rr.outerHTML = `<span id="authRowRight" class="sra">›</span>`;
+    }
+    if (authRow) { authRow.classList.remove('sr-disabled'); authRow.onclick = handleAuthAction; }
+    if (signOutBtn) signOutBtn.classList.remove('show');
   }
 }
 
-/* ── PROFILE EDITING & CLOUDINARY ── */
+// ── FIX: Account modal openers (Notifications fixed, Places pre-fills) ──
+window.openNotifModal = function() {
+  // Pre-load saved preferences
+  try {
+    const saved = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
+    if ('ride' in saved) document.getElementById('notif-ride').checked = saved.ride;
+    if ('promo' in saved) document.getElementById('notif-promo').checked = saved.promo;
+    if ('wallet' in saved) document.getElementById('notif-wallet').checked = saved.wallet;
+  } catch(e) {}
+  document.getElementById('notifModal').classList.add('show');
+};
+
+window.openPaymentModal = function() {
+  const b = document.getElementById('walletBal');
+  document.getElementById('payModalWalletBal').textContent = 'Balance: ' + (b ? b.textContent : 'R 0.00');
+  document.getElementById('payModal').classList.add('show');
+};
+
+window.openPlacesModal = function() {
+  // Pre-fill saved places
+  try {
+    const saved = JSON.parse(localStorage.getItem('vx_saved_places') || '{}');
+    document.getElementById('sp-home').value = saved.home || '';
+    document.getElementById('sp-work').value = saved.work || '';
+    document.getElementById('sp-fav').value = saved.fav || '';
+  } catch(e) {}
+  document.getElementById('placesModal').classList.add('show');
+};
+
+// ── Profile Editing & Cloudinary ──
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dqkujefxj/image/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'banter_box';
-
 window._tempPhotoUrl = null;
 
 window.openEditProfile = function() {
-    if(!cu) { window.showToast('Please sign in first'); return; }
-    document.getElementById('epName').value = window._customProfileData?.name || cu.displayName || '';
-    document.getElementById('epPhone').value = window._customProfileData?.phone || '';
-    
-    const currentPhoto = window._customProfileData?.photo || cu.photoURL;
-    document.getElementById('epPreview').src = currentPhoto || `https://i.pravatar.cc/150?img=11`;
-    window._tempPhotoUrl = currentPhoto;
-    
-    document.getElementById('editProfileModal').classList.add('show');
+  if (!cu) { window.showToast('Please sign in to edit your profile'); return; }
+  const currentName = window._customProfileData?.name || cu.displayName || '';
+  const currentPhone = window._customProfileData?.phone || '';
+  const currentPhoto = window._customProfileData?.photo || cu.photoURL || '';
+
+  document.getElementById('epName').value = currentName;
+  document.getElementById('epPhone').value = currentPhone;
+  window._tempPhotoUrl = currentPhoto || null;
+
+  // Set avatar preview in edit modal
+  const epPrev = document.getElementById('epPreview');
+  const epInit = document.getElementById('epInitial');
+  if (currentPhoto) {
+    epPrev.src = currentPhoto;
+    epPrev.style.display = 'block';
+    epInit.style.display = 'none';
+  } else {
+    epPrev.style.display = 'none';
+    epInit.style.display = 'inline';
+    epInit.textContent = ini2(currentName || 'Guest');
+  }
+
+  document.getElementById('editProfileModal').classList.add('show');
 };
 
 window.uploadProfilePic = async function(event) {
-    const file = event.target.files[0];
-    if(!file) return;
-
-    const statusEl = document.getElementById('epUploadStatus');
-    const saveBtn = document.getElementById('epSaveBtn');
-    
-    statusEl.style.display = 'block';
-    saveBtn.disabled = true;
-    saveBtn.style.opacity = '0.5';
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-    try {
-        const res = await fetch(CLOUDINARY_UPLOAD_URL, {
-            method: 'POST',
-            body: formData
-        });
-        const data = await res.json();
-        
-        if(data.secure_url) {
-            document.getElementById('epPreview').src = data.secure_url;
-            window._tempPhotoUrl = data.secure_url;
-            statusEl.textContent = 'Upload Complete ✅';
-            setTimeout(() => statusEl.style.display = 'none', 2000);
-        } else {
-            throw new Error('Upload failed');
-        }
-    } catch(e) {
-        statusEl.textContent = 'Upload Failed ❌';
-        window.showToast('Could not upload photo. Check Cloudinary connection.');
-    } finally {
-        saveBtn.disabled = false;
-        saveBtn.style.opacity = '1';
-    }
+  const file = event.target.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('epUploadStatus');
+  const saveBtn = document.getElementById('epSaveBtn');
+  statusEl.style.display = 'block';
+  statusEl.textContent = 'Uploading…';
+  saveBtn.disabled = true; saveBtn.style.opacity = '0.5';
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  try {
+    const res = await fetch(CLOUDINARY_UPLOAD_URL, {method:'POST', body:formData});
+    const data = await res.json();
+    if (data.secure_url) {
+      const epPrev = document.getElementById('epPreview');
+      const epInit = document.getElementById('epInitial');
+      epPrev.src = data.secure_url;
+      epPrev.style.display = 'block';
+      epInit.style.display = 'none';
+      window._tempPhotoUrl = data.secure_url;
+      statusEl.textContent = '✅ Upload complete';
+      setTimeout(() => statusEl.style.display = 'none', 2000);
+    } else { throw new Error('Upload failed'); }
+  } catch(e) {
+    statusEl.textContent = '❌ Upload failed';
+    window.showToast('Could not upload photo.');
+  } finally {
+    saveBtn.disabled = false; saveBtn.style.opacity = '1';
+  }
 };
 
 window.saveProfile = async function() {
-    const newName = document.getElementById('epName').value.trim();
-    const newPhone = document.getElementById('epPhone').value.trim();
-    if(!newName) { window.showToast('Name is required'); return; }
-
-    const saveBtn = document.getElementById('epSaveBtn');
-    saveBtn.textContent = 'Saving...';
-
-    try {
-        await updateProfile(cu, {
-            displayName: newName,
-            photoURL: window._tempPhotoUrl || cu.photoURL
-        });
-        
-        await update(ref(db, `users/${cu.uid}/profile`), {
-            name: newName,
-            phone: newPhone,
-            photo: window._tempPhotoUrl || cu.photoURL || ''
-        });
-
-        window.showToast('Profile updated successfully!');
-        window.closeAnimatedModal('editProfileModal');
-    } catch(e) {
-        window.showToast('Error saving profile');
-    } finally {
-        saveBtn.textContent = 'Save Changes';
-    }
+  const newName = document.getElementById('epName').value.trim();
+  const newPhone = document.getElementById('epPhone').value.trim();
+  if (!newName) { window.showToast('Name is required'); return; }
+  const saveBtn = document.getElementById('epSaveBtn');
+  saveBtn.textContent = 'Saving…';
+  try {
+    await updateProfile(cu, {displayName: newName, photoURL: window._tempPhotoUrl || cu.photoURL || ''});
+    await update(ref(db, `users/${cu.uid}/profile`), {
+      name: newName, phone: newPhone,
+      photo: window._tempPhotoUrl || cu.photoURL || ''
+    });
+    window.showToast('Profile updated!');
+    window.closeAnimatedModal('editProfileModal');
+  } catch(e) {
+    window.showToast('Error saving profile');
+  } finally {
+    saveBtn.textContent = 'Save Changes';
+  }
 };
 
+// ── Auth & Sign Out ──
+window.handleAuthAction = function() {
+  if (cu) return; // Already signed in — row is disabled
+  document.getElementById('googleSheetBg').classList.add('show');
+};
 
-/* ── LISTEN ACTIVE RIDE ── */
-window._drawnPhase=null;window._activeRideData=null;
+window.executeSignOut = async function() {
+  await fbOut(auth);
+  localStorage.removeItem('vx_guest_mode');
+  window.location.href = 'login.html';
+};
+
+// ── Listen Active Ride ──
+window._drawnPhase=null; window._activeRideData=null;
 function listenToActiveRide(rideId){
   if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
   rideReqUnsub=onValue(ref(db,`ride_requests/${rideId}`),snap=>{
@@ -1513,12 +1589,8 @@ function listenToActiveRide(rideId){
       document.getElementById('adPlate').textContent=data.driverPlate||'— — —';
       if(data.securityPin){document.getElementById('adPin').textContent=data.securityPin;window._riderPin=data.securityPin;}
       if(data.arrivedPin)window._driverPin=data.arrivedPin;
-      
-      const isCourier = data.serviceMode === 'courier';
-      
-      if(data.arrived&&data.status!=='in_progress'){
-          document.getElementById('rideStatusText').textContent = isCourier ? 'Courier arrived — verify PIN' : 'Driver arrived — verify PIN to start';
-      }
+      const isCourier=data.serviceMode==='courier';
+      if(data.arrived&&data.status!=='in_progress'){document.getElementById('rideStatusText').textContent=isCourier?'Courier arrived — verify PIN':'Driver arrived — verify PIN to start';}
       if(!data.driverId){
         if(data.status==='in_progress'){document.getElementById('adDist').textContent=data.distKm?data.distKm.toFixed(1)+' km':'-- km';document.getElementById('adTime').textContent=data.tripMins?data.tripMins+' min':'-- min';}
         else if(data.arrived){document.getElementById('adDist').textContent='0.0 km';document.getElementById('adTime').textContent='0 min';}
@@ -1563,7 +1635,7 @@ function listenToActiveRide(rideId){
 }
 
 function showDriverAccepted(data){
-  const isCourier = data.serviceMode === 'courier';
+  const isCourier=data.serviceMode==='courier';
   document.getElementById('adName').textContent=data.driverName||'Driver';
   const imgNum=data.driverName?(data.driverName.charCodeAt(0)%70)+1:11;
   document.getElementById('adAvImg').src=data.driverAv||data.driverImage||`https://i.pravatar.cc/150?img=${imgNum}`;
@@ -1579,8 +1651,8 @@ function showDriverAccepted(data){
     document.getElementById('activeRidePanel').classList.add('show');
     if(window.setActivePanelState)window.setActivePanelState('expanded');
   });
-  document.getElementById('rideStatusText').textContent=isCourier ? 'Courier on the way to pickup…' : 'Driver on the way to pickup…';
-  window.showToast(`🎉 ${isCourier ? 'Courier' : 'Driver'} accepted! Track them on the map.`);
+  document.getElementById('rideStatusText').textContent=isCourier?'Courier on the way to pickup…':'Driver on the way to pickup…';
+  window.showToast(`🎉 ${isCourier?'Courier':'Driver'} accepted! Track them on the map.`);
 }
 
 function handleRideCanceled(by,reason=''){
@@ -1614,7 +1686,7 @@ function resetToBooking(){
   else clearRoute();
 }
 
-/* ── CHAT ── */
+// ── Chat ──
 function listenChat(rideId){
   if(chatUnsub){chatUnsub();chatUnsub=null;}
   chatUnsub=onValue(ref(db,`ride_requests/${rideId}/chat`),snap=>{
@@ -1641,7 +1713,7 @@ window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No act
 window.chatKeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMsg();}};
 window.autoResize=function(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';};
 
-/* ── PIN OVERLAY ── */
+// ── PIN Overlay ──
 window.showPinOverlay=function(){
   const rPin=window._riderPin||'----';
   document.getElementById('riderPinDisplay').innerHTML=String(rPin).split('').map((d,i)=>`<div class="pin-digit-box" style="animation-delay:${i*.06}s">${d}</div>`).join('');
@@ -1657,11 +1729,11 @@ window.verifyDriverPin=function(){
   if(!expected){window.showToast('Driver has not arrived yet');return;}
   if(entered===expected){
     window.closeAnimatedModal('pinOverlay');
-    document.getElementById('rideStatusText').textContent=window._activeRideData?.serviceMode === 'courier' ? '📦 Delivery in progress!' : '🚗 Ride in progress!';
+    document.getElementById('rideStatusText').textContent=window._activeRideData?.serviceMode==='courier'?'📦 Delivery in progress!':'🚗 Ride in progress!';
     window.showToast('✅ PIN verified — enjoy your trip!');
     if(window._activeRideData){document.getElementById('adDist').textContent=window._activeRideData.distKm?window._activeRideData.distKm.toFixed(1)+' km':'-- km';document.getElementById('adTime').textContent=window._activeRideData.tripMins?window._activeRideData.tripMins+' min':'-- min';}
     if(window._activeRideData&&window._activeRideData.destLng){drawRoute([window._activeRideData.pickupLng||window._wULng,window._activeRideData.pickupLat||window._wULat],[window._activeRideData.destLng,window._activeRideData.destLat],false);window._drawnPhase='arrived';}
-  }else{
+  } else {
     document.getElementById('pinError').style.display='block';
     [0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el){el.value='';el.style.borderColor='var(--red)';}});
     setTimeout(()=>{document.getElementById('pinError').style.display='none';[0,1,2,3].forEach(i=>{const el=document.getElementById(`pdi${i}`);if(el)el.style.borderColor='';});},2000);
@@ -1669,32 +1741,17 @@ window.verifyDriverPin=function(){
   }
 };
 
-/* ── BOOKING ── */
+// ── Booking ──
 window.initiateRidePayment=async function(method='card'){
   if(!cu){window.showToast('Please sign in first');return;}
   const r=window._rides.find(x=>x.id===window._selId);
   let finalFare=r.price;
-  
   const processBooking=async(payType)=>{
     try{
-      const dest=window._destName.split(',').slice(0,2).join(',');
       const secPin=Math.floor(1000+Math.random()*9000).toString();
-      
-      const payload = {
-        status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',
-        rideType:r.type,fare:finalFare,pickup:document.getElementById('originLabel').textContent||'Current Location',
-        destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,
-        destLng:window._destLng,destLat:window._destLat,pickupLng:window._wULng,pickupLat:window._wULat,
-        capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now(),
-        serviceMode: window._serviceMode
-      };
-      
-      if (window._serviceMode === 'courier') {
-          payload.courierDetails = window._courierDetails;
-      }
-      
-      const rideReqRef=await push(ref(db,'ride_requests'), payload);
-      
+      const payload={status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',rideType:r.type,fare:finalFare,pickup:document.getElementById('originLabel').textContent||'Current Location',destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,destLng:window._destLng,destLat:window._destLat,pickupLng:window._wULng,pickupLat:window._wULat,capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now(),serviceMode:window._serviceMode};
+      if(window._serviceMode==='courier')payload.courierDetails=window._courierDetails;
+      const rideReqRef=await push(ref(db,'ride_requests'),payload);
       activeRideReqId=rideReqRef.key;
       window._riderPin=secPin;
       await set(ref(db,`users/${cu.uid}/activeRideId`),activeRideReqId);
@@ -1704,18 +1761,17 @@ window.initiateRidePayment=async function(method='card'){
       listenToActiveRide(activeRideReqId);
     }catch(e){window.showToast('Error creating request');}
   };
-  
   if(method==='card'){
-    window.triggerYocoPayment(finalFare,`${window._serviceMode === 'courier' ? 'Delivery' : 'Ride'}: ${r.type}`,async()=>{
+    window.triggerYocoPayment(finalFare,`${window._serviceMode==='courier'?'Delivery':'Ride'}: ${r.type}`,async()=>{
       await processBooking('Card');
       if(cu){
-        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card', isCourier: window._serviceMode === 'courier'});
-        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ${window._serviceMode === 'courier' ? 'delivery' : 'ride'} (Card)`,amount:finalFare,type:'dr',date:Date.now()});
+        await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Card',isCourier:window._serviceMode==='courier'});
+        await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`${r.type} ${window._serviceMode==='courier'?'delivery':'ride'} (Card)`,amount:finalFare,type:'dr',date:Date.now()});
       }
     },'confirmModal');
-  }else{
+  } else {
     await processBooking('Cash');
-    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash', isCourier: window._serviceMode === 'courier'});
+    if(cu)await push(ref(db,`users/${cu.uid}/trips`),{type:r.type,driver:r.driver,fare:finalFare,destination:window._destName.split(',').slice(0,2).join(','),status:'Booked',date:Date.now(),paymentMethod:'Cash',isCourier:window._serviceMode==='courier'});
   }
 };
 
@@ -1723,16 +1779,14 @@ window.cancelActiveRide=async function(){
   if(!activeRideReqId||!cu){window.showToast('No active ride');return;}
   if(!confirm('Cancel your request?'))return;
   try{
-    const snap=await get(ref(db,`ride_requests/${activeRideReqId}`));
-    const d=snap.val();
+    const snap=await get(ref(db,`ride_requests/${activeRideReqId}`));const d=snap.val();
     if(d&&(d.status==='pending'||d.status==='accepted')){await update(ref(db,`ride_requests/${activeRideReqId}`),{status:'canceled_by_rider',canceledAt:Date.now()});await push(ref(db,`users/${cu.uid}/trips`),{type:d.rideType||'—',driver:d.driverName||'—',fare:d.fare||0,destination:d.destination||'—',status:'Canceled',date:Date.now(),paymentMethod:d.paymentMethod||'—'});}
     if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}if(chatUnsub){chatUnsub();chatUnsub=null;}
-    await set(ref(db,`users/${cu.uid}/activeRideId`),null);
-    activeRideReqId=null;resetToBooking();window.showToast('Request cancelled');
+    await set(ref(db,`users/${cu.uid}/activeRideId`),null);activeRideReqId=null;resetToBooking();window.showToast('Request cancelled');
   }catch(e){window.showToast('Error cancelling request');}
 };
 
-/* ── YOCO ── */
+// ── Yoco ──
 window.triggerYocoPayment=function(amount,description,onSuccess,restoreModalId){
   if(typeof window.YocoSDK==='undefined'){window.showToast('Payment unavailable');return;}
   if(restoreModalId)window.closeAnimatedModal(restoreModalId);
@@ -1771,7 +1825,7 @@ window.executeVoucher=async function(){
   }catch(e){window.showToast('Error processing voucher');}
 };
 
-/* ── TRIPS / TX ── */
+// ── Trips & Tx ──
 window.applyTripFilter=function(){
   const filterDate=document.getElementById('tripDateFilter').value;
   let filtered=window._allTrips;
@@ -1784,31 +1838,35 @@ function renderTrips(list){
   el.innerHTML=list.map(t=>`<div class="tc"><div class="tc-row"><div><div class="tc-type">${t.type} <span style="font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,.05)">${t.paymentMethod||'Card'}</span></div><div class="tc-meta">${t.destination||'—'} · ${t.driver||'—'}</div></div><div class="tc-fare">R ${parseFloat(t.fare||0).toFixed(2)}</div></div><div class="tc-meta" style="margin-top:6px">${t.date?new Date(t.date).toLocaleString('en-ZA',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):''}</div><span class="tc-badge ${t.status==='Canceled'?'canceled':''}">${t.status==='Canceled'?'✕ Canceled':'✓ '+(t.status||'Completed')}</span></div>`).join('');
 }
 function renderTx(obj){
-  const el=document.getElementById('txList'),list=Object.values(obj).reverse();
+  const el=document.getElementById('txList');const list=Object.values(obj).reverse();
   if(!list.length){el.innerHTML='<div class="empty"><div class="empty-ico">💳</div><p>No transactions yet.</p></div>';return;}
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
 
-/* ── ACCOUNT & SETTINGS ── */
-window.handleAuthAction=()=>{
-  if(cu)return;
-  document.getElementById('googleSheetBg').classList.add('show');
+// ── Settings saves ──
+window.saveNotifPrefs=function(){
+  const prefs={};
+  ['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});
+  localStorage.setItem('vx_notif_prefs',JSON.stringify(prefs));
+  window.closeAnimatedModal('notifModal');
+  window.showToast('Notification preferences saved');
 };
 
-window.executeSignOut=async()=>{
-  await fbOut(auth);
-  localStorage.removeItem('vx_guest_mode');
-  window.location.href='login.html';
-};
+window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
+window.closeTopUpModal=()=>window.closeAnimatedModal('topUpModal');
+window.openPayModal=window.openPaymentModal; // alias
 
-window.saveNotifPrefs=function(){const prefs={};['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});localStorage.setItem('vx_notif_prefs',JSON.stringify(prefs));window.closeAnimatedModal('notifModal');window.showToast('Preferences saved');};
-window.openPayModal=function(){const b=document.getElementById('walletBal');document.getElementById('payModalWalletBal').textContent='Balance: '+(b?b.textContent:'R 0.00');document.getElementById('payModal').classList.add('show');};
-window.savePlaces=async function(){const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};localStorage.setItem('vx_saved_places',JSON.stringify(data));if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});window.closeAnimatedModal('placesModal');window.showToast('Saved places updated');};
+window.savePlaces=async function(){
+  const data={home:document.getElementById('sp-home').value.trim(),work:document.getElementById('sp-work').value.trim(),fav:document.getElementById('sp-fav').value.trim()};
+  localStorage.setItem('vx_saved_places',JSON.stringify(data));
+  if(cu)await set(ref(db,`users/${cu.uid}/savedPlaces`),data).catch(()=>{});
+  window.closeAnimatedModal('placesModal');window.showToast('Saved places updated');
+};
 
 function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 window.ini2=ini2;
 
-/* ── RATING ── */
+// ── Rating ──
 window.currentRating=0;
 document.querySelectorAll('.r-star').forEach(star=>{
   star.addEventListener('click',function(){
@@ -1820,10 +1878,7 @@ window.skipRating=function(){window.closeAnimatedModal('ratingModal');window.cur
 window.submitRating=async function(){
   if(!window.currentRating){window.showToast('Please select a star rating');return;}
   if(window._lastCompletedDriverId&&window.db){
-    try{
-      await push(ref(db,`drivers/${window._lastCompletedDriverId}/ratings`),{rating:window.currentRating,comment:document.getElementById('ratingComment').value.trim(),date:Date.now(),riderName:cu?.displayName||'Rider'});
-      window.showToast('Thanks for your feedback!');
-    }catch(e){window.showToast('Could not send rating at this time');}
+    try{await push(ref(db,`drivers/${window._lastCompletedDriverId}/ratings`),{rating:window.currentRating,comment:document.getElementById('ratingComment').value.trim(),date:Date.now(),riderName:cu?.displayName||'Rider'});window.showToast('Thanks for your feedback!');}catch(e){window.showToast('Could not send rating at this time');}
   }
   window.skipRating();
 };
@@ -1862,7 +1917,7 @@ function updateCarMarker(lat,lng){
   if(window._carMarkerEl){window._carMarkerEl.setLngLat([lng,lat]);return;}
   const wrap=document.createElement('div');wrap.style.cssText='position:relative;width:34px;height:34px';
   const pulse=document.createElement('div');pulse.className='car-pulse';
-  const car=document.createElement('div');car.className='car-marker';car.textContent= window._serviceMode === 'courier' ? '📦' : '🚕';
+  const car=document.createElement('div');car.className='car-marker';car.textContent=window._serviceMode==='courier'?'📦':'🚕';
   wrap.appendChild(pulse);wrap.appendChild(car);
   window._carMarkerEl=new mapboxgl.Marker({element:wrap,anchor:'center'}).setLngLat([lng,lat]).addTo(map);
 }
@@ -1881,7 +1936,7 @@ window.requestLocation=function(){
 window.requestLocation();
 window.zoomToCurrent=function(){if(wULng&&wULat)map.flyTo({center:[wULng,wULat],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});};
 
-/* ── GEOCODER ── */
+// ── Geocoder ──
 const geocoder=new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search destination…',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
 document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
 window._geocoder=geocoder;
@@ -1940,29 +1995,21 @@ function clearDestination(){
   loadRecentSearches();
 }
 
-/* ── PROMO ── */
+// ── Promo ──
 window._promoApplied=false;
 window.applyPromo=function(){
-  if(window._promoApplied){window.showToast(`✅ ${window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20'} already applied!`);return;}
+  if(window._promoApplied){window.showToast(`✅ ${window._serviceMode==='courier'?'SEND10':'RIDE20'} already applied!`);return;}
   window._promoApplied=true;updatePromoBannerState();
-  if(window._destName){updatePrices();window.showToast(`🎉 ${window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20'} applied — 20% off!`);}
-  else{window.showToast(`🎉 ${window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20'} applied! Now search for a destination.`);}
+  if(window._destName){updatePrices();window.showToast(`🎉 ${window._serviceMode==='courier'?'SEND10':'RIDE20'} applied — 20% off!`);}
+  else{window.showToast(`🎉 ${window._serviceMode==='courier'?'SEND10':'RIDE20'} applied! Now search for a destination.`);}
 };
 function updatePromoBannerState(){
   const banner=document.getElementById('promoBanner');const pill=document.getElementById('promoCodePill');if(!banner||!pill)return;
-  if(window._promoApplied){
-      banner.style.display = 'none';
-  }
-  else{
-      banner.style.display = 'flex';
-      banner.classList.remove('applied');
-      pill.textContent= window._serviceMode === 'courier' ? 'SEND10' : 'RIDE20';
-      document.querySelector('.promo-title').textContent='First time discount!';
-      document.querySelector('.promo-sub').textContent='Tap to apply your promo code';
-  }
+  if(window._promoApplied){banner.style.display='none';}
+  else{banner.style.display='flex';pill.textContent=window._serviceMode==='courier'?'SEND10':'RIDE20';document.querySelector('.promo-title').textContent='First time discount!';document.querySelector('.promo-sub').textContent='Tap to apply your promo code';}
 }
 
-/* ── RECENT SEARCHES AUTO-REQUEST ── */
+// ── Recent Searches ──
 function loadRecentSearches(){
   const searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');
   const section=document.getElementById('recentSection');const list=document.getElementById('recentList');
@@ -1972,25 +2019,15 @@ function loadRecentSearches(){
 }
 window.saveRecentSearch=function(name,lng,lat){let searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');searches=searches.filter(s=>s.name!==name);searches.unshift({name,lng,lat});if(searches.length>3)searches=searches.slice(0,3);localStorage.setItem('vx_recent_searches',JSON.stringify(searches));};
 window.clearRecentSearches=function(){localStorage.removeItem('vx_recent_searches');document.getElementById('recentSection').style.display='none';window.showToast('Recent searches cleared');};
-
 window.selectRecentSearch=function(name,lng,lat){
   const input=document.querySelector('.mapboxgl-ctrl-geocoder--input');
-  if(input){
-    input.value=name.split(',').slice(0,2).join(',');
-    input.style.borderColor='rgba(0,82,255,.4)';
-    setTimeout(()=>input.style.borderColor='',1200);
-  }
+  if(input){input.value=name.split(',').slice(0,2).join(',');input.style.borderColor='rgba(0,82,255,.4)';setTimeout(()=>input.style.borderColor='',1200);}
   setDestination(name,lng,lat,false);
-  
-  if(window._serviceMode === 'courier') {
-      setTimeout(() => document.getElementById('courierModal').classList.add('show'), 600);
-  } else {
-      window.showToast('Auto-requesting your ride...');
-      setTimeout(() => { initiateRidePayment('cash'); }, 1200); 
-  }
+  if(window._serviceMode==='courier'){setTimeout(()=>document.getElementById('courierModal').classList.add('show'),600);}
+  else{window.showToast('Auto-requesting your ride…');setTimeout(()=>{initiateRidePayment('cash');},1200);}
 };
 
-/* ── RIDE & COURIER DATA ── */
+// ── Ride & Courier Data ──
 const RIDE_BASE=[
   {id:1,type:'VynixGo',baseFare:20,perKm:5.5,capacity:4,driver:'Kabelo P.',specs:'Compact · Economy'},
   {id:2,type:'VynixComfort',baseFare:30,perKm:8,capacity:4,driver:'Thabo M.',specs:'Newer cars · Legroom'},
@@ -2002,59 +2039,38 @@ const COURIER_BASE=[
   {id:6,type:'VynixCargo',baseFare:50,perKm:10.5,capacity:1,driver:'Pieter D.',specs:'Large Items & Furniture'}
 ];
 
-window._serviceMode = 'ride'; 
+window._serviceMode='ride';
 window._rides=RIDE_BASE.map(r=>({...r,price:r.baseFare,time:'3 min'}));
 window._selId=1;window._distKm=0;window._destName='';window._tripDurationMins=0;
 window._courierDetails={};
 
-window.setServiceMode = function(mode) {
-    window._serviceMode = mode;
-    
-    // Update Toggle UI safely without throwing event target errors on Desktop
-    document.querySelectorAll('.st-btn').forEach(el => {
-       el.classList.toggle('act', el.textContent.toLowerCase().includes(mode));
-    });
-    
-    // Adjust header and promo
-    document.querySelector('.ptitle').textContent = mode === 'ride' ? 'Where to?' : 'Send a package';
-    updatePromoBannerState();
-    
-    // Update active ID and re-render
-    window._selId = mode === 'ride' ? 1 : 4; 
-    updatePrices();
-    
-    if(window._destName) {
-        const r = window._rides.find(x => x.id === window._selId);
-        const btn = document.getElementById('confirmBtn');
-        btn.textContent = `Book ${r.type}`;
-    }
+window.setServiceMode=function(mode){
+  window._serviceMode=mode;
+  document.querySelectorAll('.st-btn').forEach(el=>{el.classList.toggle('act',el.textContent.toLowerCase().includes(mode));});
+  document.querySelector('.ptitle').textContent=mode==='ride'?'Where to?':'Send a package';
+  updatePromoBannerState();
+  window._selId=mode==='ride'?1:4;
+  updatePrices();
+  if(window._destName){const r=window._rides.find(x=>x.id===window._selId);const btn=document.getElementById('confirmBtn');btn.textContent=`Book ${r.type}`;}
 };
 
 function haversine(la1,lo1,la2,lo2){const R=6371,dL=(la2-la1)*Math.PI/180,dN=(lo2-lo1)*Math.PI/180;const a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
 window.haversine=haversine;
 
 function updatePrices(){
-  const baseArr = window._serviceMode === 'courier' ? COURIER_BASE : RIDE_BASE;
-  const km=window._distKm||0;
-  const discount=window._promoApplied?0.8:1;
-  
-  window._rides = baseArr.map(r=>{
-      const basePrice = Math.round((r.baseFare+r.perKm*km)*100)/100;
-      const finalPrice = Math.round(basePrice*discount*100)/100;
-      return{
-          ...r, 
-          price: finalPrice, 
-          originalPrice: window._promoApplied ? basePrice : null,
-          time:`${3 + (r.id % 3)} min`,
-          tripTime: window._tripDurationMins ? `${window._tripDurationMins} min` : 'N/A'
-      };
+  const baseArr=window._serviceMode==='courier'?COURIER_BASE:RIDE_BASE;
+  const km=window._distKm||0;const discount=window._promoApplied?0.8:1;
+  window._rides=baseArr.map(r=>{
+    const basePrice=Math.round((r.baseFare+r.perKm*km)*100)/100;
+    const finalPrice=Math.round(basePrice*discount*100)/100;
+    return{...r,price:finalPrice,originalPrice:window._promoApplied?basePrice:null,time:`${3+(r.id%3)} min`,tripTime:window._tripDurationMins?`${window._tripDurationMins} min`:'N/A'};
   });
   renderRides(true);
 }
 
 function renderRides(withDest=false){
   const list=document.getElementById('rideList');if(!withDest){list.innerHTML='';return;}
-  const iconHtml = window._serviceMode === 'courier' ? '📦' : '👤';
+  const iconHtml=window._serviceMode==='courier'?'📦':'👤';
   list.innerHTML=window._rides.map(r=>`<div class="rcard ${r.id===window._selId?'sel':''}" onclick="selRide(${r.id})"><div class="rinfo"><div class="rav">${window.ini2(r.driver)}</div><div><div class="rname">${r.type} <span style="font-weight:400;font-size:10px;color:var(--muted)">${iconHtml}${r.capacity}</span></div><div class="rmeta">${r.specs}</div></div></div><div style="text-align:right;flex-shrink:0">${r.originalPrice?`<div class="r-old-price">R ${r.originalPrice.toFixed(2)}</div>`:''}<div class="rprice ${r.originalPrice?'promo-price':''}">R ${r.price.toFixed(2)}</div><div class="rtbadge">${r.time}</div></div></div>`).join('');
 }
 
@@ -2062,220 +2078,114 @@ window.selRide=function(id){window._selId=id;renderRides(!!window._destName);con
 
 window.openModal=function(){
   if(!window._destName){window.showToast('Search for a destination first');return;}
-  if(window._serviceMode === 'courier') {
-      document.getElementById('courierModal').classList.add('show');
-  } else {
-      showConfirmModal();
-  }
+  if(window._serviceMode==='courier'){document.getElementById('courierModal').classList.add('show');}
+  else{showConfirmModal();}
 };
 
-window.proceedToCourierConfirm = function() {
-    const n = document.getElementById('cPName').value.trim();
-    const p = document.getElementById('cPPhone').value.trim();
-    const desc = document.getElementById('cPDesc').value.trim();
-    if(!n || !p) { window.showToast('Please enter recipient details'); return; }
-    window._courierDetails = { name: n, phone: p, desc: desc || 'Package' };
-    window.closeAnimatedModal('courierModal');
-    showConfirmModal();
+window.proceedToCourierConfirm=function(){
+  const n=document.getElementById('cPName').value.trim();const p=document.getElementById('cPPhone').value.trim();const desc=document.getElementById('cPDesc').value.trim();
+  if(!n||!p){window.showToast('Please enter recipient details');return;}
+  window._courierDetails={name:n,phone:p,desc:desc||'Package'};
+  window.closeAnimatedModal('courierModal');showConfirmModal();
 };
 
-window.showConfirmModal = function() {
+window.showConfirmModal=function(){
   const r=window._rides.find(x=>x.id===window._selId);
-  document.getElementById('m-type-label').textContent = window._serviceMode === 'courier' ? 'Service' : 'Ride';
+  document.getElementById('m-type-label').textContent=window._serviceMode==='courier'?'Service':'Ride';
   document.getElementById('m-type').textContent=r.type;
-  
-  if (window._serviceMode === 'courier') {
-      document.getElementById('m-courier-row').style.display = 'flex';
-      document.getElementById('m-courier-info').textContent = `${window._courierDetails.name} (${window._courierDetails.desc})`;
-  } else {
-      document.getElementById('m-courier-row').style.display = 'none';
-  }
-  
+  if(window._serviceMode==='courier'){document.getElementById('m-courier-row').style.display='flex';document.getElementById('m-courier-info').textContent=`${window._courierDetails.name} (${window._courierDetails.desc})`;}
+  else{document.getElementById('m-courier-row').style.display='none';}
   document.getElementById('m-driver').textContent=r.driver;
   document.getElementById('m-eta').textContent=r.time;
   document.getElementById('m-trip-time').textContent=r.tripTime||'N/A';
   document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
-  
   if(window._promoApplied&&r.originalPrice){
-      document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
-      document.getElementById('m-fare').style.color='var(--green)';
-      document.getElementById('m-discount').textContent=`-R ${(r.originalPrice-r.price).toFixed(2)}`;
-      document.getElementById('promoAppliedRow').style.display='';
-  } else {
-      document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;
-      document.getElementById('m-fare').style.color='var(--blue)';
-      document.getElementById('promoAppliedRow').style.display='none';
+    document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;document.getElementById('m-fare').style.color='var(--green)';
+    document.getElementById('m-discount').textContent=`-R ${(r.originalPrice-r.price).toFixed(2)}`;document.getElementById('promoAppliedRow').style.display='';
+  }else{
+    document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;document.getElementById('m-fare').style.color='var(--blue)';
+    document.getElementById('promoAppliedRow').style.display='none';
   }
   document.getElementById('confirmModal').classList.add('show');
 };
 
 window.closeModal=()=>window.closeAnimatedModal('confirmModal');
-window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
-window.closeTopUpModal=()=>window.closeAnimatedModal('topUpModal');
 
-/* ── SEARCH TIMER ── */
+// ── Search Timer ──
 window.startSearchTimer=function(){
   const overlay=document.getElementById('searchOverlay');overlay.classList.add('show');
-  document.getElementById('searchTitle').textContent= window._serviceMode === 'courier' ? 'Finding a courier…' : 'Finding your driver…';
-  document.getElementById('searchSub').textContent= `Pinging nearby ${window._serviceMode === 'courier' ? 'couriers' : 'drivers'}. If no one accepts within 60 seconds, the request will timeout.`;
+  document.getElementById('searchTitle').textContent=window._serviceMode==='courier'?'Finding a courier…':'Finding your driver…';
+  document.getElementById('searchSub').textContent=`Pinging nearby ${window._serviceMode==='courier'?'couriers':'drivers'}. If no one accepts within 60 seconds, the request will timeout.`;
   document.getElementById('searchProgressWrap').style.display='flex';document.getElementById('cancelSearchBtn').style.display='block';document.getElementById('timeoutActions').style.display='none';
   let t=60;const circle=document.getElementById('searchProgress'),txt=document.getElementById('searchTimerTxt');
   circle.style.transition='none';circle.style.strokeDashoffset='0';void circle.offsetWidth;setTimeout(()=>circle.style.transition='stroke-dashoffset 1s linear',50);
   txt.textContent='60s';clearInterval(window._searchInterval);
   window._searchInterval=setInterval(()=>{t--;txt.textContent=t+'s';circle.style.strokeDashoffset=(283-(t/60)*283);if(t<=0){clearInterval(window._searchInterval);window.showSearchTimeout();}},1000);
 };
-window.showSearchTimeout=function(){document.getElementById('searchTitle').textContent=`No ${window._serviceMode === 'courier' ? 'couriers' : 'drivers'} available`;document.getElementById('searchSub').textContent=`All nearby ${window._serviceMode === 'courier' ? 'couriers' : 'drivers'} are currently busy. Would you like to keep trying?`;document.getElementById('searchProgressWrap').style.display='none';document.getElementById('cancelSearchBtn').style.display='none';document.getElementById('timeoutActions').style.display='flex';};
+window.showSearchTimeout=function(){document.getElementById('searchTitle').textContent=`No ${window._serviceMode==='courier'?'couriers':'drivers'} available`;document.getElementById('searchSub').textContent=`All nearby ${window._serviceMode==='courier'?'couriers':'drivers'} are currently busy. Would you like to keep trying?`;document.getElementById('searchProgressWrap').style.display='none';document.getElementById('cancelSearchBtn').style.display='none';document.getElementById('timeoutActions').style.display='flex';};
 window.retrySearch=async function(){if(window.activeRideReqId&&window.db){try{const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId),{createdAt:Date.now()});}catch(e){}}window.startSearchTimer();};
 window.cancelSearch=async function(msg='Request cancelled'){clearInterval(window._searchInterval);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='flex';window.showToast(msg);if(window.activeRideReqId&&window.db){try{const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);const s=await fbGet(r);if(s.exists()&&s.val().status==='pending')await fbRemove(r);}catch(e){}window.activeRideReqId=null;}};
 
-/* ── DRAG ENGINE ── */
+// ── Drag Engine ──
 function getSnapPositions(panelFullPx){return{collapsed:panelFullPx-92,mid:panelFullPx-(window.innerHeight*0.54),expanded:0};}
 function getActiveSnapPositions(panelFullPx){return{collapsed:panelFullPx-170,mid:panelFullPx-(window.innerHeight*0.52),expanded:0};}
 function getPanelFullPx(){return window.innerHeight*0.85;}
 function applyTransform(el,y){el.style.transform=`translateY(${y}px) translateZ(0)`;}
 
-/* ── UNIFIED BOTTOM SHEET ENGINE (SCROLLING FIXED) ── */
-function initBottomSheet(panelId, handleWrapId, scrollAreaId, getSnapPositionsFn, globalSetStateName) {
-  const panel = document.getElementById(panelId);
-  const handle = document.getElementById(handleWrapId);
-  const scrollArea = document.getElementById(scrollAreaId);
-  if (!panel || !handle) return;
-
-  let state = 'mid', dragging = false, isPanelDrag = false, startY = 0, curY = 0, velHistory = [];
-  const bar = handle.querySelector('div');
-
-  function setStateDirect(name, animate = true) {
-    if (window.innerWidth >= 900) return;
-    state = name;
-    const snapPos = getSnapPositionsFn(getPanelFullPx());
-    const targetY = snapPos[name];
-    if (animate) {
-      panel.classList.add('animating');
-      setTimeout(() => panel.classList.remove('animating'), 460);
-    }
-    applyTransform(panel, targetY);
-    panel.className = panel.className.replace(/snap-\w+/g, '').trim();
-    panel.classList.add(`snap-${name}`);
-
-    if (bar) {
-      bar.style.width = name === 'collapsed' ? '40px' : '52px';
-      bar.style.background = name === 'collapsed' ? 'var(--border)' : 'var(--blue2)';
-    }
-    if (scrollArea) {
-      scrollArea.style.overflowY = name === 'expanded' ? 'auto' : 'hidden';
-    }
-    updateMapClickZone();
-    setTimeout(() => map.resize(), 460);
+function initBottomSheet(panelId,handleWrapId,scrollAreaId,getSnapPositionsFn,globalSetStateName){
+  const panel=document.getElementById(panelId);const handle=document.getElementById(handleWrapId);const scrollArea=document.getElementById(scrollAreaId);
+  if(!panel||!handle)return;
+  let state='mid',dragging=false,isPanelDrag=false,startY=0,curY=0,velHistory=[];
+  const bar=handle.querySelector('div');
+  function setStateDirect(name,animate=true){
+    if(window.innerWidth>=900)return;
+    state=name;const snapPos=getSnapPositionsFn(getPanelFullPx());const targetY=snapPos[name];
+    if(animate){panel.classList.add('animating');setTimeout(()=>panel.classList.remove('animating'),460);}
+    applyTransform(panel,targetY);
+    panel.className=panel.className.replace(/snap-\w+/g,'').trim();panel.classList.add(`snap-${name}`);
+    if(bar){bar.style.width=name==='collapsed'?'40px':'52px';bar.style.background=name==='collapsed'?'var(--border)':'var(--blue2)';}
+    if(scrollArea){scrollArea.style.overflowY=name==='expanded'?'auto':'hidden';}
+    updateMapClickZone();setTimeout(()=>map.resize(),460);
   }
-  window[globalSetStateName] = setStateDirect;
-
-  function getVelocity() {
-    const now = performance.now();
-    const recent = velHistory.filter(e => now - e.t < 80);
-    if (recent.length < 2) return 0;
-    const oldest = recent[0], newest = recent[recent.length - 1];
-    return (newest.y - oldest.y) / (newest.t - oldest.t);
-  }
-
-  function findSnap(pos, vel, snapPos) {
-    const projected = pos + vel * 0.15;
-    const names = Object.keys(snapPos);
-    let best = names[0], bestDist = Infinity;
-    for (const name of names) {
-      const dist = Math.abs(snapPos[name] - projected);
-      if (dist < bestDist) {
-        bestDist = dist;
-        best = name;
+  window[globalSetStateName]=setStateDirect;
+  function getVelocity(){const now=performance.now();const recent=velHistory.filter(e=>now-e.t<80);if(recent.length<2)return 0;const oldest=recent[0],newest=recent[recent.length-1];return(newest.y-oldest.y)/(newest.t-oldest.t);}
+  function findSnap(pos,vel,snapPos){const projected=pos+vel*0.15;const names=Object.keys(snapPos);let best=names[0],bestDist=Infinity;for(const name of names){const dist=Math.abs(snapPos[name]-projected);if(dist<bestDist){bestDist=dist;best=name;}}return best;}
+  panel.addEventListener('touchstart',e=>{
+    if(window.innerWidth>=900)return;
+    const isScrollArea=scrollArea&&scrollArea.contains(e.target);
+    if(isScrollArea&&state==='expanded'&&scrollArea.scrollTop>0){isPanelDrag=false;return;}
+    isPanelDrag=true;dragging=true;startY=e.touches[0].clientY;velHistory=[];
+    const snapPos=getSnapPositionsFn(getPanelFullPx());curY=snapPos[state]||0;
+    panel.classList.remove('animating');if(bar)bar.classList.add('active');
+  },{passive:true});
+  panel.addEventListener('touchmove',e=>{
+    if(!dragging||window.innerWidth>=900)return;
+    const clientY=e.touches[0].clientY;const deltaY=clientY-startY;
+    const isScrollArea=scrollArea&&scrollArea.contains(e.target);
+    if(isScrollArea&&state==='expanded'){
+      if(scrollArea.scrollTop<=0){
+        if(deltaY<0){isPanelDrag=false;}
+        else if(deltaY>0&&!isPanelDrag){isPanelDrag=true;startY=clientY;const snapPos=getSnapPositionsFn(getPanelFullPx());curY=snapPos[state]||0;panel.classList.remove('animating');if(bar)bar.classList.add('active');}
       }
     }
-    return best;
-  }
-
-  panel.addEventListener('touchstart', e => {
-    if (window.innerWidth >= 900) return;
-    const isScrollArea = scrollArea && scrollArea.contains(e.target);
-
-    // Let native scroll happen immediately if we are expanded and already scrolled down
-    if (isScrollArea && state === 'expanded' && scrollArea.scrollTop > 0) {
-      isPanelDrag = false;
-      return;
-    }
-
-    isPanelDrag = true;
-    dragging = true;
-    startY = e.touches[0].clientY;
-    velHistory = [];
-    const snapPos = getSnapPositionsFn(getPanelFullPx());
-    curY = snapPos[state] || 0;
-    panel.classList.remove('animating');
-    if (bar) bar.classList.add('active');
-  }, { passive: true });
-
-  panel.addEventListener('touchmove', e => {
-    if (!dragging || window.innerWidth >= 900) return;
-
-    const clientY = e.touches[0].clientY;
-    const deltaY = clientY - startY;
-    const isScrollArea = scrollArea && scrollArea.contains(e.target);
-
-    if (isScrollArea && state === 'expanded') {
-      if (scrollArea.scrollTop <= 0) {
-        if (deltaY < 0) {
-          isPanelDrag = false;
-        } else if (deltaY > 0 && !isPanelDrag) {
-          isPanelDrag = true;
-          startY = clientY; 
-          const snapPos = getSnapPositionsFn(getPanelFullPx());
-          curY = snapPos[state] || 0;
-          panel.classList.remove('animating');
-          if (bar) bar.classList.add('active');
-        }
-      }
-    }
-    if (!isPanelDrag) return;
-    if (e.cancelable) e.preventDefault();
-
-    const snapPos = getSnapPositionsFn(getPanelFullPx());
-    const minY = 0, maxY = snapPos.collapsed;
-    const raw = curY + deltaY;
-    let y;
-    if (raw < minY) {
-      y = minY - (minY - raw) * 0.2;
-    } else if (raw > maxY) {
-      y = maxY + (raw - maxY) * 0.25;
-    } else {
-      y = raw;
-    }
-    applyTransform(panel, y);
-    velHistory.push({ t: performance.now(), y: clientY });
-    if (velHistory.length > 20) velHistory.shift();
-  }, { passive: false });
-
-  const onEnd = () => {
-    if (!dragging) return;
-    dragging = false;
-    isPanelDrag = false;
-    if (bar) bar.classList.remove('active');
-
-    const style = window.getComputedStyle(panel);
-    const matrix = new DOMMatrixReadOnly(style.transform);
-    const currentY = matrix.m42 || 0;
-    const vel = getVelocity();
-    const snapPos = getSnapPositionsFn(getPanelFullPx());
-    const snap = findSnap(currentY, vel * 120, snapPos);
-    setStateDirect(snap, true);
+    if(!isPanelDrag)return;if(e.cancelable)e.preventDefault();
+    const snapPos=getSnapPositionsFn(getPanelFullPx());const minY=0,maxY=snapPos.collapsed;const raw=curY+deltaY;
+    let y;if(raw<minY){y=minY-(minY-raw)*0.2;}else if(raw>maxY){y=maxY+(raw-maxY)*0.25;}else{y=raw;}
+    applyTransform(panel,y);velHistory.push({t:performance.now(),y:clientY});if(velHistory.length>20)velHistory.shift();
+  },{passive:false});
+  const onEnd=()=>{
+    if(!dragging)return;dragging=false;isPanelDrag=false;if(bar)bar.classList.remove('active');
+    const style=window.getComputedStyle(panel);const matrix=new DOMMatrixReadOnly(style.transform);const currentY=matrix.m42||0;
+    const vel=getVelocity();const snapPos=getSnapPositionsFn(getPanelFullPx());const snap=findSnap(currentY,vel*120,snapPos);setStateDirect(snap,true);
   };
-
-  panel.addEventListener('touchend', onEnd, { passive: true });
-  panel.addEventListener('touchcancel', onEnd, { passive: true });
-
-  setTimeout(() => setStateDirect('mid', false), 120);
+  panel.addEventListener('touchend',onEnd,{passive:true});panel.addEventListener('touchcancel',onEnd,{passive:true});
+  setTimeout(()=>setStateDirect('mid',false),120);
 }
 
-initBottomSheet('bookPanel', 'panelDragHandle', 'panelScrollArea', getSnapPositions, 'setPanelState');
-initBottomSheet('activeRidePanel', 'activeDragHandle', 'activePanelInner', getActiveSnapPositions, 'setActivePanelState');
+initBottomSheet('bookPanel','panelDragHandle','panelScrollArea',getSnapPositions,'setPanelState');
+initBottomSheet('activeRidePanel','activeDragHandle','activePanelInner',getActiveSnapPositions,'setActivePanelState');
 
-/* ── TABS ── */
+// ── Tabs ──
 const TABS=['ride','trips','wallet','account'];
 window.switchTab=function(name){
   TABS.forEach(t=>{
@@ -2294,12 +2204,9 @@ const appShell=document.getElementById('appShell');
 appShell.addEventListener('touchstart',e=>{if(e.target.closest('#map')||e.target.closest('.drag-handle-wrap')||e.target.closest('.active-drag-wrap')||e.target.closest('.mapboxgl-ctrl')||e.target.closest('.mbg')||e.target.closest('.auth-overlay')||e.target.closest('.rating-stars'))return;touchstartX=e.changedTouches[0].screenX;},{passive:true});
 appShell.addEventListener('touchend',e=>{if(e.target.closest('#map')||e.target.closest('.drag-handle-wrap')||e.target.closest('.active-drag-wrap')||e.target.closest('.mapboxgl-ctrl')||e.target.closest('.mbg')||e.target.closest('.auth-overlay')||e.target.closest('.rating-stars'))return;touchendX=e.changedTouches[0].screenX;handleGlobalSwipe();},{passive:true});
 
-/* ── MAP CLICK ZONE ── */
+// ── Map Click Zone ──
 function updateMapClickZone(){
-  if (window.innerWidth >= 900) {
-      document.getElementById('mapClickZone').classList.remove('active');
-      return;
-  }
+  if(window.innerWidth>=900){document.getElementById('mapClickZone').classList.remove('active');return;}
   const bookEl=document.getElementById('bookPanel');const activeEl=document.getElementById('activeRidePanel');
   const bookVisible=bookEl.style.display!=='none';const activeVisible=activeEl.style.display==='flex';
   const bookCollapsed=bookEl.classList.contains('snap-collapsed');const activeCollapsed=activeEl.classList.contains('snap-collapsed');
@@ -2307,12 +2214,7 @@ function updateMapClickZone(){
   document.getElementById('mapClickZone').classList.toggle('active',open);
 }
 window.updateMapClickZone=updateMapClickZone;
-
-// Add a resize listener to dynamically adapt between desktop and mobile modes seamlessly
-window.addEventListener('resize', () => {
-  updateMapClickZone();
-});
-
+window.addEventListener('resize',()=>{ updateMapClickZone(); });
 window.collapsePanel=function(){if(window.setPanelState)window.setPanelState('collapsed');if(window.setActivePanelState)window.setActivePanelState('collapsed');};
 
 window.showToast=function(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>t.classList.remove('show'),3200);};
