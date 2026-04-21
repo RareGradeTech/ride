@@ -1831,19 +1831,41 @@ window.cancelActiveRide=async function(){
   }catch(e){window.showToast('Error cancelling request');}
 };
 
-window.triggerYocoPayment=function(amount,description,onSuccess,modalToClose){
-  if(typeof window.YocoSDK==='undefined'){window.showToast('Payment unavailable');return;}
-  // We explicitly do NOT close the parent modal here so Yoco appears over it
-  const yoco=new window.YocoSDK({publicKey:yocoPublicKey});
-  yoco.showPopup({amountInCents:Math.round(amount*100),currency:'ZAR',name:'VynixRide',description,callback:function(result){
-    if(result.error){
-      window.showToast('Payment failed: '+result.error.message);
+window.triggerYocoPayment = function(amount, description, onSuccess, modalToClose) {
+  if (typeof window.YocoSDK === 'undefined') { 
+    window.showToast('Payment unavailable'); 
+    return; 
+  }
+  
+  // Grab the active bottom sheet
+  const activeModal = document.getElementById(modalToClose);
+  
+  // Temporarily drop the bottom sheet's z-index so Yoco naturally sits on top
+  if (activeModal) {
+    activeModal.style.zIndex = '90'; 
+  }
+  
+  const yoco = new window.YocoSDK({ publicKey: yocoPublicKey });
+  yoco.showPopup({
+    amountInCents: Math.round(amount * 100),
+    currency: 'ZAR',
+    name: 'VynixRide',
+    description: description,
+    callback: function(result) {
+      
+      // Instantly restore the bottom sheet's original z-index when Yoco closes
+      if (activeModal) {
+        activeModal.style.zIndex = '';
+      }
+      
+      if (result.error) {
+        window.showToast('Payment failed: ' + result.error.message);
+      } else {
+        if (modalToClose) window.closeAnimatedModal(modalToClose);
+        onSuccess(result.id);
+      }
     }
-    else{
-      if(modalToClose) window.closeAnimatedModal(modalToClose);
-      onSuccess(result.id);
-    }
-  }});
+  });
 };
 
 window.openTopUpModal = function() {
