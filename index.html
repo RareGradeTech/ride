@@ -186,20 +186,16 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .st-btn { flex:1; text-align:center; padding:10px; font-size:14px; font-weight:700; border-radius:10px; cursor:pointer; color:var(--muted); transition:all .2s var(--ease-spring); }
 .st-btn.act { background:#fff; color:var(--blue); box-shadow:0 4px 12px rgba(0,82,255,0.12); transform:scale(1.02); }
 
-/* ══ GEO WRAP ══ */
+/* ══ GEO WRAP & PICKUP STYLING ══ */
 .geo-wrap{margin-bottom:10px;flex-shrink:0}
+.geo-wrap-pickup .mapboxgl-ctrl-geocoder--input { background: rgba(23,168,90,.05) !important; border-color: rgba(23,168,90,.2) !important; }
+.geo-wrap-pickup .mapboxgl-ctrl-geocoder--icon { fill: var(--green) !important; }
 .mapboxgl-ctrl-geocoder{width:100%!important;max-width:100%!important;border-radius:14px!important;border:1.5px solid var(--border)!important;box-shadow:none!important;background:#fff!important;font-family:'Outfit',sans-serif!important;transition:border-color .2s,box-shadow .2s!important}
 .mapboxgl-ctrl-geocoder:focus-within{border-color:rgba(0,82,255,.4)!important;box-shadow:0 0 0 3px rgba(0,82,255,.08)!important}
 .mapboxgl-ctrl-geocoder--input{font-size:14px!important;font-weight:600!important;color:var(--ink)!important;font-family:'Outfit',sans-serif!important;padding:11px 40px 11px 40px!important;height:48px!important}
 .mapboxgl-ctrl-geocoder--icon{fill:var(--blue)!important}
-.mapboxgl-ctrl-geocoder--suggestions{border-radius:14px!important;box-shadow:0 8px 28px rgba(0,0,0,.12)!important;border:1px solid var(--border)!important;overflow:hidden!important}
+.mapboxgl-ctrl-geocoder--suggestions{border-radius:14px!important;box-shadow:0 8px 28px rgba(0,0,0,.12)!important;border:1px solid var(--border)!important;overflow:hidden!important;z-index:999 !important;}
 .mapboxgl-ctrl-geocoder--suggestion{font-family:'Outfit',sans-serif!important;font-size:13px!important}
-
-/* ══ ORIGIN ROW ══ */
-.origin-row{display:flex;align-items:center;gap:10px;background:#fff;padding:11px 14px;border-radius:13px;border:1.5px solid var(--border);margin-bottom:10px;flex-shrink:0;transition:border-color .2s}
-.o-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px rgba(23,168,90,.15)}
-.o-main{font-size:13px;font-weight:600}
-.o-sub{font-size:11px;color:var(--muted)}
 .slabel{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;flex-shrink:0}
 
 /* ══ RIDE LIST ══ */
@@ -464,14 +460,57 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .date-filter-wrap{display:flex;align-items:center;background:#fff;padding:6px 12px;border-radius:10px;border:1px solid var(--border);}
 .date-filter-input{border:none;outline:none;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;color:var(--ink);background:transparent;}
 
-/* ══ WALLET ══ */
-.w-hero{background:linear-gradient(135deg,#0044FF,var(--blue));border-radius:22px;padding:26px 24px;margin-bottom:22px;color:#fff;position:relative;overflow:hidden;width:100%}
-.w-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:rgba(255,255,255,.07);border-radius:50%}
-.w-hero::after{content:'';position:absolute;bottom:-50px;left:-20px;width:170px;height:170px;background:rgba(255,255,255,.05);border-radius:50%}
-.wlabel{font-size:12px;opacity:.7;margin-bottom:5px;font-weight:500}
-.wbal{font-size:36px;font-weight:800;margin-bottom:16px;letter-spacing:-.5px}
-.wbtns{display:flex;gap:10px;position:relative;z-index:1}
-.wbtn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:.2s var(--ease-spring)}
+/* ══ WALLET / CREDIT CARD DESIGN ══ */
+.w-card {
+  background: linear-gradient(135deg, #111827, #1f2937);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 16px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.w-card::before {
+  content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none;
+}
+.w-card-chip {
+  width: 44px; height: 32px;
+  background: linear-gradient(135deg, #e5b05c, #d4af37, #f3e5ab);
+  border-radius: 6px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.w-card-chip::after {
+  content:''; position:absolute; left: 10px; right: 10px; top:0; bottom:0; border-left: 1px solid rgba(0,0,0,0.2); border-right: 1px solid rgba(0,0,0,0.2);
+}
+.w-card-mc {
+  position: absolute; right: 24px; top: 24px; display: flex; align-items: center; justify-content: center;
+}
+.w-card-mc::before {
+  content:''; width:28px; height:28px; background:rgba(235,0,27,0.85); border-radius:50%; position:absolute; right:16px; z-index:1; mix-blend-mode: multiply;
+}
+.w-card-mc::after {
+  content:''; width:28px; height:28px; background:rgba(247,158,27,0.85); border-radius:50%; z-index:2; mix-blend-mode: multiply;
+}
+.wlabel{font-size:11px; opacity:.7; margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:1px;}
+.wbal{font-size:32px; font-weight:800; font-family:'Courier New', Courier, monospace; letter-spacing:1px;}
+
+.wbtns{display:flex;gap:10px;}
+.wbtn{background:var(--blue);border:none;color:#fff;border-radius:12px;padding:12px 18px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:.2s var(--ease-spring); width: 100%; box-shadow: 0 4px 14px var(--glow);}
+
+.inline-topup-section {
+  display: none; background: #fff; border-radius: 16px; padding: 20px;
+  border: 1px solid var(--border); margin-bottom: 24px;
+  animation: slideDown 0.3s var(--ease-spring);
+}
+@keyframes slideDown { from {opacity:0; transform: translateY(-10px);} to {opacity:1; transform: translateY(0);} }
+
 .txi{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--border)}
 .txi:last-child{border:none}
 .txl{font-size:14px;font-weight:500}
@@ -575,7 +614,7 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 .pm-label { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pm-sub { font-size:12px; color:var(--muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-/* ══ SIGN OUT BUTTON — now at the very bottom ══ */
+/* ══ SIGN OUT BUTTON ══ */
 .logout-pill-btn {
   display: none;
   align-items: center;
@@ -824,21 +863,6 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
   </div>
 </div>
 
-<div class="mbg" id="topUpModal">
-  <div class="modal">
-    <div class="modal-pill"></div>
-    <div class="mh">Add Funds</div>
-    <div class="input-wrap"><div class="slabel">Top Up via Yoco (ZAR)</div><input type="number" id="yocoAmount" class="t-input" placeholder="e.g. 150"></div>
-    <div class="mbtns" style="margin-bottom:20px"><button class="mok" style="flex:1" onclick="executeYocoTopUp()">Pay with Yoco</button></div>
-    <div style="text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px">— OR —</div>
-    <div class="input-wrap"><div class="slabel">Redeem Voucher Code</div><input type="text" id="voucherCode" class="t-input" placeholder="Enter code from Admin" style="text-transform:uppercase"></div>
-    <div class="mbtns">
-      <button class="mcancel" onclick="closeAnimatedModal('topUpModal')">Cancel</button>
-      <button class="mok" onclick="executeVoucher()">Redeem</button>
-    </div>
-  </div>
-</div>
-
 <div class="mbg" id="courierModal">
   <div class="modal" style="text-align:left">
     <div class="modal-pill"></div>
@@ -921,14 +945,14 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
         <div class="pm-text-wrap"><div class="pm-label">Pay by Card (Yoco)</div><div class="pm-sub">Visa, Mastercard</div></div>
         <span class="pm-badge pm-default-badge">Default</span>
       </div>
-      <div class="pm-card">
+      <div class="pm-card" onclick="closeAnimatedModal('payModal'); switchTab('wallet');">
         <div class="pm-icon">👛</div>
         <div class="pm-text-wrap"><div class="pm-label">VynixRide Wallet</div><div class="pm-sub" id="payModalWalletBal">Balance: R 0.00</div></div>
       </div>
     </div>
     <div class="mbtns">
       <button class="mcancel" onclick="closeAnimatedModal('payModal')">Close</button>
-      <button class="mok" onclick="closeAnimatedModal('payModal');setTimeout(()=>openTopUpModal(), 250)">Top Up Wallet</button>
+      <button class="mok" onclick="closeAnimatedModal('payModal'); switchTab('wallet'); toggleTopUp();">Top Up Wallet</button>
     </div>
   </div>
 </div>
@@ -1143,14 +1167,13 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
           <div class="st-btn act" onclick="setServiceMode('ride')">🚕 Ride</div>
           <div class="st-btn" onclick="setServiceMode('courier')">📦 Courier</div>
         </div>
-        <div class="origin-row">
-          <div class="o-dot"></div>
-          <div>
-            <div class="o-main">Your Location</div>
-            <div class="o-sub" id="originLabel">Detecting…</div>
-          </div>
-        </div>
-        <div class="geo-wrap" id="geoWrap"></div>
+        
+        <div class="slabel">Pickup Location</div>
+        <div class="geo-wrap geo-wrap-pickup" id="pickupWrap"></div>
+
+        <div class="slabel">Destination</div>
+        <div class="geo-wrap" id="destWrap"></div>
+
         <div class="promo-banner" id="promoBanner" onclick="applyPromo()">
           <div class="promo-badge">20% OFF</div>
           <div class="promo-text-wrap">
@@ -1225,13 +1248,34 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
 
   <div class="fpage" id="tab-wallet">
     <div class="ph anim-item">Wallet</div>
-    <div class="w-hero anim-item">
-      <div style="position:relative;z-index:1">
+    
+    <div class="w-card anim-item">
+      <div class="w-card-mc"></div>
+      <div class="w-card-chip"></div>
+      <div>
         <div class="wlabel">Available Balance</div>
         <div class="wbal" id="walletBal">R 0.00</div>
-        <div class="wbtns"><button class="wbtn" onclick="openTopUpModal()">+ Top Up</button></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:20px;">
+        <div style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:1px;" id="walletCardName">Guest</div>
+        <div style="font-size:10px; opacity:0.7; letter-spacing:1px;">VYNIX WALLET</div>
       </div>
     </div>
+
+    <div class="wbtns anim-item" style="margin-bottom: 24px;">
+      <button class="wbtn" onclick="toggleTopUp()">+ Top Up Balance</button>
+    </div>
+
+    <div id="inlineTopUp" class="inline-topup-section anim-item">
+       <div class="slabel">Top Up via Yoco (ZAR)</div>
+       <input type="number" id="yocoAmountInline" class="t-input" placeholder="e.g. 150" style="margin-bottom:12px;">
+       <button class="mok" style="width:100%; margin-bottom:24px;" onclick="window.executeYocoTopUpInline()">Pay with Yoco</button>
+       
+       <div class="slabel">Redeem Voucher Code</div>
+       <input type="text" id="voucherCodeInline" class="t-input" placeholder="Enter code" style="text-transform:uppercase; margin-bottom:12px;">
+       <button class="mok" style="width:100%; background:var(--ink);" onclick="window.executeVoucherInline()">Redeem</button>
+    </div>
+
     <div class="slabel anim-item">Transactions</div>
     <div id="txList" class="anim-item"></div>
   </div>
@@ -1251,8 +1295,32 @@ html,body{height:100%;height:100dvh;overflow:hidden;font-family:'Outfit',sans-se
       </div>
       <div id="profEditBadge" style="background:rgba(255,255,255,0.22);padding:7px 12px;border-radius:12px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.1);flex-shrink:0;display:none;">Edit</div>
     </div>
+    
+    <div class="acc-section-title anim-item">Account Settings</div>
+    <div class="ss anim-item">
+      <div class="sr" onclick="openNotifModal()">
+        <div class="srl"><div class="sri">🔔</div><div class="srt">Notifications</div></div>
+        <span class="sra">›</span>
+      </div>
+      <div class="sr" onclick="openPayModal()">
+        <div class="srl"><div class="sri">💳</div><div class="srt">Payment Methods</div></div>
+        <span class="sra">›</span>
+      </div>
+      <div class="sr" onclick="openPlacesModal()">
+        <div class="srl"><div class="sri">📍</div><div class="srt">Saved Places</div></div>
+        <span class="sra">›</span>
+      </div>
+    </div>
+    
+    <div class="acc-section-title anim-item">Security</div>
+    <div class="ss anim-item">
+      <div class="sr" id="authRow" onclick="handleAuthAction()">
+        <div class="srl"><div class="sri" style="background:rgba(23,168,90,.08)">🔒</div><div class="srt" id="authLabel">Sign in with Google</div></div>
+        <span class="sra" id="authRowRight">›</span>
+      </div>
+    </div>
 
-    <div class="acc-version-text anim-item">VynixRide v2.3 · South Africa 🇿🇦</div>
+    <div class="acc-version-text anim-item">VynixRide v2.4 · South Africa 🇿🇦</div>
 
     <button class="logout-pill-btn anim-item" id="signOutBtn" onclick="document.getElementById('signOutModal').classList.add('show')">
       <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -1286,17 +1354,15 @@ import{getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged,signOut as 
 import{getDatabase,ref,set,push,get,onValue,update,remove,off}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import{getRemoteConfig,fetchAndActivate,getValue}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-remote-config.js";
 
-// ── Splash ──
 document.addEventListener("DOMContentLoaded", () => {
   const splash = document.getElementById('realSplash');
   setTimeout(() => {
     splash.classList.add('hide');
     setTimeout(() => splash.style.display = 'none', 800);
-  }, 5000);
+  }, 3000);
   initModalGestures();
 });
 
-// ── Global Modal Engine ──
 function initModalGestures() {
   const overlays = document.querySelectorAll('.mbg, .pin-overlay, .chat-bg');
   overlays.forEach(bg => {
@@ -1351,14 +1417,12 @@ const rc=getRemoteConfig(app);
 rc.settings.minimumFetchIntervalMillis=3600000;
 fetchAndActivate(rc).then(()=>{const k=getValue(rc,'yoco_public_key').asString();if(k)yocoPublicKey=k;}).catch(()=>{});
 
-// ── Google Sheet sign-in ──
 document.getElementById('gsClose').onclick=()=>window.closeAnimatedModal('googleSheetBg');
 document.getElementById('gsGoogleBtn').onclick=()=>{
   window.closeAnimatedModal('googleSheetBg');
   signInWithPopup(auth,gp).catch(()=>window.showToast('Sign-in cancelled'));
 };
 
-// ── Auth State ──
 onAuthStateChanged(auth,async u=>{
   document.getElementById('initLoader').classList.add('hide');
   const isGuest=localStorage.getItem('vx_guest_mode')==='1';
@@ -1389,7 +1453,6 @@ onAuthStateChanged(auth,async u=>{
   if(arSnap.exists()&&arSnap.val()){ activeRideReqId=arSnap.val(); listenToActiveRide(activeRideReqId); }
 });
 
-// ── updateUI ──
 function updateUI(u) {
   const n = window._customProfileData?.name || (u ? (u.displayName||'Rider') : 'Guest');
   const e = u ? u.email : 'Not signed in';
@@ -1410,6 +1473,7 @@ function updateUI(u) {
   }
 
   document.getElementById('profName').textContent = n;
+  document.getElementById('walletCardName').textContent = n;
   document.getElementById('profEmail').textContent = e;
   document.getElementById('profPhone').textContent = p;
 
@@ -1446,7 +1510,6 @@ function updateUI(u) {
   }
 }
 
-// ── Account modal openers ──
 window.openNotifModal = function() {
   try {
     const saved = JSON.parse(localStorage.getItem('vx_notif_prefs') || '{}');
@@ -1473,7 +1536,6 @@ window.openPlacesModal = function() {
   document.getElementById('placesModal').classList.add('show');
 };
 
-// ── Profile Editing & Cloudinary ──
 const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dqkujefxj/image/upload';
 const CLOUDINARY_UPLOAD_PRESET = 'banter_box';
 window._tempPhotoUrl = null;
@@ -1556,7 +1618,6 @@ window.saveProfile = async function() {
   }
 };
 
-// ── Auth & Sign Out ──
 window.handleAuthAction = function() {
   if (cu) return;
   document.getElementById('googleSheetBg').classList.add('show');
@@ -1568,7 +1629,6 @@ window.executeSignOut = async function() {
   window.location.href = 'login.html';
 };
 
-// ── Listen Active Ride ──
 window._drawnPhase=null; window._activeRideData=null;
 function listenToActiveRide(rideId){
   if(rideReqUnsub){rideReqUnsub();rideReqUnsub=null;}
@@ -1684,7 +1744,6 @@ function resetToBooking(){
   else clearRoute();
 }
 
-// ── Chat ──
 function listenChat(rideId){
   if(chatUnsub){chatUnsub();chatUnsub=null;}
   chatUnsub=onValue(ref(db,`ride_requests/${rideId}/chat`),snap=>{
@@ -1711,7 +1770,6 @@ window.sendQR=async function(text){if(!activeRideReqId){window.showToast('No act
 window.chatKeydown=function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();window.sendChatMsg();}};
 window.autoResize=function(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';};
 
-// ── PIN Overlay ──
 window.showPinOverlay=function(){
   const rPin=window._riderPin||'----';
   document.getElementById('riderPinDisplay').innerHTML=String(rPin).split('').map((d,i)=>`<div class="pin-digit-box" style="animation-delay:${i*.06}s">${d}</div>`).join('');
@@ -1739,7 +1797,6 @@ window.verifyDriverPin=function(){
   }
 };
 
-// ── Booking ──
 window.initiateRidePayment=async function(method='card'){
   if(!cu){window.showToast('Please sign in first');return;}
   const r=window._rides.find(x=>x.id===window._selId);
@@ -1747,7 +1804,7 @@ window.initiateRidePayment=async function(method='card'){
   const processBooking=async(payType)=>{
     try{
       const secPin=Math.floor(1000+Math.random()*9000).toString();
-      const payload={status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',rideType:r.type,fare:finalFare,pickup:document.getElementById('originLabel').textContent||'Current Location',destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,destLng:window._destLng,destLat:window._destLat,pickupLng:window._wULng,pickupLat:window._wULat,capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now(),serviceMode:window._serviceMode};
+      const payload={status:'pending',riderUid:cu.uid,riderName:cu.displayName||'Rider',rideType:r.type,fare:finalFare,pickup:document.querySelector('.geo-wrap-pickup .mapboxgl-ctrl-geocoder--input').value||'Current Location',destination:window._destName,distKm:window._distKm||0,tripMins:window._tripDurationMins||0,destLng:window._destLng,destLat:window._destLat,pickupLng:window._wULng,pickupLat:window._wULat,capacity:r.capacity||4,securityPin:secPin,paymentMethod:payType,createdAt:Date.now(),serviceMode:window._serviceMode};
       if(window._serviceMode==='courier')payload.courierDetails=window._courierDetails;
       const rideReqRef=await push(ref(db,'ride_requests'),payload);
       activeRideReqId=rideReqRef.key;
@@ -1784,7 +1841,6 @@ window.cancelActiveRide=async function(){
   }catch(e){window.showToast('Error cancelling request');}
 };
 
-// ── Yoco ──
 window.triggerYocoPayment=function(amount,description,onSuccess,restoreModalId){
   if(typeof window.YocoSDK==='undefined'){window.showToast('Payment unavailable');return;}
   if(restoreModalId)window.closeAnimatedModal(restoreModalId);
@@ -1795,21 +1851,23 @@ window.triggerYocoPayment=function(amount,description,onSuccess,restoreModalId){
   }});
 };
 
-window.executeYocoTopUp=async function(){
+window.executeYocoTopUpInline=async function(){
   if(!cu){window.showToast('Sign in first');return;}
-  const amt=parseFloat(document.getElementById('yocoAmount').value);
+  const amt=parseFloat(document.getElementById('yocoAmountInline').value);
   if(isNaN(amt)||amt<10){window.showToast('Min R10');return;}
   window.triggerYocoPayment(amt,'Wallet Top-Up',async()=>{
     const wRef=ref(db,`users/${cu.uid}/wallet/balance`);const snap=await get(wRef);const curr=snap.val()||0;
     await update(ref(db,`users/${cu.uid}/wallet`),{balance:curr+amt});
     await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:'Yoco Wallet Top Up',amount:amt,type:'cr',date:Date.now()});
-    document.getElementById('yocoAmount').value='';window.showToast(`Added R${amt.toFixed(2)}`);
-  },'topUpModal');
+    document.getElementById('yocoAmountInline').value='';
+    window.showToast(`Added R${amt.toFixed(2)}`);
+    window.toggleTopUp();
+  });
 };
 
-window.executeVoucher=async function(){
+window.executeVoucherInline=async function(){
   if(!cu){window.showToast('Sign in first');return;}
-  const code=document.getElementById('voucherCode').value.trim().toUpperCase();if(!code){window.showToast('Enter a code');return;}
+  const code=document.getElementById('voucherCodeInline').value.trim().toUpperCase();if(!code){window.showToast('Enter a code');return;}
   try{
     const vRef=ref(db,`vouchers/${code}`);const snap=await get(vRef);
     if(snap.exists()){
@@ -1818,12 +1876,13 @@ window.executeVoucher=async function(){
       const wSnap=await get(ref(db,`users/${cu.uid}/wallet/balance`));const curr=wSnap.val()||0;
       const updates={};updates[`users/${cu.uid}/wallet/balance`]=curr+amt;updates[`vouchers/${code}/used`]=true;updates[`vouchers/${code}/redeemedBy`]=cu.uid;
       await update(ref(db),updates);await push(ref(db,`users/${cu.uid}/wallet/transactions`),{label:`Voucher: ${code}`,amount:amt,type:'cr',date:Date.now()});
-      window.closeAnimatedModal('topUpModal');window.showToast(`R${amt.toFixed(2)} added!`);document.getElementById('voucherCode').value='';
+      window.showToast(`R${amt.toFixed(2)} added!`);
+      document.getElementById('voucherCodeInline').value='';
+      window.toggleTopUp();
     }else{window.showToast('Invalid voucher code');}
   }catch(e){window.showToast('Error processing voucher');}
 };
 
-// ── Trips & Tx ──
 window.applyTripFilter=function(){
   const filterDate=document.getElementById('tripDateFilter').value;
   let filtered=window._allTrips;
@@ -1841,7 +1900,6 @@ function renderTx(obj){
   el.innerHTML=list.map(t=>`<div class="txi"><div><div class="txl">${t.label}</div><div class="txd">${t.date?new Date(t.date).toLocaleDateString('en-ZA'):''}</div></div><div class="txa ${t.type}">${t.type==='cr'?'+':'-'}R ${Math.abs(t.amount||0).toFixed(2)}</div></div>`).join('');
 }
 
-// ── Settings saves ──
 window.saveNotifPrefs=function(){
   const prefs={};
   ['ride','promo','wallet'].forEach(k=>{const el=document.getElementById(`notif-${k}`);if(el)prefs[k]=el.checked;});
@@ -1850,8 +1908,6 @@ window.saveNotifPrefs=function(){
   window.showToast('Notification preferences saved');
 };
 
-window.openTopUpModal=()=>document.getElementById('topUpModal').classList.add('show');
-window.closeTopUpModal=()=>window.closeAnimatedModal('topUpModal');
 window.openPayModal=window.openPaymentModal;
 
 window.savePlaces=async function(){
@@ -1864,7 +1920,6 @@ window.savePlaces=async function(){
 function ini2(n){return(n||'?').split(' ').map(x=>x[0]).join('').substring(0,2).toUpperCase();}
 window.ini2=ini2;
 
-// ── Rating ──
 window.currentRating=0;
 document.querySelectorAll('.r-star').forEach(star=>{
   star.addEventListener('click',function(){
@@ -1905,7 +1960,7 @@ map.on('load',()=>{
 map.on('style.load',()=>{map.setFog({'color':'rgba(220,225,245,1)','high-color':'rgba(180,195,240,1)','horizon-blend':0.06,'space-color':'rgba(100,130,200,1)','star-intensity':0.06});});
 
 const oEl=document.createElement('div');oEl.className='cmarker';
-const oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
+let oMk=new mapboxgl.Marker({element:oEl,anchor:'center'}).setLngLat([DLNG,DLAT]).addTo(map);
 let wULng=DLNG,wULat=DLAT;
 window._wULat=DLAT;window._wULng=DLNG;window._carMarkerEl=null;
 
@@ -1927,17 +1982,40 @@ window.requestLocation=function(){
       const{latitude:la,longitude:lo}=pos.coords;
       wULng=lo;wULat=la;oMk.setLngLat([lo,la]);window._wULat=la;window._wULng=lo;
       map.flyTo({center:[lo,la],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
-      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lo},${la}.json?access_token=${TK}&types=place,neighborhood,address&limit=1`).then(r=>r.json()).then(d=>{const lbl=d.features?.[0]?.place_name||`${la.toFixed(4)},${lo.toFixed(4)}`;document.getElementById('originLabel').textContent=lbl.split(',').slice(0,2).join(',');});
-    },()=>{document.getElementById('locModal').classList.add('show');document.getElementById('originLabel').textContent='Mokopane, Limpopo (Default)';});
+      fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lo},${la}.json?access_token=${TK}&types=place,neighborhood,address&limit=1`).then(r=>r.json()).then(d=>{
+        const lbl=d.features?.[0]?.place_name||`${la.toFixed(4)},${lo.toFixed(4)}`;
+        const input = document.querySelector('.geo-wrap-pickup .mapboxgl-ctrl-geocoder--input');
+        if(input) input.value = lbl.split(',').slice(0,2).join(',');
+      });
+    },()=>{
+      document.getElementById('locModal').classList.add('show');
+      const input = document.querySelector('.geo-wrap-pickup .mapboxgl-ctrl-geocoder--input');
+      if(input) input.value = 'Mokopane, Limpopo (Default)';
+    });
   }
 };
 window.requestLocation();
 window.zoomToCurrent=function(){if(wULng&&wULat)map.flyTo({center:[wULng,wULat],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});};
 
-// ── Geocoder ──
-const geocoder=new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search destination…',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
-document.getElementById('geoWrap').appendChild(geocoder.onAdd(map));
-window._geocoder=geocoder;
+// ── Geocoders ──
+const pickupGeocoder = new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search pickup location...',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
+document.getElementById('pickupWrap').appendChild(pickupGeocoder.onAdd(map));
+pickupGeocoder.on('result',e=>{
+  const[lng,lat]=e.result.geometry.coordinates;
+  wULng=lng;wULat=lat;window._wULng=lng;window._wULat=lat;
+  oMk.setLngLat([lng,lat]);
+  map.flyTo({center:[lng,lat],zoom:DEFAULT_ZOOM,speed:1.2,pitch:55,padding:{bottom:getMobilePad()}});
+  if(window._destLng&&window._destLat){
+    window._distKm=haversine(lat,lng,window._destLat,window._destLng)*1.3;
+    window._tripDurationMins=Math.ceil(window._distKm*2);
+    updatePrices();
+    drawRoute([lng,lat],[window._destLng,window._destLat],true);
+  }
+});
+
+const destGeocoder=new MapboxGeocoder({accessToken:TK,mapboxgl:mapboxgl,placeholder:'Search destination…',countries:'ZA',proximity:{longitude:DLNG,latitude:DLAT},types:'poi,address,place,neighborhood,locality',flyTo:false,marker:false});
+document.getElementById('destWrap').appendChild(destGeocoder.onAdd(map));
+window._geocoder=destGeocoder;
 
 function clearRoute(){if(map.getLayer('route'))map.removeLayer('route');if(map.getLayer('route-bg'))map.removeLayer('route-bg');if(map.getSource('route'))map.removeSource('route');}
 
@@ -1954,13 +2032,13 @@ function drawRoute(o,d,isBooking=false){
   }).catch(()=>{if(isBooking){window._distKm=haversine(o[1],o[0],d[1],d[0]);window._tripDurationMins=0;updatePrices();}});
 }
 
-geocoder.on('result',e=>{
+destGeocoder.on('result',e=>{
   const[lng,lat]=e.result.geometry.coordinates;
   const destName=e.result.place_name||e.result.text;
   setDestination(destName,lng,lat,true);
   saveRecentSearch(destName,lng,lat);
 });
-geocoder.on('clear',()=>{clearDestination();});
+destGeocoder.on('clear',()=>{clearDestination();});
 
 function setDestination(destName,lng,lat,fromGeocoder=false){
   window._destName=destName;window._destLng=lng;window._destLat=lat;
@@ -2018,31 +2096,19 @@ function loadRecentSearches(){
 window.saveRecentSearch=function(name,lng,lat){let searches=JSON.parse(localStorage.getItem('vx_recent_searches')||'[]');searches=searches.filter(s=>s.name!==name);searches.unshift({name,lng,lat});if(searches.length>3)searches=searches.slice(0,3);localStorage.setItem('vx_recent_searches',JSON.stringify(searches));};
 window.clearRecentSearches=function(){localStorage.removeItem('vx_recent_searches');document.getElementById('recentSection').style.display='none';window.showToast('Recent searches cleared');};
 
-// ── Recent search: Bolt/Uber style — set destination silently then show confirm modal ──
 window.selectRecentSearch=function(name,lng,lat){
-  // Update the geocoder input text so it looks filled in
-  const input=document.querySelector('.mapboxgl-ctrl-geocoder--input');
+  const input=document.querySelector('#destWrap .mapboxgl-ctrl-geocoder--input');
   if(input){
     input.value=name.split(',').slice(0,2).join(',');
-    // Brief highlight to confirm selection
     input.style.borderColor='rgba(0,82,255,.4)';
     setTimeout(()=>input.style.borderColor='',1200);
   }
-
-  // Set the destination on the map (plots pin, draws route, shows ride options)
   setDestination(name,lng,lat,false);
-
-  // For courier mode, collect package details first then show confirm
-  // For ride mode, expand panel and show confirm modal after a short moment
-  // (just like Bolt/Uber: tap recent → map updates → confirm sheet slides up)
   if(window._serviceMode==='courier'){
     setTimeout(()=>document.getElementById('courierModal').classList.add('show'),600);
   }else{
-    // Give the route a moment to draw, then show the booking confirm sheet
     setTimeout(()=>{
-      if(window._destName){
-        window.showConfirmModal();
-      }
+      if(window._destName){ window.showConfirmModal(); }
     },800);
   }
 };
@@ -2066,6 +2132,7 @@ window._courierDetails={};
 
 window.setServiceMode=function(mode){
   window._serviceMode=mode;
+  localStorage.setItem('vx_active_mode', mode);
   document.querySelectorAll('.st-btn').forEach(el=>{el.classList.toggle('act',el.textContent.toLowerCase().includes(mode));});
   document.querySelector('.ptitle').textContent=mode==='ride'?'Where to?':'Send a package';
   updatePromoBannerState();
@@ -2118,6 +2185,8 @@ window.showConfirmModal=function(){
   document.getElementById('m-driver').textContent=r.driver;
   document.getElementById('m-eta').textContent=r.time;
   document.getElementById('m-trip-time').textContent=r.tripTime||'N/A';
+  const pInput = document.querySelector('.geo-wrap-pickup .mapboxgl-ctrl-geocoder--input');
+  document.getElementById('m-pickup').textContent=pInput ? (pInput.value || 'Current Location') : 'Current Location';
   document.getElementById('m-dest').textContent=window._destName.split(',').slice(0,3).join(',');
   if(window._promoApplied&&r.originalPrice){
     document.getElementById('m-fare').textContent=`R ${r.price.toFixed(2)}`;document.getElementById('m-fare').style.color='var(--green)';
@@ -2131,7 +2200,6 @@ window.showConfirmModal=function(){
 
 window.closeModal=()=>window.closeAnimatedModal('confirmModal');
 
-// ── Search Timer ──
 window.startSearchTimer=function(){
   const overlay=document.getElementById('searchOverlay');overlay.classList.add('show');
   document.getElementById('searchTitle').textContent=window._serviceMode==='courier'?'Finding a courier…':'Finding your driver…';
@@ -2146,7 +2214,6 @@ window.showSearchTimeout=function(){document.getElementById('searchTitle').textC
 window.retrySearch=async function(){if(window.activeRideReqId&&window.db){try{const{ref:fbRef,update:fbUpdate}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");await fbUpdate(fbRef(window.db,'ride_requests/'+window.activeRideReqId),{createdAt:Date.now()});}catch(e){}}window.startSearchTimer();};
 window.cancelSearch=async function(msg='Request cancelled'){clearInterval(window._searchInterval);document.getElementById('searchOverlay').classList.remove('show');document.getElementById('bookPanel').style.display='flex';window.showToast(msg);if(window.activeRideReqId&&window.db){try{const{ref:fbRef,get:fbGet,remove:fbRemove}=await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js");const r=fbRef(window.db,'ride_requests/'+window.activeRideReqId);const s=await fbGet(r);if(s.exists()&&s.val().status==='pending')await fbRemove(r);}catch(e){}window.activeRideReqId=null;}};
 
-// ── Drag Engine ──
 function getSnapPositions(panelFullPx){return{collapsed:panelFullPx-92,mid:panelFullPx-(window.innerHeight*0.54),expanded:0};}
 function getActiveSnapPositions(panelFullPx){return{collapsed:panelFullPx-170,mid:panelFullPx-(window.innerHeight*0.52),expanded:0};}
 function getPanelFullPx(){return window.innerHeight*0.85;}
@@ -2205,7 +2272,15 @@ function initBottomSheet(panelId,handleWrapId,scrollAreaId,getSnapPositionsFn,gl
 initBottomSheet('bookPanel','panelDragHandle','panelScrollArea',getSnapPositions,'setPanelState');
 initBottomSheet('activeRidePanel','activeDragHandle','activePanelInner',getActiveSnapPositions,'setActivePanelState');
 
-// ── Tabs ──
+// ── App Persistence Loader ──
+document.addEventListener('DOMContentLoaded', () => {
+  const activeTab = localStorage.getItem('vx_active_tab') || 'ride';
+  switchTab(activeTab);
+
+  const activeMode = localStorage.getItem('vx_active_mode') || 'ride';
+  setServiceMode(activeMode);
+});
+
 const TABS=['ride','trips','wallet','account'];
 window.switchTab=function(name){
   TABS.forEach(t=>{
@@ -2215,7 +2290,13 @@ window.switchTab=function(name){
     const bn=document.getElementById(`bn-${t}`);if(bn)bn.classList.toggle('act',t===name);
   });
   document.querySelectorAll('.nl[data-tab]').forEach(el=>el.classList.toggle('act',el.dataset.tab===name));
-  if(name==='ride')setTimeout(()=>map.resize(),40);
+  localStorage.setItem('vx_active_tab', name);
+  if(name==='ride' && window._mapInstance) setTimeout(()=>window._mapInstance.resize(), 40);
+};
+
+window.toggleTopUp = function() {
+  const el = document.getElementById('inlineTopUp');
+  el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
 };
 
 let touchstartX=0,touchendX=0;
@@ -2224,7 +2305,6 @@ const appShell=document.getElementById('appShell');
 appShell.addEventListener('touchstart',e=>{if(e.target.closest('#map')||e.target.closest('.drag-handle-wrap')||e.target.closest('.active-drag-wrap')||e.target.closest('.mapboxgl-ctrl')||e.target.closest('.mbg')||e.target.closest('.auth-overlay')||e.target.closest('.rating-stars'))return;touchstartX=e.changedTouches[0].screenX;},{passive:true});
 appShell.addEventListener('touchend',e=>{if(e.target.closest('#map')||e.target.closest('.drag-handle-wrap')||e.target.closest('.active-drag-wrap')||e.target.closest('.mapboxgl-ctrl')||e.target.closest('.mbg')||e.target.closest('.auth-overlay')||e.target.closest('.rating-stars'))return;touchendX=e.changedTouches[0].screenX;handleGlobalSwipe();},{passive:true});
 
-// ── Map Click Zone ──
 function updateMapClickZone(){
   if(window.innerWidth>=900){document.getElementById('mapClickZone').classList.remove('active');return;}
   const bookEl=document.getElementById('bookPanel');const activeEl=document.getElementById('activeRidePanel');
@@ -2241,7 +2321,6 @@ window.showToast=function(msg){const t=document.getElementById('toast');t.textCo
 
 const mapWrap=document.getElementById('tab-ride');
 if(window.ResizeObserver)new ResizeObserver(()=>map&&map.resize()).observe(mapWrap);
-document.getElementById('tab-ride').style.display='block';
 </script>
 </body>
 </html>
